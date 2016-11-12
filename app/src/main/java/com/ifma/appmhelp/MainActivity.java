@@ -1,5 +1,8 @@
 package com.ifma.appmhelp;
 
+import android.app.ProgressDialog;
+import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.design.widget.FloatingActionButton;
@@ -13,8 +16,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
+import android.widget.Toast;
 
+import com.ifma.appmhelp.controls.Login;
+import com.ifma.appmhelp.models.Host;
+import com.ifma.appmhelp.models.Usuario;
 import com.ifma.appmhelp.services.ConexaoXMPP;
+import com.ifma.appmhelp.tasks.ConectarXMPPTask;
 
 import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.jivesoftware.smack.SmackException;
@@ -24,6 +33,12 @@ import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    private AbstractXMPPConnection conexao;
+    private ProgressDialog load;
+    private EditText edLogin;
+    private EditText edSenha;
+    private ConectarXMPPTask conectarTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +64,9 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        this.registrarComponentes();
+        this.conectar();
     }
 
     @Override
@@ -108,18 +126,45 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    public void enviarMensagem(View v){
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
-        try {
-            AbstractXMPPConnection conexao = new ConexaoXMPP().conectar();
-            conexao.login("usuario1", "senha");
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (XMPPException e) {
-            e.printStackTrace();
-        } catch (SmackException e) {
-            e.printStackTrace();
-        }
+    public void registrarComponentes(){
+        this.load  = new ProgressDialog(this);
+        this.conectarTask = new ConectarXMPPTask(this.load);
+        this.edLogin = (EditText) findViewById(R.id.edUsuarioLogin);
+        this.edSenha = (EditText) findViewById(R.id.edUsuarioSenha);
+
+    }
+
+
+    public void conectar() {
+        Host host = new Host("192.168.0.6", 5222);
+        this.conectarTask.execute(host);
+    }
+
+
+    public void efetuarLogin(View v){
+        this.conexao = this.conectarTask.getConexao();
+        Login login = new Login();
+        if(this.conexao != null){
+            if (!edLogin.getText().toString().equals("")) {
+                if (!edSenha.getText().toString().equals("")) {
+                    Usuario usuario = new Usuario(edLogin.getText().toString(), edSenha.getText().toString());
+                    if (login.realizaLogin(usuario, this.conexao)) {
+                        Toast.makeText(this, "Bem vindo " + usuario.getLogin(),
+                                Toast.LENGTH_SHORT).show();
+                    } else
+                        Toast.makeText(this, login.getMsgErro(), Toast.LENGTH_SHORT)
+                                .show();
+                }
+                else{
+                    Toast.makeText(this, "Preencha uma senha", Toast.LENGTH_SHORT).show();
+                    edSenha.setFocusable(true);
+                }
+            }else{
+                Toast.makeText(this, "Preencha um usuário", Toast.LENGTH_SHORT).show();
+                edLogin.setFocusable(true);
+            }
+
+        }else
+            Toast.makeText(this, "Não foi possível fazer login, pois não foi feita a conexão com o servidor", Toast.LENGTH_SHORT).show();
     }
 }

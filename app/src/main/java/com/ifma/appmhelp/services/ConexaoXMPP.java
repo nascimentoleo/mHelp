@@ -13,22 +13,19 @@ import java.io.IOException;
  */
 public class ConexaoXMPP {
 
-    public AbstractXMPPConnection conectar() throws IOException, XMPPException, SmackException {
-
-        // Create a connection to the jabber.org server on a specific port.
+    public static AbstractXMPPConnection getConexao(String host, int porta) throws IOException, XMPPException, SmackException{
         XMPPTCPConnectionConfiguration config = XMPPTCPConnectionConfiguration.builder()
-                .setUsernameAndPassword("usuario", "senha")
                 .setServiceName("mHelp-api")
-                .setHost("192.168.0.4")
-                .setPort(5222)
+                .setHost(host)
+                .setPort(porta)
                 .build();
 
         AbstractXMPPConnection conn = new XMPPTCPConnection(config);
         conn.connect();
-
         return conn;
 
-
     }
+
+
 
 }
