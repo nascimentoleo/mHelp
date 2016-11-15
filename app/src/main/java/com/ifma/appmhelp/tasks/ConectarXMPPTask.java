@@ -4,7 +4,7 @@ import android.app.ProgressDialog;
 import android.os.AsyncTask;
 
 import com.ifma.appmhelp.models.Host;
-import com.ifma.appmhelp.services.ConexaoXMPP;
+import com.ifma.appmhelp.factories.FactoryConexaoXMPP;
 
 import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.jivesoftware.smack.SmackException;
@@ -34,7 +34,7 @@ public class ConectarXMPPTask extends AsyncTask<Host, Integer, Boolean> {
     @Override
     public Boolean doInBackground(Host... params){
         try {
-            this.conexao = ConexaoXMPP.getConexao(params[0].getEndereco(),params[0].getPorta());
+            this.conexao = FactoryConexaoXMPP.getConexao(params[0].getEndereco(), params[0].getPorta());
             return true;
         } catch (IOException | SmackException | XMPPException e) {
             e.printStackTrace();
