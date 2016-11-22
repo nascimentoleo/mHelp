@@ -25,4 +25,9 @@
     <string name="usuario_name">Usuário</string>
     <string name="title_activity_medico">Médico</string>
     <string name="enviar_msg">Enviar Mensagem</string>
+    <string name="title_activity_cadastro">CadastroActivity</string>
+    <string name="cadastrar_name">Cadastrar</string>
+    <string name="medico_name">Médico</string>
+    <string name="paciente_name">Paciente</string>
+    <string name="crm_name">CRM</string>
 </resources>

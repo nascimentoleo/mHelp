@@ -142,7 +142,7 @@ public class MedicoActivity extends AppCompatActivity
     public void enviarMensagem(View v){
         //if(this.chat != null){
             try {
-                this.chat = FactoryChat.novoChat("leo@mhelp-api", ConexaoXMPP.getInstance().getConexao());
+                this.chat = FactoryChat.novoChat("leo@" + ConexaoXMPP.getInstance().getConexao().getServiceName() , ConexaoXMPP.getInstance().getConexao());
                 this.chat.addMessageListener(new ChatMessageListener() {
                     @Override
                     public void processMessage(Chat chat, Message message) {

@@ -128,7 +128,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void conectar() {
-        this.conectarXMPPTask.execute(new Host("192.168.0.6", 5222));
+        this.conectarXMPPTask.execute(new Host("192.168.1.24", 5222));
     }
 
     public void efetuarLogin(View v){

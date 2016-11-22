@@ -1,6 +1,7 @@
 package com.ifma.appmhelp.factories;
 
 import org.jivesoftware.smack.AbstractXMPPConnection;
+import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
@@ -15,17 +16,14 @@ public class FactoryConexaoXMPP {
 
     public static AbstractXMPPConnection getConexao(String host, int porta) throws IOException, XMPPException, SmackException{
         XMPPTCPConnectionConfiguration config = XMPPTCPConnectionConfiguration.builder()
-                .setServiceName("mhelp-api")
+                .setDebuggerEnabled(true)
+                .setCompressionEnabled(true)
+                .setSecurityMode(ConnectionConfiguration.SecurityMode.disabled)
+                .setServiceName(host)
                 .setHost(host)
                 .setPort(porta)
                 .build();
-
-        AbstractXMPPConnection conn = new XMPPTCPConnection(config);
-        conn.connect();
-        return conn;
-
+        return new XMPPTCPConnection(config).connect();
     }
-
-
 
 }
