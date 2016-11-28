@@ -1,0 +1,23 @@
+#
+# generated on 2016/11/28 02:05:38
+#
+# --table-start--
+dataClass=com.ifma.appmhelp.models.Usuario
+tableName=usuarios
+# --table-fields-start--
+# --field-start--
+fieldName=id
+generatedId=true
+# --field-end--
+# --field-start--
+fieldName=login
+# --field-end--
+# --field-start--
+fieldName=senha
+# --field-end--
+# --field-start--
+fieldName=cpf
+# --field-end--
+# --table-fields-end--
+# --table-end--
+#################################

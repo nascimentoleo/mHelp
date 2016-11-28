@@ -25,6 +25,7 @@
             android:hint="@string/usuario_name"
             android:inputType="textAutoComplete"
             android:maxLines="1"
+            android:imeOptions="actionNext"
             android:singleLine="true" />
 
     </android.support.design.widget.TextInputLayout>
@@ -39,15 +40,19 @@
             android:layout_height="wrap_content"
             android:hint="@string/senha_name"
             android:inputType="textPassword"
+            android:imeOptions="actionNext"
             android:maxLines="1"
             android:singleLine="true" />
 
     </android.support.design.widget.TextInputLayout>
 
     <RadioGroup
+        android:id="@+id/rGroupCadastro"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:onClick="onClickRadioGroupCadastro"
+        >
 
         <RadioButton
             android:id="@+id/radioPaciente"
@@ -65,6 +70,7 @@
     </RadioGroup>
 
     <android.support.design.widget.TextInputLayout
+        android:id="@+id/txtCRM"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -75,8 +81,8 @@
             android:hint="@string/crm_name"
             android:inputType="textAutoComplete"
             android:maxLines="1"
-            android:visibility="invisible"
-            android:singleLine="true" />
+            android:singleLine="true"
+            />
 
     </android.support.design.widget.TextInputLayout>
 

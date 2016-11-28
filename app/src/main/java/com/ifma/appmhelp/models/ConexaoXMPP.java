@@ -14,9 +14,8 @@ public class ConexaoXMPP implements Serializable{
     private static ConexaoXMPP instance = null;
 
     public synchronized static ConexaoXMPP getInstance() {
-        if(instance==null){
+        if(instance==null)
             instance = new ConexaoXMPP();
-        }
         return instance;
     }
 
