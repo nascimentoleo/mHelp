@@ -18,8 +18,12 @@ public class TablesSqlHelper extends OrmLiteSqliteOpenHelper {
     private String msgErro;
     private Class tableClass;
 
-    public TablesSqlHelper(Context context, Class tableClass) {
-        super(context, dbInfo.getNomeBanco(), null, dbInfo.getVersaoBanco(), R.raw.ormlite_config);
+    public TablesSqlHelper(Context context) {
+        super(context, DbInfo.getNomeBanco(), null, DbInfo.getVersaoBanco(), R.raw.ormlite_config);
+    }
+
+
+    public void setTableClass(Class tableClass) {
         this.tableClass = tableClass;
     }
 
@@ -47,5 +51,8 @@ public class TablesSqlHelper extends OrmLiteSqliteOpenHelper {
             e.printStackTrace();
         }
     }
+
+
+
 
 }

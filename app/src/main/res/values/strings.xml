@@ -30,4 +30,5 @@
     <string name="medico_name">Médico</string>
     <string name="paciente_name">Paciente</string>
     <string name="crm_name">CRM</string>
+    <string name="nome_name">Nome</string>
 </resources>

@@ -139,12 +139,12 @@ public class MainActivity extends AppCompatActivity
     }
 
     private boolean loginEhValido() {
-        if (edLogin.getText().toString().equals("")) {
+        if (edLogin.getText().toString().trim().equals("")) {
             Toast.makeText(this, "Preencha um usuário", Toast.LENGTH_SHORT).show();
             edLogin.setFocusable(true);
             return false;
         }
-        else if (edSenha.getText().toString().equals("")) {
+        else if (edSenha.getText().toString().trim().equals("")) {
             Toast.makeText(this, "Preencha uma senha", Toast.LENGTH_SHORT).show();
             edSenha.setFocusable(true);
             return false;

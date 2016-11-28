@@ -3,7 +3,7 @@ package com.ifma.appmhelp.db;
 /**
  * Created by leo on 11/28/16.
  */
-public class dbInfo {
+public class DbInfo {
     private static final String NOME_BANCO = "mhelpdb";
     private static final int VERSAO_BANCO = 1;
 

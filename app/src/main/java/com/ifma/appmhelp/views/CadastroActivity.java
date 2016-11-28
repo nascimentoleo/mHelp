@@ -9,9 +9,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import com.ifma.appmhelp.R;
-import com.ifma.appmhelp.db.TablesSqlHelper;
+import com.ifma.appmhelp.controls.RepositorioDeUsuarios;
 import com.ifma.appmhelp.models.Usuario;
 
 public class CadastroActivity extends AppCompatActivity {
@@ -43,7 +44,15 @@ public class CadastroActivity extends AppCompatActivity {
     }
 
     public void cadastrar(View v){
-        //TablesSqlHelper sqlHelper = new TablesSqlHelper(this, Usuario.class);
+        if(cadastroEhValido()){
+            Usuario novoUsuario = new Usuario(edUsuarioCadastro.getText().toString(), edSenhaCadastro.getText().toString());
+            RepositorioDeUsuarios cadastro = new RepositorioDeUsuarios();
+            if (cadastro.cadastrar(this, novoUsuario))
+                Toast.makeText(this, "Usuário cadastrado", Toast.LENGTH_SHORT).show();
+            else
+                Toast.makeText(this, "Erro ao cadastrar usuário ", Toast.LENGTH_SHORT).show();
+
+        }
     }
 
     public void onClickRadioGroupCadastro(View v){
@@ -61,5 +70,22 @@ public class CadastroActivity extends AppCompatActivity {
         txtCRM            = (TextInputLayout) findViewById(R.id.txtCRM);
         txtCRM.setVisibility(View.INVISIBLE);
     }
+
+    private boolean cadastroEhValido(){
+        if(edUsuarioCadastro.getText().toString().trim().equals("")){
+            Toast.makeText(this, "Preencha um usuário", Toast.LENGTH_SHORT).show();
+            edUsuarioCadastro.setFocusable(true);
+            return false;
+        }
+        if(edSenhaCadastro.getText().toString().trim().equals("")){
+            Toast.makeText(this, "Preencha uma senha", Toast.LENGTH_SHORT).show();
+            edSenhaCadastro.setFocusable(true);
+            return false;
+        }
+        return true;
+
+    }
+
+
 
 }

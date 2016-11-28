@@ -12,7 +12,7 @@ public class Usuario {
 
     @DatabaseField(generatedId = true)
     private Long id;
-    @DatabaseField
+    @DatabaseField(uniqueIndex = true)
     private String login;
     @DatabaseField
     private String senha;
@@ -22,6 +22,15 @@ public class Usuario {
     public Usuario(String login, String senha) {
         this.login = login;
         this.senha = senha;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    //Construtor sem argumentos necessário para o funcionamento do orm
+    public Usuario() {
+
     }
 
     public String getLogin() {
@@ -39,4 +48,6 @@ public class Usuario {
     public String getCpf() {
         return cpf;
     }
+
+
 }
