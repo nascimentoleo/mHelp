@@ -19,7 +19,7 @@ public class FactoryConexaoXMPP {
                 .setDebuggerEnabled(true)
                 .setCompressionEnabled(true)
                 .setSecurityMode(ConnectionConfiguration.SecurityMode.disabled)
-                .setServiceName(host)
+                .setServiceName("mhelp-server-xmpp")
                 .setHost(host)
                 .setPort(porta)
                 .build();

@@ -3,6 +3,7 @@ package com.ifma.appmhelp.tasks;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 
+import com.ifma.appmhelp.models.ConexaoXMPP;
 import com.ifma.appmhelp.models.Host;
 import com.ifma.appmhelp.factories.FactoryConexaoXMPP;
 
@@ -46,14 +47,12 @@ public class ConectarXMPPTask extends AsyncTask<Host, Integer, Boolean> {
 
     @Override
     protected void onPostExecute(Boolean response) {
-       this.progressLoad.dismiss();
+        this.progressLoad.dismiss();
+        ConexaoXMPP.getInstance().setConexao(this.conexao);
     }
 
     public String getMsgErro() {
         return this.msgErro;
     }
 
-    public AbstractXMPPConnection getConexao() {
-        return this.conexao;
-    }
 }

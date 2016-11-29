@@ -4,28 +4,31 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.ifma.appmhelp.R;
+import com.ifma.appmhelp.models.Usuario;
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by leo on 11/28/16.
  */
-public class TablesSqlHelper extends OrmLiteSqliteOpenHelper {
+public class DbSqlHelper extends OrmLiteSqliteOpenHelper {
 
     private String msgErro;
-    private Class tableClass;
 
-    public TablesSqlHelper(Context context) {
+    private static final List<Class> listaDeClasses = new ArrayList<Class>(){{
+        add(Usuario.class);
+    }};
+
+    public DbSqlHelper(Context context) {
         super(context, DbInfo.getNomeBanco(), null, DbInfo.getVersaoBanco(), R.raw.ormlite_config);
+        checkDatabaseVersion();
     }
 
-
-    public void setTableClass(Class tableClass) {
-        this.tableClass = tableClass;
-    }
 
     public String getMsgErro() {
         return this.msgErro;
@@ -34,7 +37,8 @@ public class TablesSqlHelper extends OrmLiteSqliteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase database, ConnectionSource connectionSource) {
         try {
-            TableUtils.createTable(connectionSource, tableClass);
+            for(Class classeDb : this.listaDeClasses)
+                TableUtils.createTable(connectionSource, classeDb);
         } catch (SQLException e) {
             this.msgErro = e.getMessage();
             e.printStackTrace();
@@ -44,7 +48,8 @@ public class TablesSqlHelper extends OrmLiteSqliteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase database, ConnectionSource connectionSource, int oldVersion, int newVersion) {
         try {
-            TableUtils.dropTable(connectionSource, tableClass, false);
+            for(Class classeDb : this.listaDeClasses)
+                TableUtils.dropTable(connectionSource, classeDb, true);
             onCreate(database, connectionSource);
         } catch (SQLException e) {
             this.msgErro = e.getMessage();
@@ -52,7 +57,9 @@ public class TablesSqlHelper extends OrmLiteSqliteOpenHelper {
         }
     }
 
-
+    public void checkDatabaseVersion() {
+        SQLiteDatabase db = this.getWritableDatabase();
+    }
 
 
 }

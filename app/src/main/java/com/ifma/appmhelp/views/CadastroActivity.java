@@ -50,7 +50,7 @@ public class CadastroActivity extends AppCompatActivity {
             if (cadastro.cadastrar(this, novoUsuario))
                 Toast.makeText(this, "Usuário cadastrado", Toast.LENGTH_SHORT).show();
             else
-                Toast.makeText(this, "Erro ao cadastrar usuário ", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Erro ao cadastrar usuário - " + cadastro.getMsgErro(), Toast.LENGTH_SHORT).show();
 
         }
     }

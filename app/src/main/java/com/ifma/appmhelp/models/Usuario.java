@@ -12,12 +12,16 @@ public class Usuario {
 
     @DatabaseField(generatedId = true)
     private Long id;
-    @DatabaseField(uniqueIndex = true)
+    @DatabaseField(uniqueIndex = true, canBeNull = false)
     private String login;
-    @DatabaseField
+    @DatabaseField (canBeNull = false)
     private String senha;
     @DatabaseField
     private String cpf;
+    @DatabaseField
+    private String nome;
+    @DatabaseField
+    private String email;
 
     public Usuario(String login, String senha) {
         this.login = login;
@@ -49,5 +53,11 @@ public class Usuario {
         return cpf;
     }
 
+    public String getNome() {
+        return nome;
+    }
 
+    public String getEmail() {
+        return email;
+    }
 }
