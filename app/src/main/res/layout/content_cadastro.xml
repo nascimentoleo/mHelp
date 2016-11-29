@@ -34,6 +34,22 @@
         android:layout_height="wrap_content">
 
         <EditText
+            android:id="@+id/edEmailCadastro"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/email_name"
+            android:inputType="textEmailAddress"
+            android:imeOptions="actionNext"
+            android:maxLines="1"
+            android:singleLine="true" />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
             android:id="@+id/edUsuarioCadastro"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -83,23 +99,6 @@
             android:text="@string/paciente_name"/>
 
     </RadioGroup>
-
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/txtCRM"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <EditText
-            android:id="@+id/edCRM"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/crm_name"
-            android:inputType="textAutoComplete"
-            android:maxLines="1"
-            android:singleLine="true"
-            />
-
-    </android.support.design.widget.TextInputLayout>
 
     <Button
         android:id="@+id/btnCadastrar"

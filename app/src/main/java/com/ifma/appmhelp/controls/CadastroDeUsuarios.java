@@ -13,12 +13,14 @@ import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smackx.iqregister.AccountManager;
 
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by leo on 11/28/16.
  */
-public class RepositorioDeUsuarios {
+public class CadastroDeUsuarios {
 
     private String msgErro;
 
@@ -31,7 +33,7 @@ public class RepositorioDeUsuarios {
         try {
             Dao<Usuario,Long> usuarioDao = databaseHelper.getDao(Usuario.class);
             if(this.addUsuarioNoServidorXMPP(usuario)){
-                if(getUsuarioByLogin(usuario.getLogin(), usuarioDao) == null) {
+                if(!loginExiste(usuario.getLogin(), usuarioDao)) {
                     usuarioDao.create(usuario);
                     return true;
                 }else
@@ -45,19 +47,27 @@ public class RepositorioDeUsuarios {
         return false;
     }
 
-
-    private Usuario getUsuarioByLogin(String login,Dao<Usuario,Long> usuarioDao) throws SQLException {
+    /*private Usuario getUsuarioByLogin(String login,Dao<Usuario,Long> usuarioDao) throws SQLException {
         List<Usuario> listaDeUsuarios =  usuarioDao.queryForEq("login", login);
         if (listaDeUsuarios.size() > 0)
             return listaDeUsuarios.get(0);
         return null;
+    } */
+
+    private boolean loginExiste(String login,Dao<Usuario,Long> usuarioDao) throws SQLException {
+        List<Usuario> listaDeUsuarios =  usuarioDao.queryForEq("login", login);
+        return listaDeUsuarios.size() > 0;
     }
+
 
     private boolean addUsuarioNoServidorXMPP(Usuario usuario){
         try {
             if(ConexaoXMPP.getInstance().conexaoEstaAtiva()){
                 AccountManager accountManager = AccountManager.getInstance(ConexaoXMPP.getInstance().getConexao());
-                accountManager.createAccount(usuario.getLogin(), usuario.getSenha());
+                Map<String, String> atributes = new HashMap<>();
+                atributes.put("name", usuario.getNome());
+                atributes.put("email", usuario.getEmail());
+                accountManager.createAccount(usuario.getLogin(), usuario.getSenha(),atributes);
                 return true;
             }
         } catch (SmackException.NoResponseException | XMPPException.XMPPErrorException |SmackException.NotConnectedException e ) {

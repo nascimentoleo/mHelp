@@ -1,5 +1,5 @@
 #
-# generated on 2016/11/29 01:21:26
+# generated on 2016/11/29 03:40:11
 #
 # --table-start--
 dataClass=com.ifma.appmhelp.models.Usuario
@@ -17,9 +17,6 @@ uniqueIndexName=usuarios_login_idx
 # --field-start--
 fieldName=senha
 canBeNull=false
-# --field-end--
-# --field-start--
-fieldName=cpf
 # --field-end--
 # --field-start--
 fieldName=nome

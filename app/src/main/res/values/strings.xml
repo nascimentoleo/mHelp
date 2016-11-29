@@ -31,4 +31,5 @@
     <string name="paciente_name">Paciente</string>
     <string name="crm_name">CRM</string>
     <string name="nome_name">Nome</string>
+    <string name="email_name">Email</string>
 </resources>

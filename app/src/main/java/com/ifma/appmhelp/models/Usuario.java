@@ -17,8 +17,6 @@ public class Usuario {
     @DatabaseField (canBeNull = false)
     private String senha;
     @DatabaseField
-    private String cpf;
-    @DatabaseField
     private String nome;
     @DatabaseField
     private String email;
@@ -45,16 +43,16 @@ public class Usuario {
         return senha;
     }
 
-    public void setCpf(String cpf) {
-        this.cpf = cpf;
-    }
-
-    public String getCpf() {
-        return cpf;
-    }
-
     public String getNome() {
         return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getEmail() {
