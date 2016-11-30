@@ -128,7 +128,7 @@ public class MainActivity extends AppCompatActivity
     public void efetuarLogin(View v){
         if(ConexaoXMPP.getInstance().conexaoEstaAtiva()){
             if(loginEhValido()) {
-                Login login = new Login();
+                Login login = new Login(this);
                 Usuario usuario = new Usuario(edLogin.getText().toString(), edSenha.getText().toString());
                 try {
                     if (login.realizaLogin(usuario, ConexaoXMPP.getInstance().getConexao())) {

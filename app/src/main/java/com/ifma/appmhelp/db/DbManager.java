@@ -12,7 +12,7 @@ public class DbManager extends ADBVApplication {
 
     @Override
     public SQLiteOpenHelper getDataBase() {
-        return new DbSqlHelper(getApplicationContext());
+        return DbSqlHelper.getHelper(getApplicationContext());
     }
 
 }

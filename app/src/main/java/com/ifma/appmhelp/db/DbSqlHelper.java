@@ -15,9 +15,17 @@ import java.sql.SQLException;
  */
 public class DbSqlHelper extends OrmLiteSqliteOpenHelper {
 
-    private String msgErro;
+   private String msgErro;
 
-   public DbSqlHelper(Context context) {
+   private static DbSqlHelper instance = null;
+
+    public synchronized static DbSqlHelper getHelper(Context context) {
+        if(instance==null)
+            instance = new DbSqlHelper(context);
+        return instance;
+    }
+
+   private DbSqlHelper(Context context) {
         super(context, DbInfo.getNomeBanco(), null, DbInfo.getVersaoBanco(), R.raw.ormlite_config);
         checkDatabaseVersion();
     }

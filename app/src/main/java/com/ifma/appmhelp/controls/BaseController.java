@@ -5,7 +5,7 @@ import android.content.Context;
 /**
  * Created by leo on 11/29/16.
  */
-public abstract class BaseController implements IController{
+public abstract class BaseController{
 
     String msgErro;
     Context ctx;
