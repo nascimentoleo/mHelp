@@ -3,12 +3,14 @@ package com.ifma.appmhelp.models;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
+import java.io.Serializable;
+
 /**
  * Created by leo on 11/12/16.
  */
 
 @DatabaseTable(tableName = "usuarios")
-public class Usuario implements IModel{
+public class Usuario implements IModel, Serializable{
 
     @DatabaseField(generatedId = true)
     private Long id;
@@ -21,18 +23,22 @@ public class Usuario implements IModel{
     @DatabaseField
     private String email;
 
+    //Construtor sem argumentos necessário para o funcionamento do orm
+    public Usuario() {
+
+    }
+
     public Usuario(String login, String senha) {
         this.login = login;
         this.senha = senha;
     }
 
-    public Long getId() {
-        return id;
+    public Usuario(String login) {
+        this.login = login;
     }
 
-    //Construtor sem argumentos necessário para o funcionamento do orm
-    public Usuario() {
-
+    public Long getId() {
+        return id;
     }
 
     public String getLogin() {
@@ -58,4 +64,5 @@ public class Usuario implements IModel{
     public String getEmail() {
         return email;
     }
+
 }

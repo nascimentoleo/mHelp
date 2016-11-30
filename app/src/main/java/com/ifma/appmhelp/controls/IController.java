@@ -10,4 +10,6 @@ import java.sql.SQLException;
 public interface IController {
 
     boolean persistir(IModel objeto) throws SQLException;
+
+    String getMsgErro();
 }

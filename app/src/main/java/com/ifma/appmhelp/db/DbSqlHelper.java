@@ -58,7 +58,7 @@ public class DbSqlHelper extends OrmLiteSqliteOpenHelper {
         }
     }
 
-    public void checkDatabaseVersion() {
+    private void checkDatabaseVersion() {
         SQLiteDatabase db = this.getWritableDatabase();
     }
 

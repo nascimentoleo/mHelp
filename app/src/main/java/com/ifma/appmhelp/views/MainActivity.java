@@ -21,6 +21,8 @@ import com.ifma.appmhelp.R;
 import com.ifma.appmhelp.controls.Login;
 import com.ifma.appmhelp.models.ConexaoXMPP;
 import com.ifma.appmhelp.models.Host;
+import com.ifma.appmhelp.models.IModel;
+import com.ifma.appmhelp.models.Medico;
 import com.ifma.appmhelp.models.Usuario;
 import com.ifma.appmhelp.tasks.ConectarXMPPTask;
 
@@ -28,6 +30,7 @@ import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -131,13 +134,18 @@ public class MainActivity extends AppCompatActivity
                 Login login = new Login(this);
                 Usuario usuario = new Usuario(edLogin.getText().toString(), edSenha.getText().toString());
                 try {
-                    if (login.realizaLogin(usuario, ConexaoXMPP.getInstance().getConexao())) {
-                        Toast.makeText(this, "Bem vindo " + usuario.getLogin(),
+                     IModel modeloLogado = login.realizaLogin(usuario);
+                     if(modeloLogado != null){
+                         Toast.makeText(this, "Bem vindo " + usuario.getLogin(),
+                                 Toast.LENGTH_SHORT).show();
+                         if(modeloLogado.getClass() == Medico.class)
+                            startActivity(new Intent(this, MedicoActivity.class));
+                        else
+                            startActivity(new Intent(this, PacienteActivity.class));
+                    }else
+                        Toast.makeText(this, login.getMsgErro(),
                                 Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(this, MedicoActivity.class));
-
-                    }
-                } catch (IOException |SmackException |XMPPException e) {
+                } catch (IOException |SmackException |XMPPException | SQLException e) {
                     e.printStackTrace();
                     Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT)
                             .show();

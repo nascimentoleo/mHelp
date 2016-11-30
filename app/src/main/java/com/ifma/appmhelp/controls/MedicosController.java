@@ -22,8 +22,8 @@ public class MedicosController extends BaseController implements IController{
     }
 
     public Medico getMedicoByUsuario(Usuario usuario) throws SQLException {
-        Dao<Medico, Long> medicoDao = DbSqlHelper.getHelper(ctx).getDao(Medico.class);
-        List<Medico> medicos = medicoDao.queryForMatching(new Medico(usuario));
+        Dao<Medico, Long> dao = DbSqlHelper.getHelper(ctx).getDao(Medico.class);
+        List<Medico> medicos = dao.queryForMatching(new Medico(usuario));
         if (!medicos.isEmpty())
             return medicos.get(0);
         return null;

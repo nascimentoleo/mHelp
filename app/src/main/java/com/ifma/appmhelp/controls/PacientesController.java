@@ -14,15 +14,15 @@ import java.util.List;
 /**
  * Created by leo on 11/29/16.
  */
-public class PacientesController extends BaseController implements IController {
+public class PacientesController extends BaseController implements IController{
 
     public PacientesController(Context ctx) {
         super(ctx);
     }
 
-    public Paciente getMedicoByUsuario(Usuario usuario) throws SQLException {
-        Dao<Paciente, Long> medicoDao = DbSqlHelper.getHelper(ctx).getDao(Paciente.class);
-        List<Paciente> pacientes = medicoDao.queryForMatching(new Paciente(usuario));
+    public Paciente getPacienteByUsuario(Usuario usuario) throws SQLException {
+        Dao<Paciente, Long> dao = DbSqlHelper.getHelper(ctx).getDao(Paciente.class);
+        List<Paciente> pacientes = dao.queryForMatching(new Paciente(usuario));
         if (!pacientes.isEmpty())
             return pacientes.get(0);
         return null;

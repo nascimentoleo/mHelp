@@ -17,9 +17,4 @@ public abstract class BaseController{
     public String getMsgErro() {
         return msgErro;
     }
-
-    void setMsgErro(String msgErro) {
-        this.msgErro = msgErro;
-    }
-
 }

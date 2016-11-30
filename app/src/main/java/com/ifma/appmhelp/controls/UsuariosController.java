@@ -13,28 +13,25 @@ import java.util.List;
 /**
  * Created by leo on 11/28/16.
  */
-public class UsuariosController extends BaseController implements IController {
+public class UsuariosController extends BaseController implements IController{
 
     public UsuariosController(Context ctx) {
         super(ctx);
     }
 
-    public boolean loginExiste(String login,Dao<Usuario,Long> usuarioDao) throws SQLException {
+    public Usuario getUsuarioByLogin(String login) throws SQLException {
         Dao<Usuario, Long> dao = DbSqlHelper.getHelper(ctx).getDao(Usuario.class);
-        List<Usuario> listaDeUsuarios =  usuarioDao.queryForMatchingArgs(new Usuario(login, ""));
-        return !listaDeUsuarios.isEmpty();
+        List<Usuario> listaDeUsuarios =  dao.queryForMatching(new Usuario(login));
+        if (!listaDeUsuarios.isEmpty())
+            return listaDeUsuarios.get(0);
+        return null;
     }
 
     @Override
     public boolean persistir(IModel objeto) throws SQLException {
         Dao<Usuario, Long> dao = DbSqlHelper.getHelper(ctx).getDao(Usuario.class);
-        if(!loginExiste(((Usuario) objeto).getLogin(), dao)) {
-            dao.create((Usuario) objeto);
-            return true;
-        }else
-            this.msgErro = "Usuário já existe no banco";
-        return false;
+        dao.create((Usuario) objeto);
+        return true;
     }
-
 
 }

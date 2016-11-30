@@ -3,12 +3,14 @@ package com.ifma.appmhelp.models;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
+import java.io.Serializable;
+
 /**
  * Created by leo on 11/28/16.
  */
 
 @DatabaseTable(tableName = "pacientes")
-public class Paciente implements IModel {
+public class Paciente implements IModel, Serializable {
     @DatabaseField(generatedId = true)
     private Long id;
     @DatabaseField

@@ -60,13 +60,18 @@ public class CadastroActivity extends AppCompatActivity {
             novoUsuario.setNome(edNomeCadastro.getText().toString());
             novoUsuario.setEmail(edEmailCadastro.getText().toString());
 
-            IController controleDeUsuarios = new UsuariosController(this);
+            UsuariosController controleDeUsuarios = new UsuariosController(this);
             ClientXMPPController clientXMPPController = new ClientXMPPController();
             try {
                 clientXMPPController.cadastrarUsuario(novoUsuario);
-                controleDeUsuarios.persistir(novoUsuario);
-                this.registrarUsuario(novoUsuario);
-                Toast.makeText(this, "Usuário cadastrado", Toast.LENGTH_SHORT).show();
+                //Se não existe usuário cadastrado no banco
+                if(controleDeUsuarios.getUsuarioByLogin(novoUsuario.getLogin()) == null) {
+                    controleDeUsuarios.persistir(novoUsuario);
+                    this.registrarUsuario(novoUsuario);
+                    Toast.makeText(this, "Usuário cadastrado", Toast.LENGTH_SHORT).show();
+
+                }else
+                    Toast.makeText(this,"Usuário já existe",Toast.LENGTH_SHORT).show();
             } catch (SmackException.NoResponseException | XMPPException.XMPPErrorException |
                      SmackException.NotConnectedException | SQLException  e) {
                 e.printStackTrace();
