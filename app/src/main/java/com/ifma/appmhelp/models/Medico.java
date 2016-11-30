@@ -13,12 +13,14 @@ public class Medico {
     private Long id;
     @DatabaseField
     private String crm;
-
-    public Medico(String crm) {
-        this.crm = crm;
-    }
+    @DatabaseField(foreign = true, foreignAutoRefresh = true, canBeNull = false)
+    private Usuario usuario;
 
     public Medico() {
+    }
+
+    public Medico(Usuario usuario) {
+        this.usuario = usuario;
     }
 
     public Long getId() {
@@ -27,5 +29,13 @@ public class Medico {
 
     public String getCrm() {
         return crm;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
     }
 }

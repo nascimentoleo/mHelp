@@ -5,7 +5,6 @@ package com.ifma.appmhelp.db;
  */
 
 
-import com.ifma.appmhelp.models.Usuario;
 import com.j256.ormlite.android.apptools.OrmLiteConfigUtil;
 
 import java.io.File;
@@ -20,10 +19,6 @@ import java.sql.SQLException;
  */
 public class OrmliteDatabaseConfigUtil extends OrmLiteConfigUtil {
 
-    /**
-     * classes represents the models to use for generating the ormlite_config.txt file
-     */
-    private static final Class<?>[] classes = new Class[] {Usuario.class};
 
     /**
      * Given that this is a separate program from the android app, we have to use
@@ -64,6 +59,6 @@ public class OrmliteDatabaseConfigUtil extends OrmLiteConfigUtil {
          * writeConfigFile is a util method used to write the necessary configurations
          * to the ormlite_config.txt file.
          */
-        writeConfigFile(configFile, classes);
+        writeConfigFile(configFile, DbClass.getClasses());
     }
 }

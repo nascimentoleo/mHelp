@@ -77,27 +77,34 @@
 
     </android.support.design.widget.TextInputLayout>
 
-    <RadioGroup
+    <TextView
+        android:layout_width="320dp"
+        android:layout_height="wrap_content"
+        android:text="Tipo de Usuário"
+        android:textSize="8pt"
+        android:layout_marginTop="20px"
+        android:layout_marginLeft="8px"
+        android:layout_marginBottom="20px"/>
+
+     <RadioGroup
         android:id="@+id/rGroupCadastro"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:onClick="onClickRadioGroupCadastro"
-        >
+        android:onClick="onClickRadioGroupCadastro">
 
-        <RadioButton
-            android:id="@+id/radioPaciente"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/medico_name"
-            />
+         <RadioButton
+             android:id="@+id/radioPaciente"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:text="@string/paciente_name"/>
 
         <RadioButton
             android:id="@+id/radioMedico"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/paciente_name"/>
-
+            android:text="@string/medico_name"
+            />
     </RadioGroup>
 
     <Button

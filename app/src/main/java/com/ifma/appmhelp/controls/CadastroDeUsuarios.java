@@ -20,13 +20,7 @@ import java.util.Map;
 /**
  * Created by leo on 11/28/16.
  */
-public class CadastroDeUsuarios {
-
-    private String msgErro;
-
-    public String getMsgErro() {
-        return msgErro;
-    }
+public class CadastroDeUsuarios extends ControleBase {
 
     public boolean cadastrar(Context ctx, Usuario usuario){
         DbSqlHelper databaseHelper = OpenHelperManager.getHelper(ctx, DbSqlHelper.class);
@@ -39,10 +33,10 @@ public class CadastroDeUsuarios {
                 }else
                      this.msgErro = "Usuário já existe no banco";
             }
-        } catch (SQLException e) { e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
             this.msgErro = e.getMessage();
-        } finally{
-            databaseHelper.close();
+
         }
         return false;
     }
@@ -70,6 +64,8 @@ public class CadastroDeUsuarios {
                 accountManager.createAccount(usuario.getLogin(), usuario.getSenha(),atributes);
                 return true;
             }
+            else
+                this.msgErro = "Conexão não está ativa";
         } catch (SmackException.NoResponseException | XMPPException.XMPPErrorException |SmackException.NotConnectedException e ) {
             e.printStackTrace();
             this.msgErro = e.getMessage();
