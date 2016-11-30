@@ -11,12 +11,20 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.ifma.appmhelp.R;
-import com.ifma.appmhelp.controls.CadastroDeMedicos;
-import com.ifma.appmhelp.controls.CadastroDePacientes;
-import com.ifma.appmhelp.controls.CadastroDeUsuarios;
+import com.ifma.appmhelp.controls.ClientXMPPController;
+import com.ifma.appmhelp.controls.IController;
+import com.ifma.appmhelp.controls.MedicosController;
+import com.ifma.appmhelp.controls.PacientesController;
+import com.ifma.appmhelp.controls.UsuariosController;
+import com.ifma.appmhelp.models.IModel;
 import com.ifma.appmhelp.models.Medico;
 import com.ifma.appmhelp.models.Paciente;
 import com.ifma.appmhelp.models.Usuario;
+
+import org.jivesoftware.smack.SmackException;
+import org.jivesoftware.smack.XMPPException;
+
+import java.sql.SQLException;
 
 public class CadastroActivity extends AppCompatActivity {
 
@@ -51,37 +59,35 @@ public class CadastroActivity extends AppCompatActivity {
             Usuario novoUsuario = new Usuario(edUsuarioCadastro.getText().toString(), edSenhaCadastro.getText().toString());
             novoUsuario.setNome(edNomeCadastro.getText().toString());
             novoUsuario.setEmail(edEmailCadastro.getText().toString());
-            CadastroDeUsuarios cadastroDeUsuarios = new CadastroDeUsuarios();
-            if (cadastroDeUsuarios.cadastrar(this, novoUsuario)) {
-                if(registrarUsuario(novoUsuario))
-                    Toast.makeText(this, "Usuário cadastrado", Toast.LENGTH_SHORT).show();
+
+            IController controleDeUsuarios = new UsuariosController(this);
+            ClientXMPPController clientXMPPController = new ClientXMPPController();
+            try {
+                clientXMPPController.cadastrarUsuario(novoUsuario);
+                controleDeUsuarios.persistir(novoUsuario);
+                this.registrarUsuario(novoUsuario);
+                Toast.makeText(this, "Usuário cadastrado", Toast.LENGTH_SHORT).show();
+            } catch (SmackException.NoResponseException | XMPPException.XMPPErrorException |
+                     SmackException.NotConnectedException | SQLException  e) {
+                e.printStackTrace();
+                Toast.makeText(this, "Erro ao cadastrar usuário - " + e.getMessage(), Toast.LENGTH_SHORT).show();
             }
-            else
-                Toast.makeText(this, "Erro ao cadastrar usuário - " + cadastroDeUsuarios.getMsgErro(), Toast.LENGTH_SHORT).show();
         }
     }
 
-    public boolean registrarUsuario(Usuario usuario){
-        //Paciente
-        if(rGroupCadastro.getCheckedRadioButtonId() == R.id.radioPaciente){
-            CadastroDePacientes cadastroDePacientes = new CadastroDePacientes();
-            if (!cadastroDePacientes.persistir(this,new Paciente(usuario))){
-                Toast.makeText(this, "Paciente não cadastrado - " + cadastroDePacientes.getMsgErro(), Toast.LENGTH_SHORT).show();
-                return false;
-            }
-
+    public boolean registrarUsuario(Usuario usuario) throws SQLException {
+        IController controle;
+        IModel modelo;
+        if(rGroupCadastro.getCheckedRadioButtonId() == R.id.radioPaciente) {
+            controle = new PacientesController(this);
+            modelo   = new Paciente(usuario);
         }else{
-            CadastroDeMedicos cadastroDeMedicos = new CadastroDeMedicos();
-            if(!cadastroDeMedicos.persistir(this, new Medico(usuario))) {
-                Toast.makeText(this, "Médico não cadastrado - " + cadastroDeMedicos.getMsgErro(), Toast.LENGTH_SHORT).show();
-                return false;
-            }
+            controle = new MedicosController(this);
+            modelo   = new Medico(usuario);
         }
+        controle.persistir(modelo);
         return true;
-
     }
-
-
 
     public void registrarComponentes(){
         edUsuarioCadastro = (EditText)   findViewById(R.id.edUsuarioCadastro);

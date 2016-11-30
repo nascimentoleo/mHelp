@@ -8,7 +8,7 @@ import com.j256.ormlite.table.DatabaseTable;
  */
 
 @DatabaseTable(tableName = "usuarios")
-public class Usuario {
+public class Usuario implements IModel{
 
     @DatabaseField(generatedId = true)
     private Long id;

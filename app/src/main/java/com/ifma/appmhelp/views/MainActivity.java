@@ -24,6 +24,11 @@ import com.ifma.appmhelp.models.Host;
 import com.ifma.appmhelp.models.Usuario;
 import com.ifma.appmhelp.tasks.ConectarXMPPTask;
 
+import org.jivesoftware.smack.SmackException;
+import org.jivesoftware.smack.XMPPException;
+
+import java.io.IOException;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -125,14 +130,18 @@ public class MainActivity extends AppCompatActivity
             if(loginEhValido()) {
                 Login login = new Login();
                 Usuario usuario = new Usuario(edLogin.getText().toString(), edSenha.getText().toString());
-                if (login.realizaLogin(usuario, ConexaoXMPP.getInstance().getConexao())) {
-                    Toast.makeText(this, "Bem vindo " + usuario.getLogin(),
-                            Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(this, MedicoActivity.class));
+                try {
+                    if (login.realizaLogin(usuario, ConexaoXMPP.getInstance().getConexao())) {
+                        Toast.makeText(this, "Bem vindo " + usuario.getLogin(),
+                                Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(this, MedicoActivity.class));
 
-                } else
-                    Toast.makeText(this, login.getMsgErro(), Toast.LENGTH_SHORT)
+                    }
+                } catch (IOException |SmackException |XMPPException e) {
+                    e.printStackTrace();
+                    Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT)
                             .show();
+                }
             }
         }else
              Toast.makeText(this, "Não foi possível fazer login, pois não foi feita a conexão com o servidor", Toast.LENGTH_SHORT).show();
