@@ -33,4 +33,11 @@
     <string name="nome_name">Nome</string>
     <string name="email_name">Email</string>
     <string name="title_activity_paciente">PacienteActivity</string>
+    <string name="nova_ocorrencia_name">Nova Ocorrência</string>
+    <string name="prontuario_name">Prontuário</string>
+    <string name="alterar_dados_name">Alterar dados</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_altera_dados">AlteraDadosActivity</string>
 </resources>

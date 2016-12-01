@@ -2,9 +2,8 @@ package com.ifma.appmhelp.views;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.view.View;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -12,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.ifma.appmhelp.R;
 import com.ifma.appmhelp.factories.FactoryChat;
 import com.ifma.appmhelp.models.ConexaoXMPP;
+import com.ifma.appmhelp.models.Medico;
 
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.chat.Chat;
@@ -33,6 +34,8 @@ public class MedicoActivity extends AppCompatActivity
     private TextView txtMsg;
     private EditText edMensagem;
     private Chat chat;
+    private Medico medico;
+    private ChatManager chatManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,14 +55,19 @@ public class MedicoActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        this.medico = (Medico) getIntent().getExtras().getSerializable("usuarioLogado");
+        registrarComponentes();
+        this.iniciaChat();
+    }
+
+    private void registrarComponentes() {
         txtMsg = (TextView) findViewById(R.id.txtMsg);
         edMensagem = (EditText) findViewById(R.id.edMensagem);
-        this.iniciaChat();
+
     }
 
     @Override
@@ -99,21 +107,6 @@ public class MedicoActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
-        }
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
@@ -121,35 +114,16 @@ public class MedicoActivity extends AppCompatActivity
 
     public void iniciaChat(){
         if (ConexaoXMPP.getInstance().conexaoEstaAtiva()){
-            ChatManager chatManager = ChatManager.getInstanceFor(ConexaoXMPP.getInstance().getConexao());
-            chatManager.addChatListener(
-                    new ChatManagerListener() {
-                        @Override
-                        public void chatCreated(Chat chat, boolean createdLocally)
-                        {
-                            if (!createdLocally)
-                                chat.addMessageListener(new ChatMessageListener() {
-                                    @Override
-                                    public void processMessage(Chat chat, Message message) {
-                                        txtMsg.setText(message.getBody());
-                                    }
-                                });
-                        }
-                    });
+            chatManager = ChatManager.getInstanceFor(ConexaoXMPP.getInstance().getConexao());
+            chatManager.addChatListener(new MyChatManagerListener());
         }
     }
 
     public void enviarMensagem(View v){
         //if(this.chat != null){
             try {
-                this.chat = FactoryChat.novoChat("leo@" + ConexaoXMPP.getInstance().getConexao().getServiceName() , ConexaoXMPP.getInstance().getConexao());
-                this.chat.addMessageListener(new ChatMessageListener() {
-                    @Override
-                    public void processMessage(Chat chat, Message message) {
-                        txtMsg.setText(message.getBody());
-                    }
-
-                });
+                this.chat = FactoryChat.novoChat("medico", ConexaoXMPP.getInstance().getConexao());
+                this.chat.addMessageListener(new MyMessageListener());
                 this.chat.sendMessage(this.edMensagem.getText().toString());
             } catch (SmackException.NotConnectedException e) {
                 Toast.makeText(MedicoActivity.this, "Não foi possível enviar a mensagem", Toast.LENGTH_SHORT).show();
@@ -157,4 +131,21 @@ public class MedicoActivity extends AppCompatActivity
             }
 
     }
+
+    class MyMessageListener implements ChatMessageListener{
+        @Override
+        public void processMessage(Chat chat, Message message) {
+            txtMsg.setText(message.getBody());
+        }
+
+    }
+
+    class MyChatManagerListener implements ChatManagerListener{
+        @Override
+        public void chatCreated(Chat chat, boolean createdLocally) {
+                if (!createdLocally)
+                    chat.addMessageListener(new MyMessageListener());;
+        }
+    }
+
 }

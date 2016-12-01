@@ -9,7 +9,12 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.ifma.appmhelp.views.PacienteActivity"
-    tools:showIn="@layout/app_bar_paciente">
+    tools:context="com.ifma.appmhelp.views.AlteraDadosActivity"
+    tools:showIn="@layout/activity_altera_dados">
+
+    <FrameLayout
+        android:id="@+id/container_altera_dados"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </RelativeLayout>

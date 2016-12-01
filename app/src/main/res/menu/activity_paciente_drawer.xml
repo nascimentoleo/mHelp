@@ -6,15 +6,17 @@
             android:id="@+id/nav_nova_ocorrencia"
             android:icon="@drawable/ic_nova_ocorrencia"
             android:title="@string/nova_ocorrencia_name" />
+
         <item
-            android:id="@+id/nav_pacientes"
-            android:icon="@drawable/ic_pacientes"
-            android:title="@string/paciente_name" />
+            android:id="@+id/nav_prontuario"
+            android:icon="@drawable/ic_prontuario"
+            android:title="@string/prontuario_name" />
+
         <item
             android:id="@+id/nav_alterar_dados"
             android:icon="@drawable/ic_atualizar"
             android:title="@string/alterar_dados_name" />
-
     </group>
+
 
 </menu>

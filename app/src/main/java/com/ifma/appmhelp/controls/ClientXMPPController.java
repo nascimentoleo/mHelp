@@ -16,11 +16,15 @@ import java.util.Map;
 public class ClientXMPPController{
 
     public boolean cadastrarUsuario(Usuario usuario) throws SmackException.NoResponseException, XMPPException.XMPPErrorException, SmackException.NotConnectedException {
-        AccountManager accountManager = AccountManager.getInstance(ConexaoXMPP.getInstance().getConexao());
-        Map<String, String> atributes = new HashMap<>();
-        atributes.put("name", usuario.getNome());
-        atributes.put("email", usuario.getEmail());
-        accountManager.createAccount(usuario.getLogin(), usuario.getSenha(),atributes);
-        return true;
+        if (ConexaoXMPP.getInstance().conexaoEstaAtiva()){
+            AccountManager accountManager = AccountManager.getInstance(ConexaoXMPP.getInstance().getConexao());
+            Map<String, String> atributes = new HashMap<>();
+            atributes.put("name", usuario.getNome());
+            atributes.put("email", usuario.getEmail());
+            accountManager.createAccount(usuario.getLogin(), usuario.getSenha(),atributes);
+            return true;
+        }
+        return false;
+
     }
 }

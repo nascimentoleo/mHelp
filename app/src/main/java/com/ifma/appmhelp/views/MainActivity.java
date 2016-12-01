@@ -125,7 +125,9 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void conectar() {
-        this.conectarXMPPTask.execute(new Host("192.168.1.24", 5222));
+        if(!ConexaoXMPP.getInstance().conexaoEstaAtiva())
+           this.conectarXMPPTask.execute(new Host("10.0.2.2", 5222)); //Ip para avd
+           //this.conectarXMPPTask.execute(new Host("192.168.1.24", 5222)); //Ip para device
     }
 
     public void efetuarLogin(View v){
@@ -142,7 +144,7 @@ public class MainActivity extends AppCompatActivity
                          bundle.putSerializable("usuarioLogado",usuarioLogado);
                          if(usuarioLogado.getClass() == Medico.class)
                             startActivity(new Intent(this, MedicoActivity.class).putExtras(bundle));
-                        else
+                         else
                             startActivity(new Intent(this, PacienteActivity.class).putExtras(bundle));
                     }else
                         Toast.makeText(this, login.getMsgErro(),

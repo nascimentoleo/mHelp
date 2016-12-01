@@ -10,7 +10,7 @@ public class FactoryChat {
 
     public static Chat novoChat(String jId, AbstractXMPPConnection conexao){
         ChatManager chatManager = ChatManager.getInstanceFor(conexao);
-        return chatManager.createChat(jId);
+        return chatManager.createChat(jId + "@" + conexao.getServiceName());
     }
 
 

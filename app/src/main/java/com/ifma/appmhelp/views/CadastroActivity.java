@@ -63,15 +63,17 @@ public class CadastroActivity extends AppCompatActivity {
             UsuariosController controleDeUsuarios = new UsuariosController(this);
             ClientXMPPController clientXMPPController = new ClientXMPPController();
             try {
-                clientXMPPController.cadastrarUsuario(novoUsuario);
-                //Se não existe usuário cadastrado no banco
-                if(controleDeUsuarios.getUsuarioByLogin(novoUsuario.getLogin()) == null) {
-                    controleDeUsuarios.persistir(novoUsuario);
-                    this.registrarUsuario(novoUsuario);
-                    Toast.makeText(this, "Usuário cadastrado", Toast.LENGTH_SHORT).show();
+                if(clientXMPPController.cadastrarUsuario(novoUsuario)){
+                    //Se não existe usuário cadastrado no banco
+                    if(controleDeUsuarios.getUsuarioByLogin(novoUsuario.getLogin()) == null) {
+                        controleDeUsuarios.persistir(novoUsuario);
+                        this.registrarUsuario(novoUsuario);
+                        Toast.makeText(this, "Usuário cadastrado", Toast.LENGTH_SHORT).show();
 
+                    }else
+                        Toast.makeText(this,"Usuário já existe",Toast.LENGTH_SHORT).show();
                 }else
-                    Toast.makeText(this,"Usuário já existe",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this,"Não foi possível cadastrar, conexão não estabelecida",Toast.LENGTH_SHORT).show();
             } catch (SmackException.NoResponseException | XMPPException.XMPPErrorException |
                      SmackException.NotConnectedException | SQLException  e) {
                 e.printStackTrace();

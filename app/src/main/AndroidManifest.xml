@@ -54,6 +54,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.ifma.appmhelp.views.MainActivity" />
         </activity>
+        <activity
+            android:name=".views.AlteraDadosActivity"
+            android:label="@string/title_activity_altera_dados"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
