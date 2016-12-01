@@ -35,4 +35,10 @@ public class MedicosController extends BaseController implements IController{
         medicoDao.createOrUpdate((Medico) objeto);
         return true;
     }
+
+    @Override
+    public void carregaId(IModel objeto) throws SQLException {
+
+    }
+
 }

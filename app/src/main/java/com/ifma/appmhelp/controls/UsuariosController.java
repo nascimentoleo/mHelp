@@ -30,8 +30,17 @@ public class UsuariosController extends BaseController implements IController{
     @Override
     public boolean persistir(IModel objeto) throws SQLException {
         Dao<Usuario, Long> dao = DbSqlHelper.getHelper(ctx).getDao(Usuario.class);
-        dao.create((Usuario) objeto);
+        dao.createOrUpdate((Usuario) objeto);
         return true;
     }
+
+    @Override
+    public void carregaId(IModel objeto) throws SQLException {
+        Dao<Usuario, Long> dao = DbSqlHelper.getHelper(ctx).getDao(Usuario.class);
+        List<Usuario> usuarios = dao.queryForMatching((Usuario) objeto);
+        if(!usuarios.isEmpty())
+            objeto.setId(usuarios.get(0).getId());
+    }
+
 
 }

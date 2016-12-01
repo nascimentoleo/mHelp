@@ -34,4 +34,11 @@ public class PacientesController extends BaseController implements IController{
         pacienteDao.createOrUpdate((Paciente) objeto);
         return true;
     }
+
+    @Override
+    public void carregaId(IModel objeto) throws SQLException {
+
+    }
+
+
 }

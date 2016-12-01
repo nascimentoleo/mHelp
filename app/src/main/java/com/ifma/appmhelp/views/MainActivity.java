@@ -134,14 +134,16 @@ public class MainActivity extends AppCompatActivity
                 Login login = new Login(this);
                 Usuario usuario = new Usuario(edLogin.getText().toString(), edSenha.getText().toString());
                 try {
-                     IModel modeloLogado = login.realizaLogin(usuario);
-                     if(modeloLogado != null){
+                     IModel usuarioLogado = login.realizaLogin(usuario);
+                     if(usuarioLogado != null){
                          Toast.makeText(this, "Bem vindo " + usuario.getLogin(),
                                  Toast.LENGTH_SHORT).show();
-                         if(modeloLogado.getClass() == Medico.class)
-                            startActivity(new Intent(this, MedicoActivity.class));
+                         Bundle bundle = new Bundle();
+                         bundle.putSerializable("usuarioLogado",usuarioLogado);
+                         if(usuarioLogado.getClass() == Medico.class)
+                            startActivity(new Intent(this, MedicoActivity.class).putExtras(bundle));
                         else
-                            startActivity(new Intent(this, PacienteActivity.class));
+                            startActivity(new Intent(this, PacienteActivity.class).putExtras(bundle));
                     }else
                         Toast.makeText(this, login.getMsgErro(),
                                 Toast.LENGTH_SHORT).show();

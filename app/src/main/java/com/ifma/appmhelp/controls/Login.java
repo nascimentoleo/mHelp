@@ -44,12 +44,10 @@ public class Login extends BaseController{
 
     private IModel carregaUsuario(Usuario usuario) throws SQLException {
         IModel result;
-        IController controller = new MedicosController(ctx);
-        result = ((MedicosController) controller).getMedicoByUsuario(usuario);
-        if(result == null) {
-            controller = new PacientesController(ctx);
-            result = ((PacientesController) controller).getPacienteByUsuario(usuario);
-        }
+        new UsuariosController(ctx).carregaId(usuario);
+        result = new MedicosController(ctx).getMedicoByUsuario(usuario);
+        if(result == null)
+            result = new PacientesController(ctx).getPacienteByUsuario(usuario);
         return result;
     }
 

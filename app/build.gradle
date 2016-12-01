@@ -33,7 +33,7 @@ dependencies {
     compile 'com.android.support:design:23.2.1'
     compile "org.igniterealtime.smack:smack-android-extensions:4.1.0"
     compile "org.igniterealtime.smack:smack-tcp:4.1.0"
-    compile 'com.j256.ormlite:ormlite-core:4.48'
-    compile 'com.j256.ormlite:ormlite-android:4.48'
+    compile 'com.j256.ormlite:ormlite-core:5.0'
+    compile 'com.j256.ormlite:ormlite-android:5.0'
     compile 'com.clough.android.androiddbviewer:androiddbviewer:1.0.0'
 }

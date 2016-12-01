@@ -3,14 +3,12 @@ package com.ifma.appmhelp.models;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
-import java.io.Serializable;
-
 /**
  * Created by leo on 11/12/16.
  */
 
 @DatabaseTable(tableName = "usuarios")
-public class Usuario implements IModel, Serializable{
+public class Usuario implements IModel{
 
     @DatabaseField(generatedId = true)
     private Long id;
@@ -37,8 +35,14 @@ public class Usuario implements IModel, Serializable{
         this.login = login;
     }
 
+    @Override
     public Long getId() {
         return id;
+    }
+
+    @Override
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getLogin() {
