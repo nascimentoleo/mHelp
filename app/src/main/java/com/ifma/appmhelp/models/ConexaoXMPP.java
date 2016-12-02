@@ -33,4 +33,15 @@ public class ConexaoXMPP implements Serializable{
                 return true;
         return false;
     }
+
+    public void desconectar(){
+        this.conexao.disconnect();
+    }
+
+    public boolean conexaoFoiAutenticada(){
+        if(this.conexaoEstaAtiva())
+            return this.conexao.isAuthenticated();
+        return false;
+    }
+
 }

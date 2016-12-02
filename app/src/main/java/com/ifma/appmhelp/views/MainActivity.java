@@ -38,7 +38,6 @@ public class MainActivity extends AppCompatActivity
     private ProgressDialog load;
     private EditText edLogin;
     private EditText edSenha;
-    private ConectarXMPPTask conectarXMPPTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,8 +65,15 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         this.registrarComponentes();
+    }
+
+    @Override
+    protected void onStart() {
+        if(ConexaoXMPP.getInstance().conexaoFoiAutenticada())
+           ConexaoXMPP.getInstance().desconectar();
         this.conectar();
 
+        super.onStart();
     }
 
     @Override
@@ -87,22 +93,6 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -118,7 +108,6 @@ public class MainActivity extends AppCompatActivity
 
     public void registrarComponentes(){
         this.load  = new ProgressDialog(this);
-        this.conectarXMPPTask = new ConectarXMPPTask(this.load);
         this.edLogin = (EditText) findViewById(R.id.edUsuarioLogin);
         this.edSenha = (EditText) findViewById(R.id.edUsuarioSenha);
 
@@ -126,8 +115,9 @@ public class MainActivity extends AppCompatActivity
 
     public void conectar() {
         if(!ConexaoXMPP.getInstance().conexaoEstaAtiva())
-           this.conectarXMPPTask.execute(new Host("10.0.2.2", 5222)); //Ip para avd
-           //this.conectarXMPPTask.execute(new Host("192.168.1.24", 5222)); //Ip para device
+            //this.conectarXMPPTask.execute(new Host("10.0.2.2", 5222)); //Ip para avd
+            new ConectarXMPPTask(this.load).execute(new Host("192.168.1.24", 5222)); //Ip para device
+
     }
 
     public void efetuarLogin(View v){
