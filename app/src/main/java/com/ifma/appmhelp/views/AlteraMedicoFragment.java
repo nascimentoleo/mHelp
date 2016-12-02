@@ -5,21 +5,70 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import com.ifma.appmhelp.R;
+import com.ifma.appmhelp.controls.IController;
+import com.ifma.appmhelp.controls.MedicosController;
+import com.ifma.appmhelp.models.Medico;
 
-public class AlteraMedicoFragment extends Fragment {
+import java.sql.SQLException;
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
+public class AlteraMedicoFragment extends Fragment implements View.OnClickListener{
+
+    private EditText edNome;
+    private EditText edCrm;
+    private EditText edEmail;
+    private Medico medico;
+    private Button btnAlterar;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        this.medico = (Medico) getArguments().getSerializable("usuarioLogado");
         return inflater.inflate(R.layout.fragment_altera_medico, container, false);
     }
 
+    @Override
+    public void onStart() {
+        // Fragment só tem acesso a view após o onCreteView,
+        // impossibilitando de registrar os componentes no onCreate
+        this.registraComponentes();
+        this.carregarValores();
+        super.onStart();
+    }
+
+    private void registraComponentes(){
+        this.edNome       = (EditText) getView().findViewById(R.id.edNomeMedico);
+        this.edCrm        = (EditText) getView().findViewById(R.id.edCRM);
+        this.edEmail      = (EditText) getView().findViewById(R.id.edEmailMedico);
+        this.btnAlterar = (Button) getView().findViewById(R.id.btnAlterarMedico);
+        btnAlterar.setOnClickListener(this);
+
+    }
+
+    private void carregarValores() {
+        this.edNome.setText(this.medico.getUsuario().getNome());
+        this.edCrm.setText(this.medico.getCrm());
+        this.edEmail.setText(this.medico.getUsuario().getEmail());
+    }
+
+    @Override
+    public void onClick(View v) {
+        this.medico.getUsuario().setNome(this.edNome.getText().toString().trim());
+        this.medico.getUsuario().setEmail(this.edEmail.getText().toString().trim());
+        this.medico.setCrm(this.edCrm.getText().toString().trim());
+
+        IController controller = new MedicosController(getContext());
+        try {
+            if (controller.persistir(this.medico))
+                Toast.makeText(getContext(),"Dados alterados",Toast.LENGTH_SHORT).show();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            Toast.makeText(getContext(),"Não foi possível atualizar o médico",Toast.LENGTH_SHORT).show();
+        }
+    }
 }

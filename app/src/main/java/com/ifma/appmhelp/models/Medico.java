@@ -37,6 +37,10 @@ public class Medico implements IModel{
         return crm;
     }
 
+    public void setCrm(String crm) {
+        this.crm = crm;
+    }
+
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
     }

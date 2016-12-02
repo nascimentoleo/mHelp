@@ -16,7 +16,6 @@ import android.view.View;
 
 import com.ifma.appmhelp.R;
 import com.ifma.appmhelp.models.Paciente;
-import com.ifma.appmhelp.models.TipoDeUsuario;
 
 public class PacienteActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -90,7 +89,7 @@ public class PacienteActivity extends AppCompatActivity
         switch(item.getItemId()){
             case R.id.nav_alterar_dados :
                 Bundle bundle = new Bundle();
-                bundle.putSerializable("tipoDeUsuario", TipoDeUsuario.PACIENTE);
+                bundle.putSerializable("usuarioLogado",this.paciente);
                 startActivity(new Intent(this, AlteraDadosActivity.class).putExtras(bundle));
                 break;
         }

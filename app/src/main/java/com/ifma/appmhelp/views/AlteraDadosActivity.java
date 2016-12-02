@@ -1,18 +1,22 @@
 package com.ifma.appmhelp.views;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.ifma.appmhelp.R;
-import com.ifma.appmhelp.models.TipoDeUsuario;
+import com.ifma.appmhelp.models.IModel;
+import com.ifma.appmhelp.models.Medico;
 
 public class AlteraDadosActivity extends AppCompatActivity{
 
+    private IModel usuarioLogado;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,12 +34,14 @@ public class AlteraDadosActivity extends AppCompatActivity{
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        TipoDeUsuario tipoDeUsuario = (TipoDeUsuario) getIntent().getExtras().getSerializable("tipoDeUsuario");
-
-        if(tipoDeUsuario == TipoDeUsuario.MEDICO)
-            getSupportFragmentManager().beginTransaction().add(R.id.container_altera_dados, new AlteraMedicoFragment()).commit();
+        usuarioLogado = (IModel) this.getIntent().getExtras().getSerializable("usuarioLogado");
+        Fragment fragment;
+        if(usuarioLogado.getClass() == Medico.class)
+            fragment = new AlteraMedicoFragment();
         else
-            getSupportFragmentManager().beginTransaction().add(R.id.container_altera_dados, new AlteraPacienteFragment()).commit();
+            fragment = new AlteraPacienteFragment();
+        fragment.setArguments(this.getIntent().getExtras());
+        getSupportFragmentManager().beginTransaction().add(R.id.container_altera_dados,fragment).commit();
 
     }
 
@@ -43,9 +49,13 @@ public class AlteraDadosActivity extends AppCompatActivity{
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                this.finish();
+                Intent it = new Intent();
+                it.putExtra("usuarioLogado",this.usuarioLogado);
+                setResult(1,it);
+                finish();
                 return true;
         }
         return false;
+
     }
 }

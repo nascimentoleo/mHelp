@@ -21,7 +21,6 @@ import com.ifma.appmhelp.R;
 import com.ifma.appmhelp.factories.FactoryChat;
 import com.ifma.appmhelp.models.ConexaoXMPP;
 import com.ifma.appmhelp.models.Medico;
-import com.ifma.appmhelp.models.TipoDeUsuario;
 
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.chat.Chat;
@@ -112,9 +111,8 @@ public class MedicoActivity extends AppCompatActivity
         switch(item.getItemId()){
             case R.id.nav_alterar_dados :
                 Bundle bundle = new Bundle();
-                bundle.putSerializable("tipoDeUsuario", TipoDeUsuario.MEDICO);
-                Intent it = new Intent();
-                startActivity(new Intent(this, AlteraDadosActivity.class).putExtras(bundle));
+                bundle.putSerializable("usuarioLogado", this.medico);
+                startActivityForResult(new Intent(this, AlteraDadosActivity.class).putExtras(bundle), 1);
                 break;
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -158,4 +156,11 @@ public class MedicoActivity extends AppCompatActivity
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Medico medico;
+        if(requestCode == 1)
+            medico = (Medico) data.getExtras().getSerializable("usuarioLogado");
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 }
