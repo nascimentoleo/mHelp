@@ -1,5 +1,6 @@
 package com.ifma.appmhelp.views;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -20,6 +21,7 @@ import com.ifma.appmhelp.R;
 import com.ifma.appmhelp.factories.FactoryChat;
 import com.ifma.appmhelp.models.ConexaoXMPP;
 import com.ifma.appmhelp.models.Medico;
+import com.ifma.appmhelp.models.TipoDeUsuario;
 
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.chat.Chat;
@@ -99,6 +101,7 @@ public class MedicoActivity extends AppCompatActivity
             return true;
         }
 
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -106,7 +109,14 @@ public class MedicoActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
-        int id = item.getItemId();
+        switch(item.getItemId()){
+            case R.id.nav_alterar_dados :
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("tipoDeUsuario", TipoDeUsuario.MEDICO);
+                Intent it = new Intent();
+                startActivity(new Intent(this, AlteraDadosActivity.class).putExtras(bundle));
+                break;
+        }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
