@@ -91,11 +91,18 @@ public class PacienteActivity extends AppCompatActivity
             case R.id.nav_alterar_dados :
                 Bundle bundle = new Bundle();
                 bundle.putSerializable(BundleKeys.USUARIO_LOGADO.getValue(),this.paciente);
-                startActivity(new Intent(this, AlteraDadosActivity.class).putExtras(bundle));
+                startActivityForResult(new Intent(this, AlteraDadosActivity.class).putExtras(bundle), RESULT_FIRST_USER);
                 break;
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(resultCode == RESULT_OK)
+            this.paciente = (Paciente) data.getExtras().getSerializable(BundleKeys.USUARIO_LOGADO.getValue());
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

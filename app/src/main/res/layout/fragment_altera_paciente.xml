@@ -50,7 +50,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/telefone_name"
-                android:inputType="textPhonetic"
+                android:inputType="text|number"
                 android:imeOptions="actionNext"
                 android:maxLines="1"
                 android:singleLine="true" />
@@ -62,7 +62,7 @@
             android:layout_height="wrap_content">
 
             <EditText
-                android:id="@+id/edEmailMedico"
+                android:id="@+id/edEmailPaciente"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/email_name"
@@ -74,7 +74,7 @@
         </android.support.design.widget.TextInputLayout>
 
         <Button
-            android:id="@+id/btnAlterarMedico"
+            android:id="@+id/btnAlterarPaciente"
             style="?android:textAppearanceSmall"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -114,7 +114,7 @@ public class MedicoActivity extends AppCompatActivity
             case R.id.nav_alterar_dados :
                 Bundle bundle = new Bundle();
                 bundle.putSerializable(BundleKeys.USUARIO_LOGADO.getValue(), this.medico);
-                startActivityForResult(new Intent(this, AlteraDadosActivity.class).putExtras(bundle), 1);
+                startActivityForResult(new Intent(this, AlteraDadosActivity.class).putExtras(bundle), RESULT_FIRST_USER);
                 break;
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
