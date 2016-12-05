@@ -1,4 +1,4 @@
-package com.ifma.appmhelp.models;
+package com.ifma.appmhelp.enums;
 
 /**
  * Created by leo on 12/2/16.
@@ -12,5 +12,7 @@ public enum BundleKeys {
         this.value = value;
     }
 
-
+    public String getValue() {
+        return value;
+    }
 }

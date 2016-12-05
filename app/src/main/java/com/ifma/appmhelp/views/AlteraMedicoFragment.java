@@ -1,5 +1,6 @@
 package com.ifma.appmhelp.views;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -7,14 +8,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.ifma.appmhelp.R;
-import com.ifma.appmhelp.controls.IController;
-import com.ifma.appmhelp.controls.MedicosController;
+import com.ifma.appmhelp.enums.BundleKeys;
 import com.ifma.appmhelp.models.Medico;
-
-import java.sql.SQLException;
+import com.ifma.appmhelp.events.OnSaveModelFragment;
 
 public class AlteraMedicoFragment extends Fragment implements View.OnClickListener{
 
@@ -23,12 +21,13 @@ public class AlteraMedicoFragment extends Fragment implements View.OnClickListen
     private EditText edEmail;
     private Medico medico;
     private Button btnAlterar;
+    private OnSaveModelFragment activityMain;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        this.medico = (Medico) getArguments().getSerializable("usuarioLogado");
+        this.medico = (Medico) getArguments().getSerializable(BundleKeys.USUARIO_LOGADO.getValue());
         return inflater.inflate(R.layout.fragment_altera_medico, container, false);
     }
 
@@ -39,6 +38,16 @@ public class AlteraMedicoFragment extends Fragment implements View.OnClickListen
         this.registraComponentes();
         this.carregarValores();
         super.onStart();
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            activityMain = (OnSaveModelFragment) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString() + " must implement OnSaveModelFragment");
+        };
     }
 
     private void registraComponentes(){
@@ -62,13 +71,6 @@ public class AlteraMedicoFragment extends Fragment implements View.OnClickListen
         this.medico.getUsuario().setEmail(this.edEmail.getText().toString().trim());
         this.medico.setCrm(this.edCrm.getText().toString().trim());
 
-        IController controller = new MedicosController(getContext());
-        try {
-            if (controller.persistir(this.medico))
-                Toast.makeText(getContext(),"Dados alterados",Toast.LENGTH_SHORT).show();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            Toast.makeText(getContext(),"Não foi possível atualizar o médico",Toast.LENGTH_SHORT).show();
-        }
+        activityMain.save(this.medico);
     }
 }

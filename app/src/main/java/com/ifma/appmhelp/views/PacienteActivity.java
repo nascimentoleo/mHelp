@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.ifma.appmhelp.R;
+import com.ifma.appmhelp.enums.BundleKeys;
 import com.ifma.appmhelp.models.Paciente;
 
 public class PacienteActivity extends AppCompatActivity
@@ -47,7 +48,7 @@ public class PacienteActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        this.paciente = (Paciente) getIntent().getExtras().getSerializable("usuarioLogado");
+        this.paciente = (Paciente) getIntent().getExtras().getSerializable(BundleKeys.USUARIO_LOGADO.getValue());
     }
 
     @Override
@@ -89,7 +90,7 @@ public class PacienteActivity extends AppCompatActivity
         switch(item.getItemId()){
             case R.id.nav_alterar_dados :
                 Bundle bundle = new Bundle();
-                bundle.putSerializable("usuarioLogado",this.paciente);
+                bundle.putSerializable(BundleKeys.USUARIO_LOGADO.getValue(),this.paciente);
                 startActivity(new Intent(this, AlteraDadosActivity.class).putExtras(bundle));
                 break;
         }

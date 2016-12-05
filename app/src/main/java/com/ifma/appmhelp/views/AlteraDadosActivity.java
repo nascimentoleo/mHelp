@@ -9,12 +9,19 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.ifma.appmhelp.R;
+import com.ifma.appmhelp.controls.IController;
+import com.ifma.appmhelp.enums.BundleKeys;
+import com.ifma.appmhelp.events.OnSaveModelFragment;
+import com.ifma.appmhelp.factories.FactoryAlteraDadosActivity;
+import com.ifma.appmhelp.factories.FactoryController;
 import com.ifma.appmhelp.models.IModel;
-import com.ifma.appmhelp.models.Medico;
 
-public class AlteraDadosActivity extends AppCompatActivity{
+import java.sql.SQLException;
+
+public class AlteraDadosActivity extends AppCompatActivity implements OnSaveModelFragment{
 
     private IModel usuarioLogado;
     @Override
@@ -34,12 +41,8 @@ public class AlteraDadosActivity extends AppCompatActivity{
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        usuarioLogado = (IModel) this.getIntent().getExtras().getSerializable("usuarioLogado");
-        Fragment fragment;
-        if(usuarioLogado.getClass() == Medico.class)
-            fragment = new AlteraMedicoFragment();
-        else
-            fragment = new AlteraPacienteFragment();
+        usuarioLogado = (IModel) this.getIntent().getExtras().getSerializable(BundleKeys.USUARIO_LOGADO.getValue());
+        Fragment fragment = FactoryAlteraDadosActivity.getFragment(usuarioLogado);
         fragment.setArguments(this.getIntent().getExtras());
         getSupportFragmentManager().beginTransaction().add(R.id.container_altera_dados,fragment).commit();
 
@@ -50,12 +53,28 @@ public class AlteraDadosActivity extends AppCompatActivity{
         switch (item.getItemId()) {
             case android.R.id.home:
                 Intent it = new Intent();
-                it.putExtra("usuarioLogado",this.usuarioLogado);
-                setResult(1,it);
+                it.putExtra(BundleKeys.USUARIO_LOGADO.getValue(),this.usuarioLogado);
+                setResult(RESULT_OK, it);
                 finish();
                 return true;
         }
         return false;
+
+    }
+
+    @Override
+    public void save(IModel modelo) {
+        IController controller = FactoryController.getController(this,modelo);
+        try {
+            if (controller.persistir(modelo)) {
+                Toast.makeText(this, "Dados alterados com sucesso!", Toast.LENGTH_SHORT).show();
+                this.usuarioLogado = modelo;
+            }else
+                Toast.makeText(this, controller.getMsgErro() ,Toast.LENGTH_SHORT).show();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Não foi possível atualizar os dados - " + e.getMessage(),Toast.LENGTH_SHORT).show();
+        }
 
     }
 }

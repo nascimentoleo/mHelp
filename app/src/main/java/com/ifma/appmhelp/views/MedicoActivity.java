@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ifma.appmhelp.R;
+import com.ifma.appmhelp.enums.BundleKeys;
 import com.ifma.appmhelp.factories.FactoryChat;
 import com.ifma.appmhelp.models.ConexaoXMPP;
 import com.ifma.appmhelp.models.Medico;
@@ -37,6 +38,7 @@ public class MedicoActivity extends AppCompatActivity
     private Chat chat;
     private Medico medico;
     private ChatManager chatManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,7 +62,7 @@ public class MedicoActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        this.medico = (Medico) getIntent().getExtras().getSerializable("usuarioLogado");
+        this.medico = (Medico) getIntent().getExtras().getSerializable(BundleKeys.USUARIO_LOGADO.getValue());
         registrarComponentes();
         this.iniciaChat();
     }
@@ -111,7 +113,7 @@ public class MedicoActivity extends AppCompatActivity
         switch(item.getItemId()){
             case R.id.nav_alterar_dados :
                 Bundle bundle = new Bundle();
-                bundle.putSerializable("usuarioLogado", this.medico);
+                bundle.putSerializable(BundleKeys.USUARIO_LOGADO.getValue(), this.medico);
                 startActivityForResult(new Intent(this, AlteraDadosActivity.class).putExtras(bundle), 1);
                 break;
         }
@@ -158,9 +160,8 @@ public class MedicoActivity extends AppCompatActivity
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Medico medico;
-        if(requestCode == 1)
-            medico = (Medico) data.getExtras().getSerializable("usuarioLogado");
+        if(resultCode == RESULT_OK)
+            this.medico = (Medico) data.getExtras().getSerializable(BundleKeys.USUARIO_LOGADO.getValue());
         super.onActivityResult(requestCode, resultCode, data);
     }
 }

@@ -19,10 +19,11 @@ import android.widget.Toast;
 
 import com.ifma.appmhelp.R;
 import com.ifma.appmhelp.controls.Login;
+import com.ifma.appmhelp.enums.BundleKeys;
+import com.ifma.appmhelp.factories.FactoryLogadoActivity;
 import com.ifma.appmhelp.models.ConexaoXMPP;
 import com.ifma.appmhelp.models.Host;
 import com.ifma.appmhelp.models.IModel;
-import com.ifma.appmhelp.models.Medico;
 import com.ifma.appmhelp.models.Usuario;
 import com.ifma.appmhelp.tasks.ConectarXMPPTask;
 
@@ -116,7 +117,8 @@ public class MainActivity extends AppCompatActivity
     public void conectar() {
         if(!ConexaoXMPP.getInstance().conexaoEstaAtiva())
             //this.conectarXMPPTask.execute(new Host("10.0.2.2", 5222)); //Ip para avd
-            new ConectarXMPPTask(this.load).execute(new Host("192.168.1.24", 5222)); //Ip para device
+            //new ConectarXMPPTask(this.load).execute(new Host("192.168.1.24", 5222)); //Ip para device
+            new ConectarXMPPTask(this.load).execute(new Host("192.168.0.6", 5222)); //Ip para device
 
     }
 
@@ -131,11 +133,9 @@ public class MainActivity extends AppCompatActivity
                          Toast.makeText(this, "Bem vindo " + usuario.getLogin(),
                                  Toast.LENGTH_SHORT).show();
                          Bundle bundle = new Bundle();
-                         bundle.putSerializable("usuarioLogado",usuarioLogado);
-                         if(usuarioLogado.getClass() == Medico.class)
-                            startActivity(new Intent(this, MedicoActivity.class).putExtras(bundle));
-                         else
-                            startActivity(new Intent(this, PacienteActivity.class).putExtras(bundle));
+                         bundle.putSerializable(BundleKeys.USUARIO_LOGADO.getValue(), usuarioLogado);
+                         Class activityClass = FactoryLogadoActivity.getActivityClass(usuarioLogado);
+                         startActivity(new Intent(this, activityClass).putExtras(bundle));
                     }else
                         Toast.makeText(this, login.getMsgErro(),
                                 Toast.LENGTH_SHORT).show();
