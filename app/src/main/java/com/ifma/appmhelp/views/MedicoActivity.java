@@ -118,7 +118,11 @@ public class MedicoActivity extends AppCompatActivity
                 startActivityForResult(new Intent(this, AlteraDadosActivity.class).putExtras(bundle), RESULT_FIRST_USER);
                 break;
             case R.id.nav_logoff_medico:
-                new Login(this).realizaLogoff(this.medico.getUsuario());
+                try {
+                    new Login(this).realizaLogoff(this.medico.getUsuario());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 startActivity(new Intent(this,MainActivity.class));
                 break;
         }

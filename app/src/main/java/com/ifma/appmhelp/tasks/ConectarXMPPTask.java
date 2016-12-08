@@ -3,20 +3,15 @@ package com.ifma.appmhelp.tasks;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 
+import com.ifma.appmhelp.factories.FactoryConexaoXMPP;
 import com.ifma.appmhelp.models.ConexaoXMPP;
 import com.ifma.appmhelp.models.Host;
-import com.ifma.appmhelp.factories.FactoryConexaoXMPP;
 
 import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
 
 import java.io.IOException;
-import java.security.KeyManagementException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-
-import javax.security.cert.CertificateException;
 
 /**
  * Created by leo on 11/12/16.

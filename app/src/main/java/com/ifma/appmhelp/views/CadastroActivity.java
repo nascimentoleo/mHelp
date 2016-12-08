@@ -21,9 +21,6 @@ import com.ifma.appmhelp.models.Medico;
 import com.ifma.appmhelp.models.Paciente;
 import com.ifma.appmhelp.models.Usuario;
 
-import org.jivesoftware.smack.SmackException;
-import org.jivesoftware.smack.XMPPException;
-
 import java.sql.SQLException;
 
 public class CadastroActivity extends AppCompatActivity {
@@ -56,13 +53,13 @@ public class CadastroActivity extends AppCompatActivity {
 
     public void cadastrar(View v){
         if(cadastroEhValido()){
-            Usuario novoUsuario = new Usuario(edUsuarioCadastro.getText().toString(), edSenhaCadastro.getText().toString());
-            novoUsuario.setNome(edNomeCadastro.getText().toString());
-            novoUsuario.setEmail(edEmailCadastro.getText().toString());
-
             UsuariosController controleDeUsuarios = new UsuariosController(this);
             ClientXMPPController clientXMPPController = new ClientXMPPController();
             try {
+                Usuario novoUsuario = new Usuario(edUsuarioCadastro.getText().toString(), edSenhaCadastro.getText().toString());
+                novoUsuario.setNome(edNomeCadastro.getText().toString());
+                novoUsuario.setEmail(edEmailCadastro.getText().toString());
+
                 if(clientXMPPController.cadastrarUsuario(novoUsuario)){
                     //Se não existe usuário cadastrado no banco
                     if(controleDeUsuarios.getUsuarioByLogin(novoUsuario.getLogin()) == null) {
@@ -74,8 +71,7 @@ public class CadastroActivity extends AppCompatActivity {
                         Toast.makeText(this,"Usuário já existe",Toast.LENGTH_SHORT).show();
                 }else
                     Toast.makeText(this,"Não foi possível cadastrar, conexão não estabelecida",Toast.LENGTH_SHORT).show();
-            } catch (SmackException.NoResponseException | XMPPException.XMPPErrorException |
-                     SmackException.NotConnectedException | SQLException  e) {
+            } catch (Exception  e) {
                 e.printStackTrace();
                 Toast.makeText(this, "Erro ao cadastrar usuário - " + e.getMessage(), Toast.LENGTH_SHORT).show();
             }
