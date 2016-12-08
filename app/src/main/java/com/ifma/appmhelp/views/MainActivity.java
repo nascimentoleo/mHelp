@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity
     private ProgressDialog load;
     private EditText edLogin;
     private EditText edSenha;
+    private Login login;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,42 +112,47 @@ public class MainActivity extends AppCompatActivity
         this.load  = new ProgressDialog(this);
         this.edLogin = (EditText) findViewById(R.id.edUsuarioLogin);
         this.edSenha = (EditText) findViewById(R.id.edUsuarioSenha);
-
+        this.login = new Login(this);
     }
 
     public void conectar() {
-        if(!ConexaoXMPP.getInstance().conexaoEstaAtiva())
+        if(!ConexaoXMPP.getInstance().conexaoEstaAtiva()) {
             //this.conectarXMPPTask.execute(new Host("10.0.2.2", 5222)); //Ip para avd
             //new ConectarXMPPTask(this.load).execute(new Host("192.168.1.24", 5222)); //Ip para device
             new ConectarXMPPTask(this.load).execute(new Host("192.168.0.6", 5222)); //Ip para device
 
+            /*Usuario usuarioLogado = login.getUsuarioLogado();
+            if(usuarioLogado != null)
+                this.logar(usuarioLogado); */
+        }
     }
 
     public void efetuarLogin(View v){
         if(ConexaoXMPP.getInstance().conexaoEstaAtiva()){
-            if(loginEhValido()) {
-                Login login = new Login(this);
-                Usuario usuario = new Usuario(edLogin.getText().toString(), edSenha.getText().toString());
-                try {
-                     IModel usuarioLogado = login.realizaLogin(usuario);
-                     if(usuarioLogado != null){
-                         Toast.makeText(this, "Bem vindo " + usuario.getLogin(),
-                                 Toast.LENGTH_SHORT).show();
-                         Bundle bundle = new Bundle();
-                         bundle.putSerializable(BundleKeys.USUARIO_LOGADO.getValue(), usuarioLogado);
-                         Class activityClass = FactoryLogadoActivity.getActivityClass(usuarioLogado);
-                         startActivity(new Intent(this, activityClass).putExtras(bundle));
-                    }else
-                        Toast.makeText(this, login.getMsgErro(),
-                                Toast.LENGTH_SHORT).show();
-                } catch (IOException |SmackException |XMPPException | SQLException e) {
-                    e.printStackTrace();
-                    Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT)
-                            .show();
-                }
-            }
+            if(loginEhValido())
+                this.logar(new Usuario(edLogin.getText().toString(), edSenha.getText().toString()));
         }else
              Toast.makeText(this, "Não foi possível fazer login, pois não foi feita a conexão com o servidor", Toast.LENGTH_SHORT).show();
+    }
+
+    private void logar(Usuario usuario){
+        try {
+            IModel usuarioLogado = login.realizaLogin(usuario);
+            if(usuarioLogado != null){
+                Toast.makeText(this, "Bem vindo " + usuario.getLogin(),
+                        Toast.LENGTH_SHORT).show();
+                Bundle bundle = new Bundle();
+                bundle.putSerializable(BundleKeys.USUARIO_LOGADO.getValue(), usuarioLogado);
+                Class activityClass = FactoryLogadoActivity.getActivityClass(usuarioLogado);
+                startActivity(new Intent(this, activityClass).putExtras(bundle));
+            }else
+                Toast.makeText(this, login.getMsgErro(),
+                        Toast.LENGTH_SHORT).show();
+        } catch (IOException |SmackException |XMPPException | SQLException e) {
+            e.printStackTrace();
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT)
+                    .show();
+        }
     }
 
     private boolean loginEhValido() {

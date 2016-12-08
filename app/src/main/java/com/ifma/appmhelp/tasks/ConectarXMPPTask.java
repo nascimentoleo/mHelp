@@ -12,6 +12,11 @@ import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
 
 import java.io.IOException;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+
+import javax.security.cert.CertificateException;
 
 /**
  * Created by leo on 11/12/16.
@@ -49,6 +54,7 @@ public class ConectarXMPPTask extends AsyncTask<Host, Integer, Boolean> {
     protected void onPostExecute(Boolean response) {
         this.progressLoad.dismiss();
         ConexaoXMPP.getInstance().setConexao(this.conexao);
+
     }
 
     public String getMsgErro() {

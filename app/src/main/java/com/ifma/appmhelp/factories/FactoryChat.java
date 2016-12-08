@@ -1,7 +1,8 @@
 package com.ifma.appmhelp.factories;
 
 import org.jivesoftware.smack.AbstractXMPPConnection;
-import org.jivesoftware.smack.chat.*;
+import org.jivesoftware.smack.chat.Chat;
+import org.jivesoftware.smack.chat.ChatManager;
 
 /**
  * Created by leo on 11/14/16.

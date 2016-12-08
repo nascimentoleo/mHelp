@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.ifma.appmhelp.R;
+import com.ifma.appmhelp.controls.Login;
 import com.ifma.appmhelp.enums.BundleKeys;
 import com.ifma.appmhelp.models.Paciente;
 
@@ -92,6 +93,10 @@ public class PacienteActivity extends AppCompatActivity
                 Bundle bundle = new Bundle();
                 bundle.putSerializable(BundleKeys.USUARIO_LOGADO.getValue(),this.paciente);
                 startActivityForResult(new Intent(this, AlteraDadosActivity.class).putExtras(bundle), RESULT_FIRST_USER);
+                break;
+            case R.id.nav_logoff_paciente:
+                new Login(this).realizaLogoff(this.paciente.getUsuario());
+                startActivity(new Intent(this, MainActivity.class));
                 break;
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

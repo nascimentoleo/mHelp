@@ -14,16 +14,15 @@ import java.io.IOException;
  */
 public class FactoryConexaoXMPP {
 
-    public static AbstractXMPPConnection getConexao(String host, int porta) throws IOException, XMPPException, SmackException{
+    public static AbstractXMPPConnection getConexao(String host, int porta) throws IOException, XMPPException, SmackException {
         XMPPTCPConnectionConfiguration config = XMPPTCPConnectionConfiguration.builder()
                 .setDebuggerEnabled(true)
                 .setCompressionEnabled(true)
-                .setSecurityMode(ConnectionConfiguration.SecurityMode.disabled)
+                .setSecurityMode(ConnectionConfiguration.SecurityMode.ifpossible)
                 .setServiceName("mhelp-server-xmpp")
                 .setHost(host)
                 .setPort(porta)
                 .build();
         return new XMPPTCPConnection(config).connect();
     }
-
 }

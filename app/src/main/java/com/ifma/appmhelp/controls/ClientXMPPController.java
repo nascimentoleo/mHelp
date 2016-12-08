@@ -21,6 +21,7 @@ public class ClientXMPPController{
             Map<String, String> atributes = new HashMap<>();
             atributes.put("name", usuario.getNome());
             atributes.put("email", usuario.getEmail());
+            accountManager.
             accountManager.createAccount(usuario.getLogin(), usuario.getSenha(),atributes);
             return true;
         }

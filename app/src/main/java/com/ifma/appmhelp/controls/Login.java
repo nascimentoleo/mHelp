@@ -1,6 +1,7 @@
 package com.ifma.appmhelp.controls;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 
 import com.ifma.appmhelp.models.ConexaoXMPP;
 import com.ifma.appmhelp.models.IModel;
@@ -24,9 +25,17 @@ public class Login extends BaseController{
     public IModel realizaLogin(Usuario usuario) throws SQLException, XMPPException, SmackException, IOException {
         if (loginEhValido(usuario)){
             ConexaoXMPP.getInstance().getConexao().login(usuario.getLogin(), usuario.getSenha());
+            this.salvarArquivoDePreferencias(usuario,true);
             return carregaUsuario(usuario);
         }
         return null;
+    }
+
+    public void realizaLogoff(Usuario usuario){
+        if(ConexaoXMPP.getInstance().conexaoFoiAutenticada()){
+            ConexaoXMPP.getInstance().desconectar();
+            this.salvarArquivoDePreferencias(new Usuario(), false);
+        }
     }
 
     private boolean loginEhValido(Usuario usuario) throws SQLException {
@@ -49,6 +58,22 @@ public class Login extends BaseController{
         if(result == null)
             result = new PacientesController(ctx).getPacienteByUsuario(usuario);
         return result;
+    }
+
+    private void salvarArquivoDePreferencias(Usuario usuario, boolean logado){
+        SharedPreferences prefs = ctx.getSharedPreferences("preferences",0);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString("login", usuario.getLogin());
+        editor.putString("senha", usuario.getSenha());
+        editor.putBoolean("logado", logado);
+        editor.commit();
+    }
+
+    public Usuario getUsuarioLogado(){
+        SharedPreferences prefs = ctx.getSharedPreferences("preferences", 0);
+        if (prefs.getBoolean("logado", false))
+            return new Usuario(prefs.getString("login", ""),prefs.getString("password", ""));
+        return null;
     }
 
 }

@@ -18,5 +18,13 @@
             android:title="@string/alterar_dados_name" />
     </group>
 
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_logoff_paciente"
+            android:icon="@drawable/ic_cancel"
+            android:title="@string/logoff_name" />
+    </group>
+
+
 
 </menu>

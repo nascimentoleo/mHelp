@@ -42,4 +42,5 @@
     <string name="title_activity_altera_dados">AlteraDadosActivity</string>
     <string name="endereco_name">Endereço</string>
     <string name="telefone_name">Telefone</string>
+    <string name="logoff_name">Logoff</string>
 </resources>

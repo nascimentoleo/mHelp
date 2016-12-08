@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ifma.appmhelp.R;
+import com.ifma.appmhelp.controls.Login;
 import com.ifma.appmhelp.enums.BundleKeys;
 import com.ifma.appmhelp.factories.FactoryChat;
 import com.ifma.appmhelp.models.ConexaoXMPP;
@@ -115,6 +116,10 @@ public class MedicoActivity extends AppCompatActivity
                 Bundle bundle = new Bundle();
                 bundle.putSerializable(BundleKeys.USUARIO_LOGADO.getValue(), this.medico);
                 startActivityForResult(new Intent(this, AlteraDadosActivity.class).putExtras(bundle), RESULT_FIRST_USER);
+                break;
+            case R.id.nav_logoff_medico:
+                new Login(this).realizaLogoff(this.medico.getUsuario());
+                startActivity(new Intent(this,MainActivity.class));
                 break;
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
