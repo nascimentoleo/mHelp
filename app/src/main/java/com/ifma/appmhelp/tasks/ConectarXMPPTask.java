@@ -1,7 +1,9 @@
 package com.ifma.appmhelp.tasks;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.v4.content.LocalBroadcastManager;
 
 import com.ifma.appmhelp.factories.FactoryConexaoXMPP;
 import com.ifma.appmhelp.models.ConexaoXMPP;
@@ -22,13 +24,20 @@ public class ConectarXMPPTask extends AsyncTask<Host, Integer, Boolean> {
     private AbstractXMPPConnection conexao;
     private ProgressDialog progressLoad;
 
+
+
+    public AbstractXMPPConnection getConexao() {
+        return conexao;
+    }
+
     public ConectarXMPPTask(ProgressDialog progressLoad) {
         this.progressLoad = progressLoad;
     }
 
     @Override
     protected void onPreExecute() {
-        progressLoad = ProgressDialog.show(progressLoad.getContext(), "Por favor aguarde",
+        if (progressLoad != null)
+             progressLoad = ProgressDialog.show(progressLoad.getContext(), "Por favor aguarde",
                 "Iniciando conexão ...");
     }
 
@@ -47,9 +56,13 @@ public class ConectarXMPPTask extends AsyncTask<Host, Integer, Boolean> {
 
     @Override
     protected void onPostExecute(Boolean response) {
-        this.progressLoad.dismiss();
+        if(this.progressLoad != null)
+            this.progressLoad.dismiss();
         ConexaoXMPP.getInstance().setConexao(this.conexao);
-
+        LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this.progressLoad.getContext());
+        Intent it = new Intent("conectar");
+        it.putExtra("finalizou_conexao", true);
+        lbm.sendBroadcast(it);
     }
 
     public String getMsgErro() {

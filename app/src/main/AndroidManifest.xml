@@ -57,7 +57,12 @@
         <activity
             android:name=".views.AlteraDadosActivity"
             android:label="@string/title_activity_altera_dados"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <service
+            android:name=".tasks.ConexaoXMPPService"
+            android:exported="false"
+            />
     </application>
 
 </manifest>
