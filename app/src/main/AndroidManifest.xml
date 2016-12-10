@@ -62,6 +62,7 @@
         <service
             android:name=".tasks.ConexaoXMPPService"
             android:exported="false"
+            android:stopWithTask="false"
             />
     </application>
 

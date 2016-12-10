@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity
     private EditText edLogin;
     private EditText edSenha;
     private Login login;
+    private ConexaoXMPPService service;
 
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
@@ -78,32 +79,25 @@ public class MainActivity extends AppCompatActivity
 
         this.registrarComponentes();
         LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, new IntentFilter("conectar"));
+
         //this.conectar();
     }
 
     @Override
     protected void onStart() {
-        this.conectar();
-        /*if(ConexaoXMPP.getInstance().conexaoFoiAutenticada())
-           ConexaoXMPP.getInstance().desconectar();
-        this.conectar(); */
-
+        if(!ConexaoXMPP.getInstance().conexaoEstaAtiva()){
+            Intent it = new Intent(this, ConexaoXMPPService.class);
+            //it.setAction(ConexaoXMPPKeys.CONECTAR.getValue());
+            startService(it);
+            //bindService(it, this, 0);
+        }
         super.onStart();
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        /*Intent it = new Intent(this, ConexaoXMPPService.class);
-        startService(it);
-        bindService(it, this, 0); */
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
+    protected void onStop() {
+        super.onStop();
         //unbindService(this);
-
     }
 
     @Override
@@ -210,12 +204,11 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onServiceConnected(ComponentName name, IBinder service) {
-        ConexaoXMPPService.ConexaoXMPPBinder binder = (ConexaoXMPPService.ConexaoXMPPBinder) service;
-        ConexaoXMPP.getInstance().setConexao(binder.getConexao());
+        this.service = ((ConexaoXMPPService.LocalBinder) service).getService();
     }
 
     @Override
     public void onServiceDisconnected(ComponentName name) {
-       ConexaoXMPP.getInstance().setConexao(null);
+       //ConexaoXMPP.getInstance().setConexao(null);
     }
 }

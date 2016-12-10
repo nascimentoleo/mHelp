@@ -1,12 +1,12 @@
 package com.ifma.appmhelp.tasks;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v4.content.LocalBroadcastManager;
 
 import com.ifma.appmhelp.factories.FactoryConexaoXMPP;
-import com.ifma.appmhelp.models.ConexaoXMPP;
 import com.ifma.appmhelp.models.Host;
 
 import org.jivesoftware.smack.AbstractXMPPConnection;
@@ -23,8 +23,7 @@ public class ConectarXMPPTask extends AsyncTask<Host, Integer, Boolean> {
     private String msgErro;
     private AbstractXMPPConnection conexao;
     private ProgressDialog progressLoad;
-
-
+    private Context ctx;
 
     public AbstractXMPPConnection getConexao() {
         return conexao;
@@ -32,6 +31,11 @@ public class ConectarXMPPTask extends AsyncTask<Host, Integer, Boolean> {
 
     public ConectarXMPPTask(ProgressDialog progressLoad) {
         this.progressLoad = progressLoad;
+        ctx = progressLoad.getContext();
+    }
+
+    public ConectarXMPPTask(Context ctx) {
+        this.ctx = ctx;
     }
 
     @Override
@@ -58,15 +62,18 @@ public class ConectarXMPPTask extends AsyncTask<Host, Integer, Boolean> {
     protected void onPostExecute(Boolean response) {
         if(this.progressLoad != null)
             this.progressLoad.dismiss();
-        ConexaoXMPP.getInstance().setConexao(this.conexao);
-        LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this.progressLoad.getContext());
+        //ConexaoXMPP.getInstance().setConexao(this.conexao);
+        LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this.ctx);
         Intent it = new Intent("conectar");
-        it.putExtra("finalizou_conexao", true);
-        lbm.sendBroadcast(it);
-    }
 
-    public String getMsgErro() {
-        return this.msgErro;
+        if(this.conexao != null)
+           it.putExtra("finalizou_conexao", true);
+        else{
+            it.putExtra("finalizou_conexao", false);
+            it.putExtra("msg_erro", this.msgErro);
+        }
+
+        lbm.sendBroadcast(it);
     }
 
 }
