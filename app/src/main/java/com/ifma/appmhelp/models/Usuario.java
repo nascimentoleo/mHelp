@@ -1,6 +1,5 @@
 package com.ifma.appmhelp.models;
 
-import com.ifma.appmhelp.lib.BlowfishCript;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
@@ -29,8 +28,7 @@ public class Usuario implements IModel{
 
     public Usuario(String login, String senha) throws Exception {
         this.login = login;
-        //this.senha = senha;
-        this.setSenha(senha);
+        this.senha = senha;
     }
 
     public Usuario(String login) {
@@ -51,16 +49,12 @@ public class Usuario implements IModel{
         return login;
     }
 
-    public String getSenhaPlain() throws Exception {
-        return BlowfishCript.decrypt(senha);
+    public void setSenha(String senha) {
+        this.senha = senha;
     }
 
-    public String getSenhaCript() throws Exception {
-        return this.senha;
-    }
-
-    private void setSenha(String senha) throws Exception {
-        this.senha = BlowfishCript.encrypt(senha);
+    public String getSenha() {
+        return senha;
     }
 
     public String getNome() {

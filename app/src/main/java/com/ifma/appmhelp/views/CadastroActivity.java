@@ -16,6 +16,7 @@ import com.ifma.appmhelp.controls.IController;
 import com.ifma.appmhelp.controls.MedicosController;
 import com.ifma.appmhelp.controls.PacientesController;
 import com.ifma.appmhelp.controls.UsuariosController;
+import com.ifma.appmhelp.lib.PasswordCrypt;
 import com.ifma.appmhelp.models.IModel;
 import com.ifma.appmhelp.models.Medico;
 import com.ifma.appmhelp.models.Paciente;
@@ -63,6 +64,8 @@ public class CadastroActivity extends AppCompatActivity {
                 if(clientXMPPController.cadastrarUsuario(novoUsuario)){
                     //Se não existe usuário cadastrado no banco
                     if(controleDeUsuarios.getUsuarioByLogin(novoUsuario.getLogin()) == null) {
+                        //Criptografa a senha antes de salvar no banco
+                        novoUsuario.setSenha(PasswordCrypt.encrypt(novoUsuario.getSenha()));
                         controleDeUsuarios.persistir(novoUsuario);
                         this.registrarUsuario(novoUsuario);
                         Toast.makeText(this, "Usuário cadastrado", Toast.LENGTH_SHORT).show();

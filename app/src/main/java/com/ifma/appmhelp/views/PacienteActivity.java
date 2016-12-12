@@ -13,11 +13,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.ifma.appmhelp.R;
 import com.ifma.appmhelp.controls.Login;
 import com.ifma.appmhelp.enums.BundleKeys;
 import com.ifma.appmhelp.models.Paciente;
+import com.ifma.appmhelp.services.ConexaoXMPPService;
 
 public class PacienteActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -96,11 +98,13 @@ public class PacienteActivity extends AppCompatActivity
                 break;
             case R.id.nav_logoff_paciente:
                 try {
-                    new Login(this).realizaLogoff(this.paciente.getUsuario());
+                    new Login(this).realizaLogoff();
+                    stopService(new Intent(this, ConexaoXMPPService.class));
+                    startActivity(new Intent(this, MainActivity.class));
                 } catch (Exception e) {
                     e.printStackTrace();
+                    Toast.makeText(this, "Não foi possível realizar o logoff - " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
-                startActivity(new Intent(this, MainActivity.class));
                 break;
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

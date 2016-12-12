@@ -60,7 +60,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
 
         <service
-            android:name=".tasks.ConexaoXMPPService"
+            android:name=".services.ConexaoXMPPService"
             android:exported="false"
             android:stopWithTask="false"
             />

@@ -31,7 +31,7 @@ import com.ifma.appmhelp.factories.FactoryLogadoActivity;
 import com.ifma.appmhelp.models.ConexaoXMPP;
 import com.ifma.appmhelp.models.IModel;
 import com.ifma.appmhelp.models.Usuario;
-import com.ifma.appmhelp.tasks.ConexaoXMPPService;
+import com.ifma.appmhelp.services.ConexaoXMPPService;
 
 public class MainActivity extends AppCompatActivity
         implements ServiceConnection, NavigationView.OnNavigationItemSelectedListener {
@@ -50,8 +50,9 @@ public class MainActivity extends AppCompatActivity
                         "Iniciando conexão ...");
             else if(intent.getBooleanExtra("finalizou_conexao", false)) {
                 load.dismiss();
-                Toast.makeText(MainActivity.this, "Conectado", Toast.LENGTH_SHORT).show();
-            }else if(! intent.getBooleanExtra("finalizou_conexao", false)){
+                //relogarUsuarioSalvo();
+            }else{
+                load.dismiss();
                 String msgErro = intent.getStringExtra("msg_erro");
                 Toast.makeText(MainActivity.this, "Não foi possível conectar ao servidor - " + msgErro, Toast.LENGTH_SHORT).show();
             }
@@ -92,6 +93,7 @@ public class MainActivity extends AppCompatActivity
     protected void onStart() {
         super.onStart();
         this.conectar();
+        //this.relogarUsuarioSalvo();
     }
 
     @Override
@@ -142,23 +144,13 @@ public class MainActivity extends AppCompatActivity
             startService(it);
             //bindService(it, this, 0);
         }
-        //new ConectarXMPPTask(this.load).execute(new Host("192.168.1.24", 5222)); //Ip para device
-        /*if(!ConexaoXMPP.getInstance().conexaoEstaAtiva()) {
-            //this.conectarXMPPTask.execute(new Host("10.0.2.2", 5222)); //Ip para avd
-            //new ConectarXMPPTask(this.load).execute(new Host("192.168.1.24", 5222)); //Ip para device
-            new ConectarXMPPTask(this.load).execute(new Host("192.168.0.6", 5222)); //Ip para device
-
-            /*Usuario usuarioLogado = login.getUsuarioLogado();
-            if(usuarioLogado != null)
-                this.logar(usuarioLogado); */
-        //}
     }
 
     public void efetuarLogin(View v){
         if(ConexaoXMPP.getInstance().conexaoEstaAtiva()){
             if(loginEhValido())
                 try {
-                    this.logar(new Usuario(edLogin.getText().toString(), edSenha.getText().toString()));
+                    this.logar(new Usuario(edLogin.getText().toString().trim(), edSenha.getText().toString().trim()));
                 } catch (Exception e) {
                     e.printStackTrace();
                     Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -166,6 +158,19 @@ public class MainActivity extends AppCompatActivity
                 }
         }else
              Toast.makeText(this, "Não foi possível fazer login, pois não foi feita a conexão com o servidor", Toast.LENGTH_SHORT).show();
+    }
+
+    private void relogarUsuarioSalvo(){
+        if(ConexaoXMPP.getInstance().conexaoEstaAtiva()){
+            try {
+                Usuario usuarioLogado = new Login(this).getUsuarioLogado();
+                if(usuarioLogado != null)
+                    this.logar(usuarioLogado);
+            } catch (Exception e) {
+                e.printStackTrace();
+                Toast.makeText(this, "Erro ao relogar - " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     private void logar(Usuario usuario){
