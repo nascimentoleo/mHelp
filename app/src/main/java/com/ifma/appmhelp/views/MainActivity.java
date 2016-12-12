@@ -29,10 +29,8 @@ import com.ifma.appmhelp.controls.Login;
 import com.ifma.appmhelp.enums.BundleKeys;
 import com.ifma.appmhelp.factories.FactoryLogadoActivity;
 import com.ifma.appmhelp.models.ConexaoXMPP;
-import com.ifma.appmhelp.models.Host;
 import com.ifma.appmhelp.models.IModel;
 import com.ifma.appmhelp.models.Usuario;
-import com.ifma.appmhelp.tasks.ConectarXMPPTask;
 import com.ifma.appmhelp.tasks.ConexaoXMPPService;
 
 public class MainActivity extends AppCompatActivity
@@ -47,8 +45,16 @@ public class MainActivity extends AppCompatActivity
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if(intent.getBooleanExtra("finalizou_conexao", false))
-                Toast.makeText(getApplicationContext(), "Conectou", Toast.LENGTH_SHORT).show();
+            if(intent.getBooleanExtra("iniciou_conexao", false))
+                load = ProgressDialog.show(MainActivity.this, "Por favor aguarde",
+                        "Iniciando conexão ...");
+            else if(intent.getBooleanExtra("finalizou_conexao", false)) {
+                load.dismiss();
+                Toast.makeText(MainActivity.this, "Conectado", Toast.LENGTH_SHORT).show();
+            }else if(! intent.getBooleanExtra("finalizou_conexao", false)){
+                String msgErro = intent.getStringExtra("msg_erro");
+                Toast.makeText(MainActivity.this, "Não foi possível conectar ao servidor - " + msgErro, Toast.LENGTH_SHORT).show();
+            }
         }
     };
 
@@ -80,24 +86,12 @@ public class MainActivity extends AppCompatActivity
         this.registrarComponentes();
         LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, new IntentFilter("conectar"));
 
-        //this.conectar();
     }
 
     @Override
     protected void onStart() {
-        if(!ConexaoXMPP.getInstance().conexaoEstaAtiva()){
-            Intent it = new Intent(this, ConexaoXMPPService.class);
-            //it.setAction(ConexaoXMPPKeys.CONECTAR.getValue());
-            startService(it);
-            //bindService(it, this, 0);
-        }
         super.onStart();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        //unbindService(this);
+        this.conectar();
     }
 
     @Override
@@ -142,7 +136,13 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void conectar() {
-        new ConectarXMPPTask(this.load).execute(new Host("192.168.1.24", 5222)); //Ip para device
+        if(!ConexaoXMPP.getInstance().conexaoEstaAtiva()){
+            Intent it = new Intent(this, ConexaoXMPPService.class);
+            //it.setAction(ConexaoXMPPKeys.CONECTAR.getValue()); //Retirei pois estava dando erro, procurar alternativa
+            startService(it);
+            //bindService(it, this, 0);
+        }
+        //new ConectarXMPPTask(this.load).execute(new Host("192.168.1.24", 5222)); //Ip para device
         /*if(!ConexaoXMPP.getInstance().conexaoEstaAtiva()) {
             //this.conectarXMPPTask.execute(new Host("10.0.2.2", 5222)); //Ip para avd
             //new ConectarXMPPTask(this.load).execute(new Host("192.168.1.24", 5222)); //Ip para device

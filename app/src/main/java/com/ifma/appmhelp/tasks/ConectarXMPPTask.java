@@ -1,6 +1,5 @@
 package com.ifma.appmhelp.tasks;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -22,27 +21,24 @@ public class ConectarXMPPTask extends AsyncTask<Host, Integer, Boolean> {
 
     private String msgErro;
     private AbstractXMPPConnection conexao;
-    private ProgressDialog progressLoad;
     private Context ctx;
 
     public AbstractXMPPConnection getConexao() {
         return conexao;
     }
 
-    public ConectarXMPPTask(ProgressDialog progressLoad) {
-        this.progressLoad = progressLoad;
-        ctx = progressLoad.getContext();
-    }
-
     public ConectarXMPPTask(Context ctx) {
         this.ctx = ctx;
     }
 
+
     @Override
     protected void onPreExecute() {
-        if (progressLoad != null)
-             progressLoad = ProgressDialog.show(progressLoad.getContext(), "Por favor aguarde",
-                "Iniciando conexão ...");
+        //Avisa que vai iniciar a conexão
+        LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this.ctx);
+        Intent it = new Intent("conectar");
+        it.putExtra("iniciou_conexao", true);
+        lbm.sendBroadcast(it);
     }
 
     @Override
@@ -60,9 +56,6 @@ public class ConectarXMPPTask extends AsyncTask<Host, Integer, Boolean> {
 
     @Override
     protected void onPostExecute(Boolean response) {
-        if(this.progressLoad != null)
-            this.progressLoad.dismiss();
-        //ConexaoXMPP.getInstance().setConexao(this.conexao);
         LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this.ctx);
         Intent it = new Intent("conectar");
 
