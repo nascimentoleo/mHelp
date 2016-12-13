@@ -87,8 +87,8 @@ public class ConexaoXMPPService extends Service {
 
     private void conectar(){
         if(this.conexao == null){
-            //conectarTask.execute(new Host("192.168.1.24", 5222));
-            conectarTask.execute(new Host("192.168.0.7", 5222));
+            conectarTask.execute(new Host("192.168.1.24", 5222));
+            //conectarTask.execute(new Host("192.168.0.7", 5222));
         }else
             ConexaoXMPP.getInstance().setConexao(this.conexao);
     }

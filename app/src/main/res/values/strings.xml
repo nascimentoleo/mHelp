@@ -43,4 +43,8 @@
     <string name="endereco_name">Endereço</string>
     <string name="telefone_name">Telefone</string>
     <string name="logoff_name">Logoff</string>
+
+    <string name="title_activity_splash">SplashActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
 </resources>
