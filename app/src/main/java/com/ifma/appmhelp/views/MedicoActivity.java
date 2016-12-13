@@ -23,7 +23,6 @@ import com.ifma.appmhelp.enums.BundleKeys;
 import com.ifma.appmhelp.factories.FactoryChat;
 import com.ifma.appmhelp.models.ConexaoXMPP;
 import com.ifma.appmhelp.models.Medico;
-import com.ifma.appmhelp.services.ConexaoXMPPService;
 
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.chat.Chat;
@@ -121,8 +120,9 @@ public class MedicoActivity extends AppCompatActivity
             case R.id.nav_logoff_medico:
                 try {
                     new Login(this).realizaLogoff();
-                    stopService(new Intent(this, ConexaoXMPPService.class));
-                    startActivity(new Intent(this, MainActivity.class));
+                    Intent intent = new Intent(this, LoginActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
                 } catch (Exception e) {
                     e.printStackTrace();
                     Toast.makeText(this, "Não foi possível realizar o logoff - "+ e.getMessage(),Toast.LENGTH_SHORT).show();

@@ -1,18 +1,10 @@
 package com.ifma.appmhelp.views;
 
-import android.app.ProgressDialog;
-import android.content.BroadcastReceiver;
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -31,33 +23,13 @@ import com.ifma.appmhelp.factories.FactoryLogadoActivity;
 import com.ifma.appmhelp.models.ConexaoXMPP;
 import com.ifma.appmhelp.models.IModel;
 import com.ifma.appmhelp.models.Usuario;
-import com.ifma.appmhelp.services.ConexaoXMPPService;
 
-public class MainActivity extends AppCompatActivity
-        implements ServiceConnection, NavigationView.OnNavigationItemSelectedListener {
+public class LoginActivity extends AppCompatActivity
+        implements  NavigationView.OnNavigationItemSelectedListener {
 
-    private ProgressDialog load;
     private EditText edLogin;
     private EditText edSenha;
     private Login login;
-    private ConexaoXMPPService service;
-
-    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if(intent.getBooleanExtra("iniciou_conexao", false))
-                load = ProgressDialog.show(MainActivity.this, "Por favor aguarde",
-                        "Iniciando conexão ...");
-            else if(intent.getBooleanExtra("finalizou_conexao", false)) {
-                load.dismiss();
-                //relogarUsuarioSalvo();
-            }else{
-                load.dismiss();
-                String msgErro = intent.getStringExtra("msg_erro");
-                Toast.makeText(MainActivity.this, "Não foi possível conectar ao servidor - " + msgErro, Toast.LENGTH_SHORT).show();
-            }
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,15 +57,13 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         this.registrarComponentes();
-        LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, new IntentFilter("conectar"));
 
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        this.conectar();
-        //this.relogarUsuarioSalvo();
+        this.relogarUsuarioSalvo();
     }
 
     @Override
@@ -131,19 +101,9 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void registrarComponentes(){
-        this.load  = new ProgressDialog(this);
         this.edLogin = (EditText) findViewById(R.id.edUsuarioLogin);
         this.edSenha = (EditText) findViewById(R.id.edUsuarioSenha);
         this.login = new Login(this);
-    }
-
-    public void conectar() {
-        if(!ConexaoXMPP.getInstance().conexaoEstaAtiva()){
-            Intent it = new Intent(this, ConexaoXMPPService.class);
-            //it.setAction(ConexaoXMPPKeys.CONECTAR.getValue()); //Retirei pois estava dando erro, procurar alternativa
-            startService(it);
-            //bindService(it, this, 0);
-        }
     }
 
     public void efetuarLogin(View v){
@@ -205,15 +165,5 @@ public class MainActivity extends AppCompatActivity
             return false;
         } else
             return true;
-    }
-
-    @Override
-    public void onServiceConnected(ComponentName name, IBinder service) {
-        this.service = ((ConexaoXMPPService.LocalBinder) service).getService();
-    }
-
-    @Override
-    public void onServiceDisconnected(ComponentName name) {
-       //ConexaoXMPP.getInstance().setConexao(null);
     }
 }

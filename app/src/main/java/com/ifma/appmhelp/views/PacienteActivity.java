@@ -100,7 +100,9 @@ public class PacienteActivity extends AppCompatActivity
                 try {
                     new Login(this).realizaLogoff();
                     stopService(new Intent(this, ConexaoXMPPService.class));
-                    startActivity(new Intent(this, MainActivity.class));
+                    Intent intent = new Intent(this, LoginActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
                 } catch (Exception e) {
                     e.printStackTrace();
                     Toast.makeText(this, "Não foi possível realizar o logoff - " + e.getMessage(), Toast.LENGTH_SHORT).show();

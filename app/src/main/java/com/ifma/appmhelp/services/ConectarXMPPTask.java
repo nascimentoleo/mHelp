@@ -31,16 +31,6 @@ public class ConectarXMPPTask extends AsyncTask<Host, Integer, Boolean> {
         this.ctx = ctx;
     }
 
-
-    @Override
-    protected void onPreExecute() {
-        //Avisa que vai iniciar a conexão
-        LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this.ctx);
-        Intent it = new Intent("conectar");
-        it.putExtra("iniciou_conexao", true);
-        lbm.sendBroadcast(it);
-    }
-
     @Override
     public Boolean doInBackground(Host... params){
         try {
