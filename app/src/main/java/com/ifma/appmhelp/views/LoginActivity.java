@@ -137,8 +137,6 @@ public class LoginActivity extends AppCompatActivity
         try {
             IModel usuarioLogado = login.realizaLogin(usuario);
             if(usuarioLogado != null){
-                Toast.makeText(this, "Bem vindo " + usuario.getLogin(),
-                        Toast.LENGTH_SHORT).show();
                 Bundle bundle = new Bundle();
                 bundle.putSerializable(BundleKeys.USUARIO_LOGADO.getValue(), usuarioLogado);
                 Class activityClass = FactoryLogadoActivity.getActivityClass(usuarioLogado);

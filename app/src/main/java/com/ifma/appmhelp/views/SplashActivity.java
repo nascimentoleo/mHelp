@@ -1,19 +1,19 @@
 package com.ifma.appmhelp.views;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
 import com.ifma.appmhelp.R;
 import com.ifma.appmhelp.models.ConexaoXMPP;
 import com.ifma.appmhelp.services.ConexaoXMPPService;
 
-public class SplashActivity extends AppCompatActivity {
+public class SplashActivity extends Activity {
 
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override

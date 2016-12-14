@@ -5,7 +5,7 @@ android {
 
     defaultConfig {
         applicationId "com.ifma.appmhelp"
-        minSdkVersion 14
+        minSdkVersion 16
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
@@ -24,6 +24,7 @@ repositories {
         url 'https://oss.sonatype.org/content/repositories/snapshots'
     }
     mavenCentral()
+    jcenter()
 }
 
 dependencies {
@@ -41,4 +42,5 @@ dependencies {
     compile 'com.j256.ormlite:ormlite-android:5.0'
     compile 'com.clough.android.androiddbviewer:androiddbviewer:1.0.0'
     compile 'com.android.support:support-v4:23.4.0'
+    compile 'com.race604.waveloading:library:1.0.1'
 }
