@@ -7,6 +7,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
@@ -77,8 +78,9 @@ public class ConexaoXMPPService extends Service {
 
     private void conectar(){
         if(this.conexao == null){
-            //conectarTask.execute(new Host("192.168.1.24", 5222));
-            conectarTask.execute(new Host("192.168.0.7", 5222));
+            if(conectarTask.getStatus() != AsyncTask.Status.RUNNING)
+                conectarTask.execute(new Host("192.168.1.24", 5222));
+                //conectarTask.execute(new Host("192.168.0.7", 5222));
         }else
             ConexaoXMPP.getInstance().setConexao(this.conexao);
     }

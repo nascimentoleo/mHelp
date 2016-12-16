@@ -1,8 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorPrimaryDark">#f8f7f7</color>
+    <color name="colorAccent">#d0c4c4</color>
 
     <color name="black_overlay">#66000000</color>
+    <color name="holo_red_light">#ff4040</color>
+    <color name="background_light">#f34c40</color>
+    <color name="background_dark">#00000000</color>
+    <color name="bright_foreground_dark_disabled">#80ffffff</color>
+    <color name="bright_foreground_dark">#ffffff</color>
+    <color name="bright_foreground_dark_inverse">#000000</color>
+    <color name="primary_text_dark">#be111010</color>
+    <color name="darker_gray">#626262</color>
 </resources>

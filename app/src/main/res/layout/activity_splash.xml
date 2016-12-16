@@ -8,7 +8,7 @@
     <ImageView
         android:layout_width="90pt"
         android:layout_height="90pt"
-        android:id="@+id/imageView2"
+        android:id="@+id/imgLogo"
         android:src="@drawable/ic_launcher"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true" />
