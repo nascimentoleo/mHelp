@@ -19,7 +19,6 @@ import com.ifma.appmhelp.R;
 import com.ifma.appmhelp.controls.Login;
 import com.ifma.appmhelp.enums.BundleKeys;
 import com.ifma.appmhelp.models.Paciente;
-import com.ifma.appmhelp.services.ConexaoXMPPService;
 
 public class PacienteActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -99,9 +98,9 @@ public class PacienteActivity extends AppCompatActivity
             case R.id.nav_logoff_paciente:
                 try {
                     new Login(this).realizaLogoff();
-                    stopService(new Intent(this, ConexaoXMPPService.class));
-                    Intent intent = new Intent(this, LoginActivity.class);
+                    Intent intent = new Intent(this, SplashActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    intent.putExtra("msg_splash","Realizando logoff ...");
                     startActivity(intent);
                 } catch (Exception e) {
                     e.printStackTrace();

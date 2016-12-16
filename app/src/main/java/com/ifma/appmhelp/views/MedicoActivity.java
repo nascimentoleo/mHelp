@@ -120,8 +120,9 @@ public class MedicoActivity extends AppCompatActivity
             case R.id.nav_logoff_medico:
                 try {
                     new Login(this).realizaLogoff();
-                    Intent intent = new Intent(this, LoginActivity.class);
+                    Intent intent = new Intent(this, SplashActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    intent.putExtra("msg_splash","Realizando logoff ...");
                     startActivity(intent);
                 } catch (Exception e) {
                     e.printStackTrace();

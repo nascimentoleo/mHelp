@@ -7,7 +7,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
@@ -55,7 +54,6 @@ public class ConexaoXMPPService extends Service {
     public void onCreate() {
         super.onCreate();
         //initNotification();
-        conectarTask = new ConectarXMPPTask(getApplicationContext());
         LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, new IntentFilter("conectar"));
 
     }
@@ -76,13 +74,17 @@ public class ConexaoXMPPService extends Service {
         return super.onStartCommand(intent, flags, startId);
     }
 
-    private void conectar(){
-        if(this.conexao == null){
-            if(conectarTask.getStatus() != AsyncTask.Status.RUNNING)
-                conectarTask.execute(new Host("192.168.1.24", 5222));
-                //conectarTask.execute(new Host("192.168.0.7", 5222));
-        }else
-            ConexaoXMPP.getInstance().setConexao(this.conexao);
+    private boolean conectar(){
+        if(this.conexao != null){
+            if(this.conexao.isConnected()){
+                ConexaoXMPP.getInstance().setConexao(this.conexao);
+                return true;
+            }
+        }
+        conectarTask = new ConectarXMPPTask(getApplicationContext());
+        conectarTask.execute(new Host("192.168.1.24", 5222));
+        //conectarTask.execute(new Host("192.168.0.7", 5222));
+        return true;
     }
 
     public class LocalBinder extends Binder {

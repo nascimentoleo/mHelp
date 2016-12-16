@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ifma.appmhelp.R;
@@ -18,7 +19,7 @@ import com.race604.drawable.wave.WaveDrawable;
 public class SplashActivity extends Activity {
 
     private ImageView imgLogo;
-
+    private TextView txtMsgSplash;
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -42,11 +43,17 @@ public class SplashActivity extends Activity {
     }
 
     private void inicializaComponentes(){
+        this.txtMsgSplash = (TextView) findViewById(R.id.txtMsgSplash);
+        //Carrega logo
         this.imgLogo = (ImageView) findViewById(R.id.imgLogo);
         WaveDrawable mWaveDrawable = new WaveDrawable(this,R.drawable.ic_launcher);
         mWaveDrawable.setIndeterminate(true);
         mWaveDrawable.setWaveSpeed(20);
         imgLogo.setImageDrawable(mWaveDrawable);
+        //Carrega mensagem (se existir)
+        String msg = getIntent().getStringExtra("msg_splash");
+        if (msg != null)
+            txtMsgSplash.setText(msg);
 
     }
 

@@ -45,6 +45,11 @@ public class ConectarXMPPTask extends AsyncTask<Host, Integer, Boolean> {
     }
 
     @Override
+    protected void onCancelled() {
+        super.onCancelled();
+    }
+
+    @Override
     protected void onPostExecute(Boolean response) {
         LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this.ctx);
         Intent it = new Intent("conectar");
@@ -57,6 +62,7 @@ public class ConectarXMPPTask extends AsyncTask<Host, Integer, Boolean> {
         }
 
         lbm.sendBroadcast(it);
+
     }
 
 }
