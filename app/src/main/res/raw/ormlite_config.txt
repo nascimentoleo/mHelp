@@ -1,5 +1,5 @@
 #
-# generated on 2016/11/30 11:53:35
+# generated on 2016/12/16 04:57:25
 #
 # --table-start--
 dataClass=com.ifma.appmhelp.models.Usuario
@@ -43,6 +43,7 @@ fieldName=usuario
 canBeNull=false
 foreign=true
 foreignAutoRefresh=true
+maxForeignAutoRefreshLevel=2
 # --field-end--
 # --table-fields-end--
 # --table-end--
@@ -66,6 +67,26 @@ fieldName=usuario
 canBeNull=false
 foreign=true
 foreignAutoRefresh=true
+maxForeignAutoRefreshLevel=2
+# --field-end--
+# --table-fields-end--
+# --table-end--
+#################################
+# --table-start--
+dataClass=com.ifma.appmhelp.models.MedicoPaciente
+tableName=medicos_pacientes
+# --table-fields-start--
+# --field-start--
+fieldName=id
+generatedId=true
+# --field-end--
+# --field-start--
+fieldName=medico
+foreign=true
+# --field-end--
+# --field-start--
+fieldName=paciente
+foreign=true
 # --field-end--
 # --table-fields-end--
 # --table-end--
