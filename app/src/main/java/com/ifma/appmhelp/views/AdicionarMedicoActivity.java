@@ -51,6 +51,7 @@ public class AdicionarMedicoActivity extends AppCompatActivity {
     }
 
     private void exibeQRCode(){
+        //Calcula o tamanho que o qrcode deve ocupar
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
         int altura  = metrics.heightPixels/2;

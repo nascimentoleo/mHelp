@@ -49,8 +49,8 @@ public class PacienteActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
-        this.paciente = (Paciente) getIntent().getExtras().getSerializable(BundleKeys.USUARIO_LOGADO.getValue());
+        if(this.paciente == null)
+            this.paciente = (Paciente) getIntent().getExtras().getSerializable(BundleKeys.USUARIO_LOGADO.getValue());
     }
 
     @Override

@@ -52,4 +52,5 @@
     <string name="adicionar_medico_name">Adicionar Médico</string>
     <string name="title_activity_adicionar_medico">AdicionarMedicoActivity</string>
     <string name="prompt_qrcode_paciente">Peça para o seu médico escanear este código</string>
+    <string name="title_activity_adicionar_paciente">Adicionar Paciente</string>
 </resources>

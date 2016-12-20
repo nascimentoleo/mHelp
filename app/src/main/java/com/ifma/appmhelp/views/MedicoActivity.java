@@ -63,7 +63,8 @@ public class MedicoActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        this.medico = (Medico) getIntent().getExtras().getSerializable(BundleKeys.USUARIO_LOGADO.getValue());
+        if(this.medico == null)
+            this.medico = (Medico) getIntent().getExtras().getSerializable(BundleKeys.USUARIO_LOGADO.getValue());
         registrarComponentes();
         this.iniciaChat();
     }
@@ -116,6 +117,9 @@ public class MedicoActivity extends AppCompatActivity
                 Bundle bundle = new Bundle();
                 bundle.putSerializable(BundleKeys.USUARIO_LOGADO.getValue(), this.medico);
                 startActivityForResult(new Intent(this, AlteraDadosActivity.class).putExtras(bundle), RESULT_FIRST_USER);
+                break;
+            case R.id.nav_adicionar_paciente :
+                startActivity(new Intent(this, AdicionarPacienteActivity.class));
                 break;
             case R.id.nav_logoff_medico:
                 try {

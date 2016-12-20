@@ -27,7 +27,7 @@
         <activity
             android:name=".views.LoginActivity"
             android:label="@string/title_actitivity_login"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".views.MedicoActivity"
             android:label="@string/title_activity_medico"
@@ -73,6 +73,15 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.ifma.appmhelp.views.PacienteActivity" />
+        </activity>
+        <activity
+            android:name=".views.AdicionarPacienteActivity"
+            android:label="@string/title_activity_adicionar_paciente"
+            android:parentActivityName=".views.MedicoActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.ifma.appmhelp.views.MedicoActivity" />
         </activity>
     </application>
 
