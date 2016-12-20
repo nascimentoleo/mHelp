@@ -72,6 +72,7 @@ public class ConexaoXMPPService extends Service {
             //}
         }
         return super.onStartCommand(intent, flags, startId);
+
     }
 
     private boolean conectar(){
@@ -82,8 +83,8 @@ public class ConexaoXMPPService extends Service {
             }
         }
         conectarTask = new ConectarXMPPTask(getApplicationContext());
-        conectarTask.execute(new Host("192.168.1.24", 5222));
-        //conectarTask.execute(new Host("192.168.0.7", 5222));
+        //conectarTask.execute(new Host("192.168.1.24", 5222));
+        conectarTask.execute(new Host("192.168.0.7", 5222));
         return true;
     }
 
@@ -98,4 +99,5 @@ public class ConexaoXMPPService extends Service {
             return service;
         }
     }
+
 }

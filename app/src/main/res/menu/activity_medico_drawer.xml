@@ -14,7 +14,10 @@
             android:id="@+id/nav_alterar_dados"
             android:icon="@drawable/ic_atualizar"
             android:title="@string/alterar_dados_name" />
-
+        <item
+            android:id="@+id/nav_adicionar_paciente"
+            android:icon="@drawable/ic_qrcode"
+            android:title="@string/adicionar_paciente_name" />
     </group>
     <group android:checkableBehavior="single">
         <item

@@ -26,7 +26,7 @@ public class Usuario implements IModel{
 
     }
 
-    public Usuario(String login, String senha) throws Exception {
+    public Usuario(String login, String senha) {
         this.login = login;
         this.senha = senha;
     }

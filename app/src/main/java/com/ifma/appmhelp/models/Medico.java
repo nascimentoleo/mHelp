@@ -1,5 +1,6 @@
 package com.ifma.appmhelp.models;
 
+import com.google.gson.Gson;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
@@ -47,5 +48,14 @@ public class Medico implements IModel{
 
     public Usuario getUsuario() {
         return usuario;
+    }
+
+
+    public String toJson(){
+        return new Gson().toJson(this);
+    }
+
+    public static Medico fromJson(String jsonObject){
+        return new Gson().fromJson(jsonObject, Medico.class);
     }
 }

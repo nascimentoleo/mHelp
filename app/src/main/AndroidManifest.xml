@@ -17,20 +17,17 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity android:name=".views.SplashActivity">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".views.LoginActivity"
             android:label="@string/title_actitivity_login"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".views.MedicoActivity"
             android:label="@string/title_activity_medico"
@@ -42,7 +39,7 @@
         </activity>
         <activity
             android:name=".views.CadastroActivity"
-            android:label="@string/title_activity_cadastro"
+            android:label="Cadastro"
             android:parentActivityName=".views.LoginActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
@@ -51,7 +48,7 @@
         </activity>
         <activity
             android:name=".views.PacienteActivity"
-            android:label="@string/title_activity_paciente"
+            android:label="Paciente"
             android:parentActivityName=".views.LoginActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
@@ -60,7 +57,7 @@
         </activity>
         <activity
             android:name=".views.AlteraDadosActivity"
-            android:label="@string/title_activity_altera_dados"
+            android:label="Alterar Dados"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <service
@@ -68,6 +65,15 @@
             android:exported="false"
             android:stopWithTask="false" />
 
+        <activity
+            android:name=".views.AdicionarMedicoActivity"
+            android:label="Adicionar Médico"
+            android:parentActivityName=".views.PacienteActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.ifma.appmhelp.views.PacienteActivity" />
+        </activity>
     </application>
 
 </manifest>

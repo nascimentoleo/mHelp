@@ -24,7 +24,7 @@ public class SplashActivity extends Activity {
         @Override
         public void onReceive(Context context, Intent intent) {
             if(intent.getBooleanExtra("finalizou_conexao", false))
-                iniciaAplicacao();
+                iniciaActivity();
             else {
                 Toast.makeText(SplashActivity.this, "Não foi possível conectar ao servidor, tente novamente mais tarde", Toast.LENGTH_SHORT).show();
                 desconectar();
@@ -73,7 +73,7 @@ public class SplashActivity extends Activity {
 
     }
 
-    private void iniciaAplicacao(){
+    private void iniciaActivity(){
         Thread timerThread = new Thread(){
             public void run(){
                 try{
@@ -81,7 +81,13 @@ public class SplashActivity extends Activity {
                 }catch(InterruptedException e){
                     e.printStackTrace();
                 }finally{
-                    Intent intent = new Intent(SplashActivity.this,LoginActivity.class);
+                    Class classActivity = (Class) getIntent().getSerializableExtra("class_actitvity");
+                    Intent intent;
+                    if (classActivity != null)
+                       intent = new Intent(SplashActivity.this, classActivity);
+                    else
+                       intent = new Intent(SplashActivity.this,LoginActivity.class);
+
                     startActivity(intent);
                 }
             }

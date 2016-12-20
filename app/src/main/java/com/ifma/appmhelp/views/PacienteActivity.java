@@ -89,16 +89,22 @@ public class PacienteActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
+        Intent intent;
         switch(item.getItemId()){
             case R.id.nav_alterar_dados :
                 Bundle bundle = new Bundle();
                 bundle.putSerializable(BundleKeys.USUARIO_LOGADO.getValue(),this.paciente);
                 startActivityForResult(new Intent(this, AlteraDadosActivity.class).putExtras(bundle), RESULT_FIRST_USER);
                 break;
+            case R.id.nav_adicionar_medico :
+                intent = new Intent(this, AdicionarMedicoActivity.class);
+                intent.putExtra(BundleKeys.PACIENTE.getValue(),this.paciente);
+                startActivity(intent);
+                break;
             case R.id.nav_logoff_paciente:
                 try {
                     new Login(this).realizaLogoff();
-                    Intent intent = new Intent(this, SplashActivity.class);
+                    intent = new Intent(this, SplashActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     intent.putExtra("msg_splash","Realizando logoff ...");
                     startActivity(intent);
