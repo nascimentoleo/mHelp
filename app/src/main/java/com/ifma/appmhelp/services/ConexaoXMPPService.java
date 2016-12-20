@@ -79,6 +79,7 @@ public class ConexaoXMPPService extends Service {
         if(this.conexao != null){
             if(this.conexao.isConnected()){
                 ConexaoXMPP.getInstance().setConexao(this.conexao);
+
                 return true;
             }
         }

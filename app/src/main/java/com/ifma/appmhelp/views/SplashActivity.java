@@ -70,6 +70,8 @@ public class SplashActivity extends Activity {
     private void conectar() {
         if(!ConexaoXMPP.getInstance().conexaoEstaAtiva())
             startService(new Intent(this, ConexaoXMPPService.class));
+        else
+            iniciaActivity();
 
     }
 

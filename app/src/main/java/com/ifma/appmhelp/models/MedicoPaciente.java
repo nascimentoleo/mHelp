@@ -16,9 +16,9 @@ public class MedicoPaciente implements IModel {
     @DatabaseField(foreign = true)
     private Paciente paciente;
 
-    public MedicoPaciente(Medico medico, Paciente paciente) {
-        this.medico = medico;
-        this.paciente = paciente;
+    public MedicoPaciente(IModel medico, IModel paciente) {
+        this.medico = (Medico) medico;
+        this.paciente = (Paciente) paciente;
     }
 
     public MedicoPaciente() {

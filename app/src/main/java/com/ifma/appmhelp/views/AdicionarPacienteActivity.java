@@ -12,6 +12,11 @@ import android.widget.Toast;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.ifma.appmhelp.R;
+import com.ifma.appmhelp.controls.MedicoPacienteController;
+import com.ifma.appmhelp.models.IModel;
+import com.ifma.appmhelp.models.MedicoPaciente;
+import com.ifma.appmhelp.models.Paciente;
+import com.ifma.appmhelp.models.UsuarioLogado;
 
 public class AdicionarPacienteActivity extends AppCompatActivity {
 
@@ -46,7 +51,18 @@ public class AdicionarPacienteActivity extends AppCompatActivity {
         IntentResult intentResult = IntentIntegrator.parseActivityResult(requestCode,resultCode,data);
         if(intentResult != null) {
             if(intentResult.getContents() != null) {
-                Toast.makeText(this, "Scanned: " + intentResult.getContents(), Toast.LENGTH_LONG).show();
+                try {
+                    IModel paciente = new Paciente().fromJson(intentResult.getContents());
+                    IModel medico   = UsuarioLogado.getInstance().getModelo();
+                    IModel medicoPaciente = new MedicoPaciente(medico, paciente);
+                    new MedicoPacienteController(this).persistir(medicoPaciente);
+                    Toast.makeText(this, "Paciente adicionado! ", Toast.LENGTH_LONG).show();
+                    finish();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(this, "Erro ao adicionar paciente: " + e.getMessage(), Toast.LENGTH_LONG).show();
+
+                }
             }
         }
         super.onActivityResult(requestCode, resultCode, data);

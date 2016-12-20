@@ -29,8 +29,8 @@ public class Login extends BaseController{
     public void realizaLogoff() throws Exception {
         if(ConexaoXMPP.getInstance().conexaoFoiAutenticada()){
             ConexaoXMPP.getInstance().desconectar();
-            this.salvarArquivoDePreferencias(new Usuario(), false);
         }
+        this.salvarArquivoDePreferencias(new Usuario(), false);
     }
 
     //Verifica se existe o usuário no banco, e se existir, compara as senhas oferecidas com a senha armazenada no banco

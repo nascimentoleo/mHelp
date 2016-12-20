@@ -18,12 +18,14 @@ public class FactoryConexaoXMPP {
         XMPPTCPConnectionConfiguration config = XMPPTCPConnectionConfiguration.builder()
                 .setDebuggerEnabled(true)
                 .setCompressionEnabled(true)
-                .setSecurityMode(ConnectionConfiguration.SecurityMode.disabled)
+                .setSecurityMode(ConnectionConfiguration.SecurityMode.ifpossible)
                 //.setSocketFactory(new DummySSLSocketFactory())
                 .setServiceName("mhelp-server-xmpp")
                 .setHost(host)
                 .setPort(porta)
                 .build();
-        return new XMPPTCPConnection(config).connect();
+        XMPPTCPConnection xmpptcpConnection = new XMPPTCPConnection(config);
+        xmpptcpConnection.setPacketReplyTimeout(10000);
+        return xmpptcpConnection.connect();
     }
 }

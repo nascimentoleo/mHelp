@@ -31,14 +31,20 @@ public class MedicosController extends BaseController implements IController{
 
     @Override
     public boolean persistir(IModel objeto) throws SQLException {
+        Medico medico = (Medico) objeto;
         Dao<Medico, Long> medicoDao = DbSqlHelper.getHelper(ctx).getDao(Medico.class);
-        medicoDao.createOrUpdate((Medico) objeto);
+        medicoDao.createOrUpdate(medico);
+        //Precisa atualizar as subclasses
+        new UsuariosController(ctx).persistir(medico.getUsuario());
         return true;
     }
 
     @Override
     public void carregaId(IModel objeto) throws SQLException {
-
+        Dao<Medico, Long> dao = DbSqlHelper.getHelper(ctx).getDao(Medico.class);
+        List<Medico> medicos = dao.queryForMatching((Medico) objeto);
+        if(!medicos.isEmpty())
+            objeto.setId(medicos.get(0).getId());
     }
 
 
