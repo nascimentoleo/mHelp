@@ -16,24 +16,31 @@ import android.widget.Toast;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.ifma.appmhelp.R;
-import com.ifma.appmhelp.controls.RosterXMPPController;
-import com.ifma.appmhelp.models.IModel;
-import com.ifma.appmhelp.models.MedicoPaciente;
+import com.ifma.appmhelp.controls.MensagemController;
+import com.ifma.appmhelp.enums.StatusSolicitacaoRoster;
+import com.ifma.appmhelp.enums.TipoDeMensagem;
+import com.ifma.appmhelp.models.Medico;
+import com.ifma.appmhelp.models.Mensagem;
 import com.ifma.appmhelp.models.Paciente;
-import com.ifma.appmhelp.models.Usuario;
+import com.ifma.appmhelp.models.SolicitacaoRoster;
 import com.ifma.appmhelp.models.UsuarioLogado;
-
-import org.jivesoftware.smack.SmackException;
-import org.jivesoftware.smack.packet.Presence;
 
 public class AdicionarPacienteActivity extends AppCompatActivity {
 
-    private IModel paciente;
+    private Paciente paciente;
+    private Medico medico;
 
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if(intent.getBooleanExtra("aceitou_solicitacao", false)){
+            if(intent.getBooleanExtra("finalizou", false)){
+                if (intent.getBooleanExtra("aceitou_solicitacao", false))
+                    Toast.makeText(AdicionarPacienteActivity.this, "Paciente adicionado! ", Toast.LENGTH_LONG).show();
+                else
+                    Toast.makeText(AdicionarPacienteActivity.this, "Paciente recusou a solicitação", Toast.LENGTH_SHORT).show();
+            }
+
+            /*if(intent.getBooleanExtra("aceitou_solicitacao", false)){
                 IModel medico   = UsuarioLogado.getInstance().getModelo();
                 IModel medicoPaciente = new MedicoPaciente(medico, paciente);
                 try {
@@ -48,14 +55,14 @@ public class AdicionarPacienteActivity extends AppCompatActivity {
 
             }else {
                 Toast.makeText(AdicionarPacienteActivity.this, "Paciente recusou a solicitação", Toast.LENGTH_SHORT).show();
-                RosterXMPPController roster = new RosterXMPPController(AdicionarPacienteActivity.this);
+                RosterXMPPController roster = new RosterXMPPController();
                 Usuario usuario = ((Paciente) paciente).getUsuario();
                 try {
                     roster.sendPresence(usuario,Presence.Type.unsubscribe);
                 } catch (SmackException.NotConnectedException e) {
                     e.printStackTrace();
                 }
-            }
+            }*/
         }
     };
 
@@ -76,6 +83,8 @@ public class AdicionarPacienteActivity extends AppCompatActivity {
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, new IntentFilter("solicitacao_roster"));
+        this.medico = (Medico) UsuarioLogado.getInstance().getModelo();
+
         this.iniciaQrScan();
     }
 
@@ -93,7 +102,9 @@ public class AdicionarPacienteActivity extends AppCompatActivity {
             if(intentResult.getContents() != null) {
                 try {
                     paciente = new Paciente().fromJson(intentResult.getContents());
-                    new RosterXMPPController(this).sendPresence(((Paciente) paciente).getUsuario(), Presence.Type.subscribe);
+                    SolicitacaoRoster solicitacaoRoster = new SolicitacaoRoster(medico.getUsuario(), StatusSolicitacaoRoster.ENVIADA);
+                    Mensagem mensagem = new Mensagem(solicitacaoRoster.toJson(), TipoDeMensagem.SOLICITACAO_ROSTER);
+                    MensagemController.enviaMensagem(paciente.getUsuario(), mensagem);
                 } catch (Exception e) {
                     e.printStackTrace();
                     Toast.makeText(this, "Erro ao enviar solicitação: " + e.getMessage(), Toast.LENGTH_LONG).show();

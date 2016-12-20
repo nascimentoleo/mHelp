@@ -1,14 +1,14 @@
 package com.ifma.appmhelp.services;
 
 import android.content.Context;
-import android.content.Intent;
-import android.support.v4.content.LocalBroadcastManager;
 
-import com.ifma.appmhelp.controls.RosterXMPPController;
+import com.ifma.appmhelp.controls.ProcessadorDeMensagens;
 import com.ifma.appmhelp.models.ConexaoXMPP;
+import com.ifma.appmhelp.models.Mensagem;
 
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.StanzaListener;
+import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.packet.Stanza;
 
@@ -30,15 +30,28 @@ public class StanzaXMPPListener implements StanzaListener{
         if(packet.getFrom() != null && packet.getFrom() != login){
             if(packet.getClass() == Presence.class)
                 this.processarPresenca((Presence) packet);
+            else if (packet.getClass() == Message.class) {
+                try {
+                    this.processarMensagem((Message) packet);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
+    private void processarMensagem(Message message) throws Exception {
+        Mensagem mensagem = Mensagem.fromJson(message.getBody().toString());
+        ProcessadorDeMensagens processador = mensagem.getTipo().getProcessador();
+        processador.processar(ctx,mensagem);
+    }
+
     private void processarPresenca(Presence presence){
-        LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(ctx);
+       /* LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(ctx);
         //Recebeu uma solicitação para adicionar contato
         if(presence.getType() == Presence.Type.subscribe){
             Intent it = new Intent("solicitacao_roster");
-            it.putExtra("login", RosterXMPPController.getLogin(presence.getFrom()));
+            it.putExtra("login", JidTranslator.getLogin(presence.getFrom()));
             it.putExtra("aceitou_solicitacao", true); //Parametro utilizado para confirmar que paciente confirmou a solicitação
             lbm.sendBroadcast(it);
         //Recebeu uma solicitacao para remover contato
@@ -46,7 +59,7 @@ public class StanzaXMPPListener implements StanzaListener{
             Intent it = new Intent("solicitacao_roster");
             it.putExtra("aceitou_solicitacao", false);
             lbm.sendBroadcast(it);
-        }
+        } */
 
     }
 

@@ -1,7 +1,6 @@
 package com.ifma.appmhelp.controls;
 
-import android.content.Context;
-
+import com.ifma.appmhelp.lib.JidTranslator;
 import com.ifma.appmhelp.models.ConexaoXMPP;
 import com.ifma.appmhelp.models.Usuario;
 
@@ -15,35 +14,26 @@ import org.jivesoftware.smack.roster.Roster;
  * Created by leo on 12/20/16.
  */
 
-public class RosterXMPPController extends BaseController {
+public class RosterXMPPController{
 
     private Roster roster;
 
-    public RosterXMPPController(Context ctx) {
-        super(ctx);
+    public RosterXMPPController() {
         this.roster = Roster.getInstanceFor(ConexaoXMPP.getInstance().getConexao());
         this.roster.setSubscriptionMode(Roster.SubscriptionMode.manual);
     }
 
     public void sendPresence(Usuario usuario, Presence.Type type) throws SmackException.NotConnectedException {
-        String jId = this.getjId(usuario.getLogin());
+        String jId = JidTranslator.getjId(ConexaoXMPP.getInstance().getConexao(),usuario.getLogin());
         Presence presence = new Presence(type);
         presence.setTo(jId);
         ConexaoXMPP.getInstance().getConexao().sendStanza(presence);
     }
 
     public void addRoster(Usuario usuario) throws SmackException.NotLoggedInException, XMPPException.XMPPErrorException, SmackException.NotConnectedException, SmackException.NoResponseException {
-        String jId = this.getjId(usuario.getLogin());
+        String jId = JidTranslator.getjId(ConexaoXMPP.getInstance().getConexao(),usuario.getLogin());
         this.roster.createEntry(jId,usuario.getNome(),null);
 
-    }
-
-    public static String getjId(String login){
-        return login + "@" + ConexaoXMPP.getInstance().getConexao().getServiceName();
-    }
-
-    public static String getLogin(String jId){
-        return jId.substring(0, jId.indexOf("@"));
     }
 
 }
