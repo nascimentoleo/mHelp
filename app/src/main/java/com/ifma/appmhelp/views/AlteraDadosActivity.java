@@ -1,6 +1,5 @@
 package com.ifma.appmhelp.views;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -13,17 +12,16 @@ import android.widget.Toast;
 
 import com.ifma.appmhelp.R;
 import com.ifma.appmhelp.controls.IController;
-import com.ifma.appmhelp.enums.BundleKeys;
 import com.ifma.appmhelp.events.OnSaveModelFragment;
 import com.ifma.appmhelp.factories.FactoryAlteraDadosActivity;
 import com.ifma.appmhelp.factories.FactoryController;
 import com.ifma.appmhelp.models.IModel;
+import com.ifma.appmhelp.models.UsuarioLogado;
 
 import java.sql.SQLException;
 
 public class AlteraDadosActivity extends AppCompatActivity implements OnSaveModelFragment{
 
-    private IModel usuarioLogado;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,8 +39,7 @@ public class AlteraDadosActivity extends AppCompatActivity implements OnSaveMode
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        usuarioLogado = (IModel) this.getIntent().getExtras().getSerializable(BundleKeys.USUARIO_LOGADO.getValue());
-        Fragment fragment = FactoryAlteraDadosActivity.getFragment(usuarioLogado);
+        Fragment fragment = FactoryAlteraDadosActivity.getFragment(UsuarioLogado.getInstance().getModelo());
         fragment.setArguments(this.getIntent().getExtras());
         getSupportFragmentManager().beginTransaction().add(R.id.container_altera_dados,fragment).commit();
 
@@ -52,9 +49,6 @@ public class AlteraDadosActivity extends AppCompatActivity implements OnSaveMode
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                Intent it = new Intent();
-                it.putExtra(BundleKeys.USUARIO_LOGADO.getValue(),this.usuarioLogado);
-                setResult(RESULT_OK, it);
                 finish();
                 return true;
         }
@@ -68,7 +62,6 @@ public class AlteraDadosActivity extends AppCompatActivity implements OnSaveMode
         try {
             if (controller.persistir(modelo)) {
                 Toast.makeText(this, "Dados alterados com sucesso!", Toast.LENGTH_SHORT).show();
-                this.usuarioLogado = modelo;
             }else
                 Toast.makeText(this, controller.getMsgErro() ,Toast.LENGTH_SHORT).show();
         } catch (SQLException e) {

@@ -17,13 +17,9 @@ import android.widget.Toast;
 
 import com.ifma.appmhelp.R;
 import com.ifma.appmhelp.controls.Login;
-import com.ifma.appmhelp.enums.BundleKeys;
-import com.ifma.appmhelp.models.Paciente;
 
 public class PacienteActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-
-    private Paciente paciente;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,8 +45,6 @@ public class PacienteActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        if(this.paciente == null)
-            this.paciente = (Paciente) getIntent().getExtras().getSerializable(BundleKeys.USUARIO_LOGADO.getValue());
     }
 
     @Override
@@ -92,13 +86,10 @@ public class PacienteActivity extends AppCompatActivity
         Intent intent;
         switch(item.getItemId()){
             case R.id.nav_alterar_dados :
-                Bundle bundle = new Bundle();
-                bundle.putSerializable(BundleKeys.USUARIO_LOGADO.getValue(),this.paciente);
-                startActivityForResult(new Intent(this, AlteraDadosActivity.class).putExtras(bundle), RESULT_FIRST_USER);
+                  startActivity(new Intent(this, AlteraDadosActivity.class));
                 break;
             case R.id.nav_adicionar_medico :
                 intent = new Intent(this, AdicionarMedicoActivity.class);
-                intent.putExtra(BundleKeys.PACIENTE.getValue(),this.paciente);
                 startActivity(intent);
                 break;
             case R.id.nav_logoff_paciente:
@@ -119,10 +110,4 @@ public class PacienteActivity extends AppCompatActivity
         return true;
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(resultCode == RESULT_OK)
-            this.paciente = (Paciente) data.getExtras().getSerializable(BundleKeys.USUARIO_LOGADO.getValue());
-        super.onActivityResult(requestCode, resultCode, data);
-    }
 }

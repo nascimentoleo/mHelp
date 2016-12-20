@@ -10,9 +10,9 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.ifma.appmhelp.R;
-import com.ifma.appmhelp.enums.BundleKeys;
 import com.ifma.appmhelp.events.OnSaveModelFragment;
 import com.ifma.appmhelp.models.Paciente;
+import com.ifma.appmhelp.models.UsuarioLogado;
 
 
 public class AlteraPacienteFragment extends Fragment implements View.OnClickListener {
@@ -33,7 +33,7 @@ public class AlteraPacienteFragment extends Fragment implements View.OnClickList
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        this.paciente = (Paciente) getArguments().getSerializable(BundleKeys.USUARIO_LOGADO.getValue());
+        this.paciente = (Paciente) UsuarioLogado.getInstance().getModelo();
         return inflater.inflate(R.layout.fragment_altera_paciente, container, false);
     }
 

@@ -18,11 +18,11 @@ import android.widget.Toast;
 
 import com.ifma.appmhelp.R;
 import com.ifma.appmhelp.controls.Login;
-import com.ifma.appmhelp.enums.BundleKeys;
 import com.ifma.appmhelp.factories.FactoryLogadoActivity;
 import com.ifma.appmhelp.models.ConexaoXMPP;
 import com.ifma.appmhelp.models.IModel;
 import com.ifma.appmhelp.models.Usuario;
+import com.ifma.appmhelp.models.UsuarioLogado;
 
 public class LoginActivity extends AppCompatActivity
         implements  NavigationView.OnNavigationItemSelectedListener {
@@ -137,10 +137,9 @@ public class LoginActivity extends AppCompatActivity
         try {
             IModel usuarioLogado = login.realizaLogin(usuario);
             if(usuarioLogado != null){
-                Bundle bundle = new Bundle();
-                bundle.putSerializable(BundleKeys.USUARIO_LOGADO.getValue(), usuarioLogado);
+                UsuarioLogado.getInstance().setModelo(usuarioLogado);
                 Class activityClass = FactoryLogadoActivity.getActivityClass(usuarioLogado);
-                startActivity(new Intent(this, activityClass).putExtras(bundle));
+                startActivity(new Intent(this, activityClass));
             }else
                 Toast.makeText(this, login.getMsgErro(),
                         Toast.LENGTH_SHORT).show();

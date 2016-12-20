@@ -9,7 +9,7 @@ import com.j256.ormlite.table.DatabaseTable;
  */
 
 @DatabaseTable(tableName = "pacientes")
-public class Paciente implements IModel{
+public class Paciente implements IModel, Cloneable{
     @DatabaseField(generatedId = true)
     private Long id;
     @DatabaseField
@@ -59,9 +59,11 @@ public class Paciente implements IModel{
     public String toJson(){
         return new Gson().toJson(this);
     }
-
     public static Paciente fromJson(String jsonObject){
         return new Gson().fromJson(jsonObject, Paciente.class);
     }
-
+    @Override
+    public Paciente clone() throws CloneNotSupportedException {
+        return (Paciente) super.clone();
+    }
 }

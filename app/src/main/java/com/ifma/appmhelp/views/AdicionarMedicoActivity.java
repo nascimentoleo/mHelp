@@ -16,8 +16,8 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.ifma.appmhelp.R;
-import com.ifma.appmhelp.enums.BundleKeys;
 import com.ifma.appmhelp.models.Paciente;
+import com.ifma.appmhelp.models.UsuarioLogado;
 
 public class AdicionarMedicoActivity extends AppCompatActivity {
 
@@ -47,7 +47,8 @@ public class AdicionarMedicoActivity extends AppCompatActivity {
 
     private void carregaComponentes(){
         this.imgQrCode = (ImageView) findViewById(R.id.imgQrCode);
-        this.paciente = (Paciente) this.getIntent().getSerializableExtra(BundleKeys.PACIENTE.getValue());
+        this.paciente = (Paciente) UsuarioLogado.getInstance().getModelo(); //(Paciente) this.getIntent().getSerializableExtra(BundleKeys.PACIENTE.getValue());
+
     }
 
     private void exibeQRCode(){
@@ -58,7 +59,10 @@ public class AdicionarMedicoActivity extends AppCompatActivity {
         int largura = metrics.widthPixels;
 
         try {
-            BitMatrix bitMatrix = new QRCodeWriter().encode(this.paciente.toJson(), BarcodeFormat.QR_CODE,largura,altura);
+            //Vou retirar a senha antes de gerar o qrcode
+            Paciente pacienteParaEnvio = this.paciente.clone();
+            pacienteParaEnvio.getUsuario().setSenha("");
+            BitMatrix bitMatrix = new QRCodeWriter().encode(pacienteParaEnvio.toJson(), BarcodeFormat.QR_CODE,largura,altura);
             Bitmap bmp = Bitmap.createBitmap(largura, altura, Bitmap.Config.RGB_565);
             for (int i = 0; i < largura; i ++)
                 for (int j = 0; j < altura; j ++)
@@ -67,6 +71,8 @@ public class AdicionarMedicoActivity extends AppCompatActivity {
             imgQrCode.setImageBitmap(bmp);
 
         } catch (WriterException e) {
+            e.printStackTrace();
+        } catch (CloneNotSupportedException e) {
             e.printStackTrace();
         }
     }
