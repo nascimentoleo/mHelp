@@ -34,7 +34,7 @@ public class ConectarXMPPTask extends AsyncTask<Host, Integer, Boolean> {
     @Override
     public Boolean doInBackground(Host... params){
         try {
-            this.conexao = FactoryConexaoXMPP.getConexao(params[0].getEndereco(), params[0].getPorta());
+            this.conexao = FactoryConexaoXMPP.getConexao(this.ctx, params[0].getEndereco(), params[0].getPorta());
             return true;
         } catch (IOException | SmackException | XMPPException e) {
             e.printStackTrace();
@@ -45,18 +45,13 @@ public class ConectarXMPPTask extends AsyncTask<Host, Integer, Boolean> {
     }
 
     @Override
-    protected void onCancelled() {
-        super.onCancelled();
-    }
-
-    @Override
     protected void onPostExecute(Boolean response) {
         LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this.ctx);
         Intent it = new Intent("conectar");
 
-        if(this.conexao != null)
-           it.putExtra("finalizou_conexao", true);
-        else{
+        if(this.conexao != null) {
+            it.putExtra("finalizou_conexao", true);
+        }else{
             it.putExtra("finalizou_conexao", false);
             it.putExtra("msg_erro", this.msgErro);
         }

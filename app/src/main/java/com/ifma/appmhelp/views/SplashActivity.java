@@ -20,6 +20,7 @@ public class SplashActivity extends Activity {
 
     private ImageView imgLogo;
     private TextView txtMsgSplash;
+
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
