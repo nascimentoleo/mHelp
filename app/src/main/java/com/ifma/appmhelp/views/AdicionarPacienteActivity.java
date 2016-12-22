@@ -39,44 +39,12 @@ public class AdicionarPacienteActivity extends AppCompatActivity {
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if(intent.getBooleanExtra("finalizou", false)){
+            if (intent.getBooleanExtra("finalizou", false)) {
                 if (intent.getBooleanExtra("aceitou_solicitacao", false)) {
-                    try {
-                        //Adiciono o roster
-                        new RosterXMPPController().addRoster(paciente.getUsuario());
-                        PacientesController pacientesController = new PacientesController(AdicionarPacienteActivity.this);
-                        UsuariosController usuariosController = new UsuariosController(AdicionarPacienteActivity.this);
-
-                        //Verifico se esse usuário já foi adicionado anteriormente
-                        Usuario usuarioDB = usuariosController.getUsuarioByLogin(paciente.getUsuario().getLogin());
-                        if (usuarioDB == null){
-                            //Novos ids serão criados
-                            paciente.setId(null);
-                            paciente.getUsuario().setId(null);
-                        }else{
-                            //Pego ids existentes
-                            paciente.getUsuario().setId(usuarioDB.getId());
-                            Paciente pacienteDB = pacientesController.getPacienteByUsuario(usuarioDB);
-
-                            if(pacienteDB != null){
-                                paciente.setId(pacienteDB.getId());
-                            }
-                        }
-                        MedicoPaciente medicoPaciente = new MedicoPaciente(medico, paciente);
-                        new MedicoPacienteController(AdicionarPacienteActivity.this).persistir(medicoPaciente, true);
-
-                        Toast.makeText(AdicionarPacienteActivity.this, "Paciente adicionado! ", Toast.LENGTH_LONG).show();
-
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        Toast.makeText(AdicionarPacienteActivity.this, "Erro ao adicionar paciente: " +
-                                e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-
+                    adicionarPaciente(paciente);
                 }else
-                    Toast.makeText(AdicionarPacienteActivity.this, "Paciente recusou a solicitação", Toast.LENGTH_SHORT).show();
-            finish();
+                    Toast.makeText(AdicionarPacienteActivity.this,"Paciente recusou a solicitação",Toast.LENGTH_SHORT).show();
+                finish();
             }
         }
     };
@@ -103,7 +71,7 @@ public class AdicionarPacienteActivity extends AppCompatActivity {
         this.iniciaQrScan();
     }
 
-    private void iniciaQrScan(){
+    private void iniciaQrScan() {
         IntentIntegrator intentIntegrator = new IntentIntegrator(this);
         intentIntegrator.setPrompt("Posicione a camera para escanear o código do paciente");
         intentIntegrator.setBeepEnabled(false);
@@ -112,14 +80,14 @@ public class AdicionarPacienteActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        IntentResult intentResult = IntentIntegrator.parseActivityResult(requestCode,resultCode,data);
-        if(intentResult != null) {
-            if(intentResult.getContents() != null) {
+        IntentResult intentResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        if (intentResult != null) {
+            if (intentResult.getContents() != null) {
                 try {
-                    paciente = new Paciente().fromJson(intentResult.getContents());
+                    this.paciente = new Paciente().fromJson(intentResult.getContents());
                     SolicitacaoRoster solicitacaoRoster = new SolicitacaoRoster(medico.getUsuario(), StatusSolicitacaoRoster.ENVIADA);
                     Mensagem mensagem = new Mensagem(solicitacaoRoster.toJson(), TipoDeMensagem.SOLICITACAO_ROSTER);
-                    MensagemController.enviaMensagem(paciente.getUsuario(), mensagem);
+                    MensagemController.enviaMensagem(this.paciente.getUsuario(), mensagem);
                 } catch (Exception e) {
                     e.printStackTrace();
                     Toast.makeText(this, "Erro ao enviar solicitação: " + e.getMessage(), Toast.LENGTH_LONG).show();
@@ -129,4 +97,41 @@ public class AdicionarPacienteActivity extends AppCompatActivity {
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
+
+
+    private void adicionarPaciente(Paciente paciente) {
+        try {
+            //Adiciono o roster
+            new RosterXMPPController().addRoster(paciente.getUsuario());
+            PacientesController pacientesController = new PacientesController(AdicionarPacienteActivity.this);
+            UsuariosController usuariosController = new UsuariosController(AdicionarPacienteActivity.this);
+
+            //Verifico se esse usuário já foi adicionado anteriormente
+            Usuario usuarioDB = usuariosController.getUsuarioByLogin(paciente.getUsuario().getLogin());
+            if (usuarioDB == null) {
+                //Novos ids serão criados
+                paciente.setId(null);
+                paciente.getUsuario().setId(null);
+            } else {
+                //Pego ids existentes
+                paciente.getUsuario().setId(usuarioDB.getId());
+                Paciente pacienteDB = pacientesController.getPacienteByUsuario(usuarioDB);
+
+                if (pacienteDB != null) {
+                    paciente.setId(pacienteDB.getId());
+                }
+            }
+            MedicoPaciente medicoPaciente = new MedicoPaciente(medico, paciente);
+            new MedicoPacienteController(AdicionarPacienteActivity.this).persistir(medicoPaciente, true);
+
+            Toast.makeText(AdicionarPacienteActivity.this, "Paciente adicionado! ", Toast.LENGTH_LONG).show();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(AdicionarPacienteActivity.this, "Erro ao adicionar paciente: " +
+                    e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+
+
+    }
+
 }

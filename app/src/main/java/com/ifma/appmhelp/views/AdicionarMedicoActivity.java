@@ -123,58 +123,62 @@ public class AdicionarMedicoActivity extends AppCompatActivity {
                 .setTitle("Um médico deseja lhe adicionar")
                 .setMessage("Confirmar solicitação de "+ medico.getUsuario().getNome())
                 .setIcon(android.R.drawable.ic_dialog_alert)
-
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        try {
-                            RosterXMPPController roster = new RosterXMPPController();
-                            roster.addRoster(medico.getUsuario());
-
-                            //Envia confirmação
-                            SolicitacaoRoster solicitacaoRoster = new SolicitacaoRoster(paciente.getUsuario(), StatusSolicitacaoRoster.APROVADA);
-                            Mensagem mensagem = new Mensagem(solicitacaoRoster.toJson(), TipoDeMensagem.SOLICITACAO_ROSTER);
-                            MensagemController.enviaMensagem(medico.getUsuario(), mensagem);
-
-                            UsuariosController usuariosController  = new UsuariosController(AdicionarMedicoActivity.this);
-                            MedicosController medicosController    = new MedicosController(AdicionarMedicoActivity.this);
-
-                            Usuario usuarioDB = usuariosController.getUsuarioByLogin(medico.getUsuario().getLogin());
-                            if (usuarioDB == null){
-                                medico.setId(null);
-                                medico.getUsuario().setId(null);
-                            }else{
-                                medico.getUsuario().setId(usuarioDB.getId());
-
-                                Medico medicoDB = medicosController.getMedicoByUsuario(usuarioDB);
-                                if(medicoDB != null){
-                                    medico.setId(medicoDB.getId());
-                                }
-
-                            }
-                            MedicoPaciente medicoPaciente = new MedicoPaciente(medico, paciente);
-                            new MedicoPacienteController(AdicionarMedicoActivity.this).persistir(medicoPaciente, true);
-                            Toast.makeText(AdicionarMedicoActivity.this, "Médico adicionado! ", Toast.LENGTH_LONG).show();
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                        enviaRespostaDaSolicitacao(StatusSolicitacaoRoster.APROVADA);
+                        adicionarMedico(medico);
                     }})
 
                 .setNegativeButton(android.R.string.no,new DialogInterface.OnClickListener() {
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        try {
-                            SolicitacaoRoster solicitacaoRoster = new SolicitacaoRoster(paciente.getUsuario(), StatusSolicitacaoRoster.REPROVADA);
-                            Mensagem mensagem = new Mensagem(solicitacaoRoster.toJson(), TipoDeMensagem.SOLICITACAO_ROSTER);
-                            MensagemController.enviaMensagem(medico.getUsuario(), mensagem);
-                            Toast.makeText(AdicionarMedicoActivity.this, "Médico recusado! ", Toast.LENGTH_LONG).show();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                        enviaRespostaDaSolicitacao(StatusSolicitacaoRoster.REPROVADA);
+                        Toast.makeText(AdicionarMedicoActivity.this, "Médico recusado! ", Toast.LENGTH_LONG).show();
                     }
                 }).create();
+    }
+
+    private void enviaRespostaDaSolicitacao(StatusSolicitacaoRoster statusResposta){
+        try {
+            SolicitacaoRoster solicitacaoRoster = new SolicitacaoRoster(paciente.getUsuario(), statusResposta);
+            Mensagem mensagem = new Mensagem(solicitacaoRoster.toJson(), TipoDeMensagem.SOLICITACAO_ROSTER);
+            MensagemController.enviaMensagem(medico.getUsuario(), mensagem);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void adicionarMedico(Medico medico){
+        try {
+            RosterXMPPController roster = new RosterXMPPController();
+            roster.addRoster(medico.getUsuario());
+            UsuariosController usuariosController  = new UsuariosController(AdicionarMedicoActivity.this);
+            MedicosController medicosController    = new MedicosController(AdicionarMedicoActivity.this);
+
+            Usuario usuarioDB = usuariosController.getUsuarioByLogin(medico.getUsuario().getLogin());
+            if (usuarioDB == null){
+                medico.setId(null);
+                medico.getUsuario().setId(null);
+            }else{
+                medico.getUsuario().setId(usuarioDB.getId());
+
+                Medico medicoDB = medicosController.getMedicoByUsuario(usuarioDB);
+                if(medicoDB != null){
+                    medico.setId(medicoDB.getId());
+                }
+
+            }
+
+            MedicoPaciente medicoPaciente = new MedicoPaciente(medico, paciente);
+            new MedicoPacienteController(AdicionarMedicoActivity.this).persistir(medicoPaciente, true);
+            Toast.makeText(AdicionarMedicoActivity.this, "Médico adicionado! ", Toast.LENGTH_LONG).show();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

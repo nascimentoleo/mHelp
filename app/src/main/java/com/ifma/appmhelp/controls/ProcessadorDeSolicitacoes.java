@@ -33,4 +33,5 @@ public class ProcessadorDeSolicitacoes implements ProcessadorDeMensagens {
 
         lbm.sendBroadcast(it);
     }
+
 }

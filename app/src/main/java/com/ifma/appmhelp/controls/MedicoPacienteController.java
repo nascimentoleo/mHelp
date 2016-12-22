@@ -36,4 +36,5 @@ public class MedicoPacienteController extends BaseController implements IControl
     public void carregaId(IModel objeto) throws SQLException {
 
     }
+
 }
