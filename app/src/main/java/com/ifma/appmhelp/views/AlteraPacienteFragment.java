@@ -79,6 +79,7 @@ public class AlteraPacienteFragment extends Fragment implements View.OnClickList
         this.paciente.getUsuario().setEmail(this.edEmail.getText().toString().trim());
         this.paciente.setEndereco(this.edEndereco.getText().toString().trim());
         this.paciente.setTelefone(this.edTelefone.getText().toString().trim());
+
         activityMain.save(this.paciente);
 
     }

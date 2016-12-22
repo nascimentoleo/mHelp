@@ -14,7 +14,7 @@ public class Usuario implements IModel{
     private Long id;
     @DatabaseField(uniqueIndex = true, canBeNull = false)
     private String login;
-    @DatabaseField (canBeNull = false)
+    @DatabaseField
     private String senha;
     @DatabaseField
     private String nome;
@@ -72,5 +72,7 @@ public class Usuario implements IModel{
     public String getEmail() {
         return email;
     }
+
+
 
 }

@@ -8,7 +8,7 @@ import javax.crypto.spec.SecretKeySpec;
 /**
  * Created by leo on 12/8/16.
  */
-public class PasswordCrypt {
+public class BlowfishCrypt {
 
     private static final String key = "U39E6C50x4NUgWEhasssTw==";
 

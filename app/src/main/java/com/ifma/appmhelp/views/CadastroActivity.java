@@ -16,7 +16,7 @@ import com.ifma.appmhelp.controls.IController;
 import com.ifma.appmhelp.controls.MedicosController;
 import com.ifma.appmhelp.controls.PacientesController;
 import com.ifma.appmhelp.controls.UsuariosController;
-import com.ifma.appmhelp.lib.PasswordCrypt;
+import com.ifma.appmhelp.lib.BlowfishCrypt;
 import com.ifma.appmhelp.models.IModel;
 import com.ifma.appmhelp.models.Medico;
 import com.ifma.appmhelp.models.Paciente;
@@ -65,8 +65,8 @@ public class CadastroActivity extends AppCompatActivity {
                     //Se não existe usuário cadastrado no banco
                     if(controleDeUsuarios.getUsuarioByLogin(novoUsuario.getLogin()) == null) {
                         //Criptografa a senha antes de salvar no banco
-                        novoUsuario.setSenha(PasswordCrypt.encrypt(novoUsuario.getSenha()));
-                        controleDeUsuarios.persistir(novoUsuario);
+                        novoUsuario.setSenha(BlowfishCrypt.encrypt(novoUsuario.getSenha()));
+                        controleDeUsuarios.persistir(novoUsuario, false);
                         this.registrarUsuario(novoUsuario);
                         Toast.makeText(this, "Usuário cadastrado", Toast.LENGTH_SHORT).show();
 
@@ -91,7 +91,7 @@ public class CadastroActivity extends AppCompatActivity {
             controle = new MedicosController(this);
             modelo   = new Medico(usuario);
         }
-        controle.persistir(modelo);
+        controle.persistir(modelo, false);
         return true;
     }
 

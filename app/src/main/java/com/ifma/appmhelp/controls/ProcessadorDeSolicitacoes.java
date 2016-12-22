@@ -19,17 +19,18 @@ public class ProcessadorDeSolicitacoes implements ProcessadorDeMensagens {
         SolicitacaoRoster solicitacaoRoster = SolicitacaoRoster.fromJson(mensagem.getMsg());
         LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(ctx);
         Intent it = new Intent("solicitacao_roster");
+
         if (solicitacaoRoster.getStatus() == StatusSolicitacaoRoster.ENVIADA) {
-            it.putExtra("usuario", solicitacaoRoster.getUsuario());
+            it.putExtra("usuario_medico", solicitacaoRoster.getUsuario());
             it.putExtra("finalizou", false);
         } else{
             it.putExtra("finalizou", true);
             if (solicitacaoRoster.getStatus() == StatusSolicitacaoRoster.APROVADA) {
-                new RosterXMPPController().addRoster(solicitacaoRoster.getUsuario());
                 it.putExtra("aceitou_solicitacao", true);
             } else
                 it.putExtra("aceitou_solicitacao", false);
         }
+
         lbm.sendBroadcast(it);
     }
 }

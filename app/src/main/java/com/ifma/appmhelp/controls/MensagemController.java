@@ -1,11 +1,11 @@
 package com.ifma.appmhelp.controls;
 
+import com.ifma.appmhelp.lib.BlowfishCrypt;
 import com.ifma.appmhelp.lib.JidTranslator;
 import com.ifma.appmhelp.models.ConexaoXMPP;
 import com.ifma.appmhelp.models.Mensagem;
 import com.ifma.appmhelp.models.Usuario;
 
-import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.packet.Message;
 
 /**
@@ -14,9 +14,11 @@ import org.jivesoftware.smack.packet.Message;
 
 public class MensagemController{
 
-    public static void enviaMensagem(Usuario usuario, Mensagem mensagem) throws SmackException.NotConnectedException {
+    public static void enviaMensagem(Usuario usuario, Mensagem mensagem) throws Exception {
         String jId = JidTranslator.getjId(ConexaoXMPP.getInstance().getConexao(),usuario.getLogin());
-        Message message = new Message(jId,mensagem.toJson());
+        //Criptografa o json antes de enviar
+        String jsonCriptografado = BlowfishCrypt.encrypt(mensagem.toJson());
+        Message message = new Message(jId,jsonCriptografado);
         ConexaoXMPP.getInstance().getConexao().sendStanza(message);
     }
 }

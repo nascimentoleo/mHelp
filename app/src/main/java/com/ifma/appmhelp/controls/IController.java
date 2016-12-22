@@ -9,7 +9,7 @@ import java.sql.SQLException;
  */
 public interface IController {
 
-    boolean persistir(IModel objeto) throws SQLException;
+    boolean persistir(IModel objeto, boolean updateChild) throws SQLException;
 
     void carregaId(IModel objeto) throws SQLException;
 

@@ -133,7 +133,7 @@ public class LoginActivity extends AppCompatActivity
         }
     }
 
-    private void logar(Usuario usuario){
+    private void logar(Usuario usuario) throws Exception {
         try {
             IModel usuarioLogado = login.realizaLogin(usuario);
             if(usuarioLogado != null){
@@ -147,6 +147,7 @@ public class LoginActivity extends AppCompatActivity
             e.printStackTrace();
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT)
                     .show();
+            new Login(this).realizaLogoff();
         }
     }
 

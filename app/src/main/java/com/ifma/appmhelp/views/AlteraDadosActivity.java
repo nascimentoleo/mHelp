@@ -60,7 +60,7 @@ public class AlteraDadosActivity extends AppCompatActivity implements OnSaveMode
     public void save(IModel modelo) {
         IController controller = FactoryController.getController(this,modelo);
         try {
-            if (controller.persistir(modelo)) {
+            if (controller.persistir(modelo, true)) {
                 Toast.makeText(this, "Dados alterados com sucesso!", Toast.LENGTH_SHORT).show();
             }else
                 Toast.makeText(this, controller.getMsgErro() ,Toast.LENGTH_SHORT).show();
@@ -70,4 +70,5 @@ public class AlteraDadosActivity extends AppCompatActivity implements OnSaveMode
         }
 
     }
+
 }

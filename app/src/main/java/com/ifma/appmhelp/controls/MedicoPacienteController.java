@@ -20,9 +20,15 @@ public class MedicoPacienteController extends BaseController implements IControl
     }
 
     @Override
-    public boolean persistir(IModel objeto) throws SQLException {
+    public boolean persistir(IModel objeto, boolean updateChild) throws SQLException {
+        MedicoPaciente medicoPaciente = (MedicoPaciente) objeto;
+        if (updateChild){
+           new MedicosController(ctx).persistir(medicoPaciente.getMedico(),updateChild);
+           new PacientesController(ctx).persistir(medicoPaciente.getPaciente(),updateChild);
+        }
+
         Dao<MedicoPaciente, Long> dao = DbSqlHelper.getHelper(ctx).getDao(MedicoPaciente.class);
-        dao.createOrUpdate((MedicoPaciente) objeto);
+        dao.createOrUpdate(medicoPaciente);
         return true;
     }
 

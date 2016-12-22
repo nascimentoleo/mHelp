@@ -16,13 +16,19 @@ import android.widget.Toast;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.ifma.appmhelp.R;
+import com.ifma.appmhelp.controls.MedicoPacienteController;
 import com.ifma.appmhelp.controls.MensagemController;
+import com.ifma.appmhelp.controls.PacientesController;
+import com.ifma.appmhelp.controls.RosterXMPPController;
+import com.ifma.appmhelp.controls.UsuariosController;
 import com.ifma.appmhelp.enums.StatusSolicitacaoRoster;
 import com.ifma.appmhelp.enums.TipoDeMensagem;
 import com.ifma.appmhelp.models.Medico;
+import com.ifma.appmhelp.models.MedicoPaciente;
 import com.ifma.appmhelp.models.Mensagem;
 import com.ifma.appmhelp.models.Paciente;
 import com.ifma.appmhelp.models.SolicitacaoRoster;
+import com.ifma.appmhelp.models.Usuario;
 import com.ifma.appmhelp.models.UsuarioLogado;
 
 public class AdicionarPacienteActivity extends AppCompatActivity {
@@ -34,35 +40,44 @@ public class AdicionarPacienteActivity extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             if(intent.getBooleanExtra("finalizou", false)){
-                if (intent.getBooleanExtra("aceitou_solicitacao", false))
-                    Toast.makeText(AdicionarPacienteActivity.this, "Paciente adicionado! ", Toast.LENGTH_LONG).show();
-                else
+                if (intent.getBooleanExtra("aceitou_solicitacao", false)) {
+                    try {
+                        //Adiciono o roster
+                        new RosterXMPPController().addRoster(paciente.getUsuario());
+                        PacientesController pacientesController = new PacientesController(AdicionarPacienteActivity.this);
+                        UsuariosController usuariosController = new UsuariosController(AdicionarPacienteActivity.this);
+
+                        //Verifico se esse usuário já foi adicionado anteriormente
+                        Usuario usuarioDB = usuariosController.getUsuarioByLogin(paciente.getUsuario().getLogin());
+                        if (usuarioDB == null){
+                            //Novos ids serão criados
+                            paciente.setId(null);
+                            paciente.getUsuario().setId(null);
+                        }else{
+                            //Pego ids existentes
+                            paciente.getUsuario().setId(usuarioDB.getId());
+                            Paciente pacienteDB = pacientesController.getPacienteByUsuario(usuarioDB);
+
+                            if(pacienteDB != null){
+                                paciente.setId(pacienteDB.getId());
+                            }
+                        }
+                        MedicoPaciente medicoPaciente = new MedicoPaciente(medico, paciente);
+                        new MedicoPacienteController(AdicionarPacienteActivity.this).persistir(medicoPaciente, true);
+
+                        Toast.makeText(AdicionarPacienteActivity.this, "Paciente adicionado! ", Toast.LENGTH_LONG).show();
+
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Toast.makeText(AdicionarPacienteActivity.this, "Erro ao adicionar paciente: " +
+                                e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+
+                }else
                     Toast.makeText(AdicionarPacienteActivity.this, "Paciente recusou a solicitação", Toast.LENGTH_SHORT).show();
+            finish();
             }
-
-            /*if(intent.getBooleanExtra("aceitou_solicitacao", false)){
-                IModel medico   = UsuarioLogado.getInstance().getModelo();
-                IModel medicoPaciente = new MedicoPaciente(medico, paciente);
-                try {
-                    //new MedicoPacienteController(AdicionarPacienteActivity.this).persistir(medicoPaciente);
-                    Toast.makeText(AdicionarPacienteActivity.this, "Paciente adicionado! ", Toast.LENGTH_LONG).show();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Toast.makeText(AdicionarPacienteActivity.this, "Erro ao adicionar paciente: " + e.getMessage(),
-                            Toast.LENGTH_SHORT).show();
-                }
-
-
-            }else {
-                Toast.makeText(AdicionarPacienteActivity.this, "Paciente recusou a solicitação", Toast.LENGTH_SHORT).show();
-                RosterXMPPController roster = new RosterXMPPController();
-                Usuario usuario = ((Paciente) paciente).getUsuario();
-                try {
-                    roster.sendPresence(usuario,Presence.Type.unsubscribe);
-                } catch (SmackException.NotConnectedException e) {
-                    e.printStackTrace();
-                }
-            }*/
         }
     };
 

@@ -3,6 +3,7 @@ package com.ifma.appmhelp.services;
 import android.content.Context;
 
 import com.ifma.appmhelp.controls.ProcessadorDeMensagens;
+import com.ifma.appmhelp.lib.BlowfishCrypt;
 import com.ifma.appmhelp.models.ConexaoXMPP;
 import com.ifma.appmhelp.models.Mensagem;
 
@@ -41,7 +42,8 @@ public class StanzaXMPPListener implements StanzaListener{
     }
 
     private void processarMensagem(Message message) throws Exception {
-        Mensagem mensagem = Mensagem.fromJson(message.getBody().toString());
+        String jsonCriptografado = message.getBody().toString();
+        Mensagem mensagem = Mensagem.fromJson(BlowfishCrypt.decrypt(jsonCriptografado));
         ProcessadorDeMensagens processador = mensagem.getTipo().getProcessador();
         processador.processar(ctx,mensagem);
     }

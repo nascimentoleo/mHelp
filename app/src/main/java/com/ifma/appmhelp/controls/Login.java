@@ -3,7 +3,7 @@ package com.ifma.appmhelp.controls;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.ifma.appmhelp.lib.PasswordCrypt;
+import com.ifma.appmhelp.lib.BlowfishCrypt;
 import com.ifma.appmhelp.models.ConexaoXMPP;
 import com.ifma.appmhelp.models.IModel;
 import com.ifma.appmhelp.models.Usuario;
@@ -41,7 +41,7 @@ public class Login extends BaseController{
 
         if (usuarioDb != null) {
             String senha   = usuario.getSenha();
-            String senhaDb = PasswordCrypt.decrypt(usuarioDb.getSenha());
+            String senhaDb = BlowfishCrypt.decrypt(usuarioDb.getSenha());
             if (senha.equals(senhaDb))
                 return true;
             else
@@ -53,7 +53,7 @@ public class Login extends BaseController{
 
     private IModel carregaUsuario(Usuario usuario) throws Exception {
         IModel result;
-        usuario.setSenha(PasswordCrypt.encrypt(usuario.getSenha()));
+        usuario.setSenha(null); //Limpo a senha pois não é mais necessária
         new UsuariosController(ctx).carregaId(usuario);
         result = new MedicosController(ctx).getMedicoByUsuario(usuario);
         if(result == null)
@@ -65,7 +65,7 @@ public class Login extends BaseController{
         SharedPreferences prefs = ctx.getSharedPreferences("preferences",0);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString("login", usuario.getLogin());
-        editor.putString("senha", PasswordCrypt.encrypt(usuario.getSenha()));
+        editor.putString("senha", BlowfishCrypt.encrypt(usuario.getSenha()));
         editor.putBoolean("logado", logado);
         editor.commit();
     }
@@ -74,7 +74,7 @@ public class Login extends BaseController{
         SharedPreferences prefs = ctx.getSharedPreferences("preferences", 0);
         if (prefs.getBoolean("logado", false)){
             String login = prefs.getString("login", "");
-            String senha = PasswordCrypt.decrypt(prefs.getString("senha", ""));
+            String senha = BlowfishCrypt.decrypt(prefs.getString("senha", ""));
             return new Usuario(login,senha);
         }
         return null;

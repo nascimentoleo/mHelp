@@ -21,7 +21,7 @@ public class SolicitacaoRoster {
         return status;
     }
 
-    public Usuario getUsuario() {
+    public IModel getUsuario() {
         return usuario;
     }
 

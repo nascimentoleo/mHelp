@@ -24,67 +24,45 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.ifma.appmhelp.R;
+import com.ifma.appmhelp.controls.MedicoPacienteController;
+import com.ifma.appmhelp.controls.MedicosController;
 import com.ifma.appmhelp.controls.MensagemController;
 import com.ifma.appmhelp.controls.RosterXMPPController;
+import com.ifma.appmhelp.controls.UsuariosController;
 import com.ifma.appmhelp.enums.StatusSolicitacaoRoster;
 import com.ifma.appmhelp.enums.TipoDeMensagem;
+import com.ifma.appmhelp.models.Medico;
+import com.ifma.appmhelp.models.MedicoPaciente;
 import com.ifma.appmhelp.models.Mensagem;
 import com.ifma.appmhelp.models.Paciente;
 import com.ifma.appmhelp.models.SolicitacaoRoster;
 import com.ifma.appmhelp.models.Usuario;
 import com.ifma.appmhelp.models.UsuarioLogado;
 
-import org.jivesoftware.smack.SmackException;
-
 public class AdicionarMedicoActivity extends AppCompatActivity {
 
     private ImageView imgQrCode;
     private Paciente paciente;
-    private Usuario usuario;
+    private Medico medico;
+
 
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            usuario = (Usuario) intent.getSerializableExtra("usuario");
+            Usuario usuarioMedico = (Usuario) intent.getSerializableExtra("usuario_medico");
+            medico = new Medico(usuarioMedico);
+            //Precisa rodar dentro da thread para evitar que seja executado com a Activity em background
+            runOnUiThread(new Runnable() {
+                              @Override
+                              public void run() {
+                                  if(!isFinishing())
+                                    createDialog().show();
+                              }
+                          });
 
-            new AlertDialog.Builder(AdicionarMedicoActivity.this)
-            .setTitle("Um médico deseja lhe adicionar")
-            .setMessage("Confirmar solicitação de "+ usuario.getNome())
-            .setIcon(android.R.drawable.ic_dialog_alert)
-
-            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-
-                public void onClick(DialogInterface dialog, int whichButton) {
-                    try {
-                        RosterXMPPController roster = new RosterXMPPController();
-                        roster.addRoster(usuario);
-                        //Envia confirmação
-                        SolicitacaoRoster solicitacaoRoster = new SolicitacaoRoster(paciente.getUsuario(), StatusSolicitacaoRoster.APROVADA);
-                        Mensagem mensagem = new Mensagem(solicitacaoRoster.toJson(), TipoDeMensagem.SOLICITACAO_ROSTER);
-                        MensagemController.enviaMensagem(usuario, mensagem);
-                        Toast.makeText(AdicionarMedicoActivity.this, "Médico adicionado! ", Toast.LENGTH_LONG).show();
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }})
-
-            .setNegativeButton(android.R.string.no,new DialogInterface.OnClickListener() {
-
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    try {
-                        SolicitacaoRoster solicitacaoRoster = new SolicitacaoRoster(paciente.getUsuario(), StatusSolicitacaoRoster.REPROVADA);
-                        Mensagem mensagem = new Mensagem(solicitacaoRoster.toJson(), TipoDeMensagem.SOLICITACAO_ROSTER);
-                        MensagemController.enviaMensagem(usuario, mensagem);
-                        Toast.makeText(AdicionarMedicoActivity.this, "Médico recusado! ", Toast.LENGTH_LONG).show();
-                    } catch (SmackException.NotConnectedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }).show();
         }
     };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -123,7 +101,6 @@ public class AdicionarMedicoActivity extends AppCompatActivity {
         try {
             //Vou retirar a senha antes de gerar o qrcode
             Paciente pacienteParaEnvio = this.paciente.clone();
-            pacienteParaEnvio.getUsuario().setSenha("");
             BitMatrix bitMatrix = new QRCodeWriter().encode(pacienteParaEnvio.toJson(), BarcodeFormat.QR_CODE,largura,altura);
             Bitmap bmp = Bitmap.createBitmap(largura, altura, Bitmap.Config.RGB_565);
             for (int i = 0; i < largura; i ++)
@@ -137,6 +114,67 @@ public class AdicionarMedicoActivity extends AppCompatActivity {
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();
         }
+    }
+
+
+    private AlertDialog createDialog(){
+
+        return new AlertDialog.Builder(AdicionarMedicoActivity.this)
+                .setTitle("Um médico deseja lhe adicionar")
+                .setMessage("Confirmar solicitação de "+ medico.getUsuario().getNome())
+                .setIcon(android.R.drawable.ic_dialog_alert)
+
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        try {
+                            RosterXMPPController roster = new RosterXMPPController();
+                            roster.addRoster(medico.getUsuario());
+
+                            //Envia confirmação
+                            SolicitacaoRoster solicitacaoRoster = new SolicitacaoRoster(paciente.getUsuario(), StatusSolicitacaoRoster.APROVADA);
+                            Mensagem mensagem = new Mensagem(solicitacaoRoster.toJson(), TipoDeMensagem.SOLICITACAO_ROSTER);
+                            MensagemController.enviaMensagem(medico.getUsuario(), mensagem);
+
+                            UsuariosController usuariosController  = new UsuariosController(AdicionarMedicoActivity.this);
+                            MedicosController medicosController    = new MedicosController(AdicionarMedicoActivity.this);
+
+                            Usuario usuarioDB = usuariosController.getUsuarioByLogin(medico.getUsuario().getLogin());
+                            if (usuarioDB == null){
+                                medico.setId(null);
+                                medico.getUsuario().setId(null);
+                            }else{
+                                medico.getUsuario().setId(usuarioDB.getId());
+
+                                Medico medicoDB = medicosController.getMedicoByUsuario(usuarioDB);
+                                if(medicoDB != null){
+                                    medico.setId(medicoDB.getId());
+                                }
+
+                            }
+                            MedicoPaciente medicoPaciente = new MedicoPaciente(medico, paciente);
+                            new MedicoPacienteController(AdicionarMedicoActivity.this).persistir(medicoPaciente, true);
+                            Toast.makeText(AdicionarMedicoActivity.this, "Médico adicionado! ", Toast.LENGTH_LONG).show();
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }})
+
+                .setNegativeButton(android.R.string.no,new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        try {
+                            SolicitacaoRoster solicitacaoRoster = new SolicitacaoRoster(paciente.getUsuario(), StatusSolicitacaoRoster.REPROVADA);
+                            Mensagem mensagem = new Mensagem(solicitacaoRoster.toJson(), TipoDeMensagem.SOLICITACAO_ROSTER);
+                            MensagemController.enviaMensagem(medico.getUsuario(), mensagem);
+                            Toast.makeText(AdicionarMedicoActivity.this, "Médico recusado! ", Toast.LENGTH_LONG).show();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }).create();
     }
 
 }

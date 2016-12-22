@@ -28,7 +28,7 @@ public class UsuariosController extends BaseController implements IController{
     }
 
     @Override
-    public boolean persistir(IModel objeto) throws SQLException {
+    public boolean persistir(IModel objeto, boolean updateChild) throws SQLException {
         Dao<Usuario, Long> dao = DbSqlHelper.getHelper(ctx).getDao(Usuario.class);
         dao.createOrUpdate((Usuario) objeto);
         return true;
