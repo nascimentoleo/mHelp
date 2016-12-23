@@ -16,11 +16,11 @@ import android.widget.Toast;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.ifma.appmhelp.R;
-import com.ifma.appmhelp.controls.MedicoPacienteController;
+import com.ifma.appmhelp.daos.MedicoPacienteDao;
 import com.ifma.appmhelp.controls.MensagemController;
-import com.ifma.appmhelp.controls.PacientesController;
+import com.ifma.appmhelp.daos.PacientesDao;
 import com.ifma.appmhelp.controls.RosterXMPPController;
-import com.ifma.appmhelp.controls.UsuariosController;
+import com.ifma.appmhelp.daos.UsuariosDao;
 import com.ifma.appmhelp.enums.StatusSolicitacaoRoster;
 import com.ifma.appmhelp.enums.TipoDeMensagem;
 import com.ifma.appmhelp.models.Medico;
@@ -103,8 +103,8 @@ public class AdicionarPacienteActivity extends AppCompatActivity {
         try {
             //Adiciono o roster
             new RosterXMPPController().addRoster(paciente.getUsuario());
-            PacientesController pacientesController = new PacientesController(AdicionarPacienteActivity.this);
-            UsuariosController usuariosController = new UsuariosController(AdicionarPacienteActivity.this);
+            PacientesDao pacientesController = new PacientesDao(AdicionarPacienteActivity.this);
+            UsuariosDao usuariosController = new UsuariosDao(AdicionarPacienteActivity.this);
 
             //Verifico se esse usuário já foi adicionado anteriormente
             Usuario usuarioDB = usuariosController.getUsuarioByLogin(paciente.getUsuario().getLogin());
@@ -122,7 +122,7 @@ public class AdicionarPacienteActivity extends AppCompatActivity {
                 }
             }
             MedicoPaciente medicoPaciente = new MedicoPaciente(medico, paciente);
-            new MedicoPacienteController(AdicionarPacienteActivity.this).persistir(medicoPaciente, true);
+            new MedicoPacienteDao(AdicionarPacienteActivity.this).persistir(medicoPaciente, true);
 
             Toast.makeText(AdicionarPacienteActivity.this, "Paciente adicionado! ", Toast.LENGTH_LONG).show();
         } catch (Exception e) {

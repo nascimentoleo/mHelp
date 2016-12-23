@@ -12,10 +12,10 @@ import android.widget.Toast;
 
 import com.ifma.appmhelp.R;
 import com.ifma.appmhelp.controls.ClientXMPPController;
-import com.ifma.appmhelp.controls.IController;
-import com.ifma.appmhelp.controls.MedicosController;
-import com.ifma.appmhelp.controls.PacientesController;
-import com.ifma.appmhelp.controls.UsuariosController;
+import com.ifma.appmhelp.daos.IDao;
+import com.ifma.appmhelp.daos.MedicosDao;
+import com.ifma.appmhelp.daos.PacientesDao;
+import com.ifma.appmhelp.daos.UsuariosDao;
 import com.ifma.appmhelp.lib.BlowfishCrypt;
 import com.ifma.appmhelp.models.IModel;
 import com.ifma.appmhelp.models.Medico;
@@ -54,7 +54,7 @@ public class CadastroActivity extends AppCompatActivity {
 
     public void cadastrar(View v){
         if(cadastroEhValido()){
-            UsuariosController controleDeUsuarios = new UsuariosController(this);
+            UsuariosDao controleDeUsuarios = new UsuariosDao(this);
             ClientXMPPController clientXMPPController = new ClientXMPPController();
             try {
                 Usuario novoUsuario = new Usuario(edUsuarioCadastro.getText().toString(), edSenhaCadastro.getText().toString());
@@ -82,13 +82,13 @@ public class CadastroActivity extends AppCompatActivity {
     }
 
     public boolean registrarUsuario(Usuario usuario) throws SQLException {
-        IController controle;
+        IDao controle;
         IModel modelo;
         if(rGroupCadastro.getCheckedRadioButtonId() == R.id.radioPaciente) {
-            controle = new PacientesController(this);
+            controle = new PacientesDao(this);
             modelo   = new Paciente(usuario);
         }else{
-            controle = new MedicosController(this);
+            controle = new MedicosDao(this);
             modelo   = new Medico(usuario);
         }
         controle.persistir(modelo, false);

@@ -7,8 +7,8 @@ import android.content.Context;
  */
 public abstract class BaseController{
 
-    String msgErro;
-    Context ctx;
+    protected String msgErro;
+    protected Context ctx;
 
     public BaseController(Context ctx) {
         this.ctx = ctx;

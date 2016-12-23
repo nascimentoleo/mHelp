@@ -1,7 +1,8 @@
-package com.ifma.appmhelp.controls;
+package com.ifma.appmhelp.daos;
 
 import android.content.Context;
 
+import com.ifma.appmhelp.controls.BaseController;
 import com.ifma.appmhelp.db.DbSqlHelper;
 import com.ifma.appmhelp.models.IModel;
 import com.ifma.appmhelp.models.Paciente;
@@ -14,9 +15,9 @@ import java.util.List;
 /**
  * Created by leo on 11/29/16.
  */
-public class PacientesController extends BaseController implements IController{
+public class PacientesDao extends BaseController implements IDao {
 
-    public PacientesController(Context ctx) {
+    public PacientesDao(Context ctx) {
         super(ctx);
     }
 
@@ -32,7 +33,7 @@ public class PacientesController extends BaseController implements IController{
     public boolean persistir(IModel objeto, boolean updateChild) throws SQLException {
         Paciente paciente = (Paciente) objeto;
         if (updateChild)
-            new UsuariosController(ctx).persistir(paciente.getUsuario(), updateChild);
+            new UsuariosDao(ctx).persistir(paciente.getUsuario(), updateChild);
 
         Dao<Paciente,Long> pacienteDao = DbSqlHelper.getHelper(ctx).getDao(Paciente.class);
         pacienteDao.createOrUpdate(paciente);

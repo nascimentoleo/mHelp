@@ -1,7 +1,8 @@
-package com.ifma.appmhelp.controls;
+package com.ifma.appmhelp.daos;
 
 import android.content.Context;
 
+import com.ifma.appmhelp.controls.BaseController;
 import com.ifma.appmhelp.db.DbSqlHelper;
 import com.ifma.appmhelp.models.IModel;
 import com.ifma.appmhelp.models.Usuario;
@@ -13,9 +14,9 @@ import java.util.List;
 /**
  * Created by leo on 11/28/16.
  */
-public class UsuariosController extends BaseController implements IController{
+public class UsuariosDao extends BaseController implements IDao {
 
-    public UsuariosController(Context ctx) {
+    public UsuariosDao(Context ctx) {
         super(ctx);
     }
 

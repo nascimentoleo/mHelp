@@ -24,11 +24,11 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.ifma.appmhelp.R;
-import com.ifma.appmhelp.controls.MedicoPacienteController;
-import com.ifma.appmhelp.controls.MedicosController;
+import com.ifma.appmhelp.daos.MedicoPacienteDao;
+import com.ifma.appmhelp.daos.MedicosDao;
 import com.ifma.appmhelp.controls.MensagemController;
 import com.ifma.appmhelp.controls.RosterXMPPController;
-import com.ifma.appmhelp.controls.UsuariosController;
+import com.ifma.appmhelp.daos.UsuariosDao;
 import com.ifma.appmhelp.enums.StatusSolicitacaoRoster;
 import com.ifma.appmhelp.enums.TipoDeMensagem;
 import com.ifma.appmhelp.models.Medico;
@@ -155,8 +155,8 @@ public class AdicionarMedicoActivity extends AppCompatActivity {
         try {
             RosterXMPPController roster = new RosterXMPPController();
             roster.addRoster(medico.getUsuario());
-            UsuariosController usuariosController  = new UsuariosController(AdicionarMedicoActivity.this);
-            MedicosController medicosController    = new MedicosController(AdicionarMedicoActivity.this);
+            UsuariosDao usuariosController  = new UsuariosDao(AdicionarMedicoActivity.this);
+            MedicosDao medicosController    = new MedicosDao(AdicionarMedicoActivity.this);
 
             Usuario usuarioDB = usuariosController.getUsuarioByLogin(medico.getUsuario().getLogin());
             if (usuarioDB == null){
@@ -173,7 +173,7 @@ public class AdicionarMedicoActivity extends AppCompatActivity {
             }
 
             MedicoPaciente medicoPaciente = new MedicoPaciente(medico, paciente);
-            new MedicoPacienteController(AdicionarMedicoActivity.this).persistir(medicoPaciente, true);
+            new MedicoPacienteDao(AdicionarMedicoActivity.this).persistir(medicoPaciente, true);
             Toast.makeText(AdicionarMedicoActivity.this, "Médico adicionado! ", Toast.LENGTH_LONG).show();
 
         } catch (Exception e) {

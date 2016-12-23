@@ -11,7 +11,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.ifma.appmhelp.R;
-import com.ifma.appmhelp.controls.IController;
+import com.ifma.appmhelp.daos.IDao;
 import com.ifma.appmhelp.events.OnSaveModelFragment;
 import com.ifma.appmhelp.factories.FactoryAlteraDadosActivity;
 import com.ifma.appmhelp.factories.FactoryController;
@@ -58,7 +58,7 @@ public class AlteraDadosActivity extends AppCompatActivity implements OnSaveMode
 
     @Override
     public void save(IModel modelo) {
-        IController controller = FactoryController.getController(this,modelo);
+        IDao controller = FactoryController.getController(this,modelo);
         try {
             if (controller.persistir(modelo, true)) {
                 Toast.makeText(this, "Dados alterados com sucesso!", Toast.LENGTH_SHORT).show();
