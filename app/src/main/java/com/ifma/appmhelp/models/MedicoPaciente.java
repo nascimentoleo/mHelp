@@ -11,9 +11,9 @@ public class MedicoPaciente implements IModel {
 
     @DatabaseField(generatedId = true)
     private int id;
-    @DatabaseField(foreign = true)
+    @DatabaseField(foreign = true, foreignAutoRefresh = true)
     private Medico medico;
-    @DatabaseField(foreign = true)
+    @DatabaseField(foreign = true, foreignAutoRefresh = true)
     private Paciente paciente;
 
     public MedicoPaciente(Medico medico, Paciente paciente) {

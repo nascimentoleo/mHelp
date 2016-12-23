@@ -1,0 +1,49 @@
+package com.ifma.appmhelp.models;
+
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+
+/**
+ * Created by leo on 12/23/16.
+ */
+
+@DatabaseTable(tableName = "medicamentos")
+public class Medicamento implements IModel {
+
+
+    @DatabaseField(generatedId = true)
+    private Long id;
+    @DatabaseField
+    private String nome;
+    @DatabaseField
+    private String doses;
+    @DatabaseField(foreign = true, foreignAutoRefresh = true)
+    private Prontuario prontuario;
+
+    public Medicamento(String nome, String doses) {
+        this.nome = nome;
+        this.doses = doses;
+    }
+
+    public Medicamento(){
+
+    }
+
+    @Override
+    public Long getId() {
+        return this.id;
+    }
+
+    @Override
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public String getDoses() {
+        return doses;
+    }
+}

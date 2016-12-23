@@ -1,5 +1,5 @@
 #
-# generated on 2016/12/21 10:42:16
+# generated on 2016/12/23 11:50:48
 #
 # --table-start--
 dataClass=com.ifma.appmhelp.models.Usuario
@@ -82,10 +82,115 @@ generatedId=true
 # --field-start--
 fieldName=medico
 foreign=true
+foreignAutoRefresh=true
+maxForeignAutoRefreshLevel=2
 # --field-end--
 # --field-start--
 fieldName=paciente
 foreign=true
+foreignAutoRefresh=true
+maxForeignAutoRefreshLevel=2
+# --field-end--
+# --table-fields-end--
+# --table-end--
+#################################
+# --table-start--
+dataClass=com.ifma.appmhelp.models.Prontuario
+tableName=prontuarios
+# --table-fields-start--
+# --field-start--
+fieldName=id
+generatedId=true
+# --field-end--
+# --field-start--
+fieldName=sexo
+# --field-end--
+# --field-start--
+fieldName=tipoSanguineo
+# --field-end--
+# --field-start--
+fieldName=nomeDaMae
+# --field-end--
+# --field-start--
+fieldName=nomeDoPai
+# --field-end--
+# --field-start--
+fieldName=telefoneDoResponsavel
+# --field-end--
+# --field-start--
+fieldName=observacoes
+# --field-end--
+# --field-start--
+fieldName=medicamentos
+foreignCollection=true
+# --field-end--
+# --field-start--
+fieldName=cids
+foreignCollection=true
+# --field-end--
+# --table-fields-end--
+# --table-end--
+#################################
+# --table-start--
+dataClass=com.ifma.appmhelp.models.ProntuarioCid
+tableName=prontuarios_cids
+# --table-fields-start--
+# --field-start--
+fieldName=id
+generatedId=true
+# --field-end--
+# --field-start--
+fieldName=prontuario
+foreign=true
+foreignAutoRefresh=true
+maxForeignAutoRefreshLevel=2
+# --field-end--
+# --field-start--
+fieldName=cid
+foreign=true
+foreignAutoRefresh=true
+maxForeignAutoRefreshLevel=2
+# --field-end--
+# --table-fields-end--
+# --table-end--
+#################################
+# --table-start--
+dataClass=com.ifma.appmhelp.models.Medicamento
+tableName=medicamentos
+# --table-fields-start--
+# --field-start--
+fieldName=id
+generatedId=true
+# --field-end--
+# --field-start--
+fieldName=nome
+# --field-end--
+# --field-start--
+fieldName=doses
+# --field-end--
+# --field-start--
+fieldName=prontuario
+foreign=true
+foreignAutoRefresh=true
+maxForeignAutoRefreshLevel=2
+# --field-end--
+# --table-fields-end--
+# --table-end--
+#################################
+# --table-start--
+dataClass=com.ifma.appmhelp.models.Cid
+tableName=cids
+# --table-fields-start--
+# --field-start--
+fieldName=id
+generatedId=true
+# --field-end--
+# --field-start--
+fieldName=codigo
+canBeNull=false
+# --field-end--
+# --field-start--
+fieldName=descricao
 # --field-end--
 # --table-fields-end--
 # --table-end--
