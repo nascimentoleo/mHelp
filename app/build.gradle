@@ -9,6 +9,7 @@ android {
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {
@@ -29,23 +30,35 @@ repositories {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    testCompile 'junit:junit:4.12'
     //compile 'org.igniterealtime.smack:smack-android-extensions:4.2.0-beta1'
     //compile 'org.igniterealtime.smack:smack-tcp:4.2.0-beta2'
     compile group: 'org.mindrot', name: 'jbcrypt', version: '0.3m'
+
+    // Set this dependency to use JUnit 4 rules
+    // Set this dependency to build and run Espresso tests
+    // Set this dependency to build and run UI Automator tests
+    //androidTestCompile 'com.android.support.test.uiautomator:uiautomator-v18:2.1.2'
+
 
     compile 'com.android.support:appcompat-v7:23.4.0'
     compile 'com.android.support:design:23.4.0'
     compile 'org.igniterealtime.smack:smack-android-extensions:4.1.0'
     compile 'org.igniterealtime.smack:smack-tcp:4.1.0'
-
     compile 'com.j256.ormlite:ormlite-core:5.0'
     compile 'com.j256.ormlite:ormlite-android:5.0'
     compile 'com.clough.android.androiddbviewer:androiddbviewer:1.0.0'
     compile 'com.android.support:support-v4:23.4.0'
     compile 'com.race604.waveloading:library:1.0.1'
     compile 'com.journeyapps:zxing-android-embedded:3.4.0'
-    compile 'com.android.support:appcompat-v7:23.1.0'
     compile 'com.google.code.gson:gson:2.8.0'
+    compile 'com.android.support:recyclerview-v7:23.4.0'
+    testCompile 'junit:junit:4.12'
+    testCompile 'org.robolectric:robolectric:3.1.4'
+    androidTestCompile 'com.android.support:support-annotations:23.4.0'
+    androidTestCompile 'com.android.support.test:runner:0.5'
+    androidTestCompile 'com.android.support.test:rules:0.5'
+    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2'
 }
+
+
 

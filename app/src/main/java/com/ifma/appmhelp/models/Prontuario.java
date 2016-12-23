@@ -19,6 +19,8 @@ public class Prontuario implements IModel {
     @DatabaseField
     private Sexo sexo;
     @DatabaseField
+    private int idade;
+    @DatabaseField
     private TipoSanguineo tipoSanguineo;
     @DatabaseField
     private String nomeDaMae;
@@ -28,9 +30,9 @@ public class Prontuario implements IModel {
     private  String telefoneDoResponsavel;
     @DatabaseField
     private  String observacoes;
-    @ForeignCollectionField
+    @ForeignCollectionField(eager = true)
     private ForeignCollection<Medicamento> medicamentos;
-    @ForeignCollectionField
+    @ForeignCollectionField(eager = true)
     private ForeignCollection<ProntuarioCid> cids;
 
     public Prontuario() {
@@ -101,5 +103,13 @@ public class Prontuario implements IModel {
 
     public ForeignCollection<ProntuarioCid> getCids() {
         return cids;
+    }
+
+    public int getIdade() {
+        return idade;
+    }
+
+    public void setIdade(int idade) {
+        this.idade = idade;
     }
 }

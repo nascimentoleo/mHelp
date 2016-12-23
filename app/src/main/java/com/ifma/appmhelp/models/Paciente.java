@@ -18,6 +18,8 @@ public class Paciente implements IModel, Cloneable{
     private String telefone;
     @DatabaseField(foreign = true, foreignAutoRefresh = true, canBeNull = false)
     private Usuario usuario;
+    @DatabaseField (foreign = true, foreignAutoRefresh = true)
+    private Prontuario prontuario;
 
     public Paciente() {
     }
@@ -54,6 +56,14 @@ public class Paciente implements IModel, Cloneable{
 
     public Usuario getUsuario() {
         return usuario;
+    }
+
+    public Prontuario getProntuario() {
+        return prontuario;
+    }
+
+    public void setProntuario(Prontuario prontuario) {
+        this.prontuario = prontuario;
     }
 
     public String toJson(){

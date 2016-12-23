@@ -32,9 +32,10 @@ public class PacientesDao extends BaseController implements IDao {
     @Override
     public boolean persistir(IModel objeto, boolean updateChild) throws SQLException {
         Paciente paciente = (Paciente) objeto;
-        if (updateChild)
+        if (updateChild) {
             new UsuariosDao(ctx).persistir(paciente.getUsuario(), updateChild);
-
+            new ProntuarioDao(ctx).persistir(paciente.getProntuario(), updateChild);
+        }
         Dao<Paciente,Long> pacienteDao = DbSqlHelper.getHelper(ctx).getDao(Paciente.class);
         pacienteDao.createOrUpdate(paciente);
         return true;
