@@ -112,9 +112,15 @@ public class MedicoActivity extends AppCompatActivity
             case R.id.nav_alterar_dados :
                 startActivity(new Intent(this, AlteraDadosActivity.class));
                 break;
+
             case R.id.nav_adicionar_paciente :
                 startActivity(new Intent(this, AdicionarPacienteActivity.class));
                 break;
+
+            case R.id.nav_pacientes :
+                startActivity(new Intent(this,ListPacientesActivity.class));
+                break;
+
             case R.id.nav_logoff_medico:
                 try {
                     new Login(this).realizaLogoff();

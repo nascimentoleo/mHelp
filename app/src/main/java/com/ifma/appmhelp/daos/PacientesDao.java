@@ -46,5 +46,10 @@ public class PacientesDao extends BaseController implements IDao {
 
     }
 
+    public Paciente getPacienteById(Long id) throws SQLException {
+        Dao<Paciente, Long> dao = DbSqlHelper.getHelper(ctx).getDao(Paciente.class);
+        return dao.queryForId(id);
+    }
+
 
 }

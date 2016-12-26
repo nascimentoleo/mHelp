@@ -2,6 +2,7 @@ package com.ifma.appmhelp.db;
 
 import com.ifma.appmhelp.models.Cid;
 import com.ifma.appmhelp.models.Medicamento;
+import com.ifma.appmhelp.models.MedicamentoProntuario;
 import com.ifma.appmhelp.models.Medico;
 import com.ifma.appmhelp.models.MedicoPaciente;
 import com.ifma.appmhelp.models.Paciente;
@@ -22,7 +23,8 @@ public class DbClass {
             Prontuario.class,
             ProntuarioCid.class,
             Medicamento.class,
-            Cid.class};
+            Cid.class,
+            MedicamentoProntuario.class};
 
 
     public static Class<?>[] getClasses() {

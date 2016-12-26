@@ -83,6 +83,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.ifma.appmhelp.views.MedicoActivity" />
         </activity>
+        <activity
+            android:name=".views.ListPacientesActivity"
+            android:label="@string/title_activity_list_pacientes"
+            android:parentActivityName=".views.MedicoActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.ifma.appmhelp.views.MedicoActivity" />
+        </activity>
     </application>
 
 </manifest>

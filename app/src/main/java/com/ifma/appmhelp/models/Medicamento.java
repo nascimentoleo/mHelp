@@ -10,19 +10,13 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable(tableName = "medicamentos")
 public class Medicamento implements IModel {
 
-
     @DatabaseField(generatedId = true)
     private Long id;
     @DatabaseField
     private String nome;
-    @DatabaseField
-    private String doses;
-    @DatabaseField(foreign = true, foreignAutoRefresh = true)
-    private Prontuario prontuario;
 
-    public Medicamento(String nome, String doses) {
+    public Medicamento(String nome) {
         this.nome = nome;
-        this.doses = doses;
     }
 
     public Medicamento(){
@@ -43,7 +37,4 @@ public class Medicamento implements IModel {
         return nome;
     }
 
-    public String getDoses() {
-        return doses;
-    }
 }

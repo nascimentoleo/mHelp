@@ -1,5 +1,5 @@
 #
-# generated on 2016/12/23 12:47:01
+# generated on 2016/12/26 10:38:53
 #
 # --table-start--
 dataClass=com.ifma.appmhelp.models.Usuario
@@ -176,15 +176,6 @@ generatedId=true
 # --field-start--
 fieldName=nome
 # --field-end--
-# --field-start--
-fieldName=doses
-# --field-end--
-# --field-start--
-fieldName=prontuario
-foreign=true
-foreignAutoRefresh=true
-maxForeignAutoRefreshLevel=2
-# --field-end--
 # --table-fields-end--
 # --table-end--
 #################################
@@ -202,6 +193,28 @@ canBeNull=false
 # --field-end--
 # --field-start--
 fieldName=descricao
+# --field-end--
+# --table-fields-end--
+# --table-end--
+#################################
+# --table-start--
+dataClass=com.ifma.appmhelp.models.MedicamentoProntuario
+tableName=medicamentoprontuario
+# --table-fields-start--
+# --field-start--
+fieldName=doses
+# --field-end--
+# --field-start--
+fieldName=prontuario
+foreign=true
+foreignAutoRefresh=true
+maxForeignAutoRefreshLevel=2
+# --field-end--
+# --field-start--
+fieldName=medicamento
+foreign=true
+foreignAutoRefresh=true
+maxForeignAutoRefreshLevel=2
 # --field-end--
 # --table-fields-end--
 # --table-end--
