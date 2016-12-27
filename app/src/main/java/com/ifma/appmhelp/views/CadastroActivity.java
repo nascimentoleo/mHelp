@@ -54,27 +54,32 @@ public class CadastroActivity extends AppCompatActivity {
 
     public void cadastrar(View v){
         if(cadastroEhValido()){
-            UsuariosDao controleDeUsuarios = new UsuariosDao(this);
+            UsuariosDao usuariosDao = new UsuariosDao(this);
             ClientXMPPController clientXMPPController = new ClientXMPPController();
             try {
                 Usuario novoUsuario = new Usuario(edUsuarioCadastro.getText().toString(), edSenhaCadastro.getText().toString());
                 novoUsuario.setNome(edNomeCadastro.getText().toString());
                 novoUsuario.setEmail(edEmailCadastro.getText().toString());
 
-                if(clientXMPPController.cadastrarUsuario(novoUsuario)){
-                    //Se não existe usuário cadastrado no banco
-                    if(controleDeUsuarios.getUsuarioByLogin(novoUsuario.getLogin()) == null) {
-                        //Criptografa a senha antes de salvar no banco
-                        novoUsuario.setSenha(BlowfishCrypt.encrypt(novoUsuario.getSenha()));
-                        controleDeUsuarios.persistir(novoUsuario, false);
-                        this.registrarUsuario(novoUsuario);
-                        Toast.makeText(this, "Usuário cadastrado", Toast.LENGTH_SHORT).show();
+                //Se não existe usuário cadastrado no banco
+                if(usuariosDao.getUsuarioByLogin(novoUsuario.getLogin()) == null) {
+                    //Criptografa a senha antes de salvar no banco
+                    novoUsuario.setSenha(BlowfishCrypt.encrypt(novoUsuario.getSenha()));
+                    usuariosDao.persistir(novoUsuario, false);
+                    this.registrarUsuario(novoUsuario);
+                    Toast.makeText(this, "Usuário cadastrado", Toast.LENGTH_SHORT).show();
+                    novoUsuario.setSenha(BlowfishCrypt.decrypt(novoUsuario.getSenha()));
 
-                    }else
-                        Toast.makeText(this,"Usuário já existe",Toast.LENGTH_SHORT).show();
+                    if(!clientXMPPController.cadastrarUsuario(novoUsuario)){
+                        novoUsuario.setSenha(BlowfishCrypt.encrypt(novoUsuario.getSenha()));
+                        Toast.makeText(this,"Não foi possível cadastrar, conexão não estabelecida",Toast.LENGTH_SHORT).show();
+                        usuariosDao.deletar(novoUsuario);
+                    }
+
                 }else
-                    Toast.makeText(this,"Não foi possível cadastrar, conexão não estabelecida",Toast.LENGTH_SHORT).show();
-            } catch (Exception  e) {
+                    Toast.makeText(this,"Usuário já existe",Toast.LENGTH_SHORT).show();
+
+                 } catch (Exception  e) {
                 e.printStackTrace();
                 Toast.makeText(this, "Erro ao cadastrar usuário - " + e.getMessage(), Toast.LENGTH_SHORT).show();
             }

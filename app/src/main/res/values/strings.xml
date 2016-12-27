@@ -54,4 +54,5 @@
     <string name="prompt_qrcode_paciente">Peça para o seu médico escanear este código</string>
     <string name="title_activity_adicionar_paciente">Adicionar Paciente</string>
     <string name="title_activity_list_pacientes">ListPacientesActivity</string>
+    <string name="pacientes_name">Pacientes</string>
 </resources>

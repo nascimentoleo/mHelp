@@ -43,5 +43,8 @@ public class UsuariosDao extends BaseController implements IDao {
             objeto.setId(usuarios.get(0).getId());
     }
 
-
+    public void deletar(IModel objeto) throws SQLException {
+        Dao<Usuario, Long> dao = DbSqlHelper.getHelper(ctx).getDao(Usuario.class);
+        dao.delete((Usuario) objeto);
+    }
 }

@@ -1,5 +1,5 @@
 #
-# generated on 2016/12/26 10:38:53
+# generated on 2016/12/26 11:20:27
 #
 # --table-start--
 dataClass=com.ifma.appmhelp.models.Usuario
@@ -198,8 +198,8 @@ fieldName=descricao
 # --table-end--
 #################################
 # --table-start--
-dataClass=com.ifma.appmhelp.models.MedicamentoProntuario
-tableName=medicamentoprontuario
+dataClass=com.ifma.appmhelp.models.ProntuarioMedicamento
+tableName=prontuarios_medicamentos
 # --table-fields-start--
 # --field-start--
 fieldName=doses

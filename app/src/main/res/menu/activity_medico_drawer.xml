@@ -9,7 +9,7 @@
         <item
             android:id="@+id/nav_pacientes"
             android:icon="@drawable/ic_pacientes"
-            android:title="@string/paciente_name" />
+            android:title="@string/pacientes_name" />
         <item
             android:id="@+id/nav_alterar_dados"
             android:icon="@drawable/ic_atualizar"

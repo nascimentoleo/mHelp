@@ -1,12 +1,14 @@
 package com.ifma.appmhelp.models;
 
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
 
 /**
  * Created by leo on 12/26/16.
  */
 
-public class MedicamentoProntuario implements IModel {
+@DatabaseTable(tableName = "prontuarios_medicamentos")
+public class ProntuarioMedicamento implements IModel {
 
     private Long id;
     @DatabaseField
@@ -16,11 +18,11 @@ public class MedicamentoProntuario implements IModel {
     @DatabaseField(foreign = true, foreignAutoRefresh = true)
     private Medicamento medicamento;
 
-    MedicamentoProntuario(){
+    ProntuarioMedicamento(){
 
     }
 
-    public MedicamentoProntuario(String doses, Prontuario prontuario, Medicamento medicamento) {
+    public ProntuarioMedicamento(String doses, Prontuario prontuario, Medicamento medicamento) {
         this.doses = doses;
         this.prontuario = prontuario;
         this.medicamento = medicamento;

@@ -31,7 +31,7 @@ public class Prontuario implements IModel {
     @DatabaseField
     private  String observacoes;
     @ForeignCollectionField(eager = true)
-    private ForeignCollection<Medicamento> medicamentos;
+    private ForeignCollection<ProntuarioMedicamento> medicamentos;
     @ForeignCollectionField(eager = true)
     private ForeignCollection<ProntuarioCid> cids;
 
@@ -97,7 +97,7 @@ public class Prontuario implements IModel {
         this.observacoes = observacoes;
     }
 
-    public ForeignCollection<Medicamento> getMedicamentos() {
+    public ForeignCollection<ProntuarioMedicamento> getMedicamentos() {
         return medicamentos;
     }
 

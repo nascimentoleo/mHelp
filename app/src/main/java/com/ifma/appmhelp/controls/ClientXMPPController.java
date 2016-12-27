@@ -20,7 +20,6 @@ public class ClientXMPPController{
             atributes.put("name", usuario.getNome());
             atributes.put("email", usuario.getEmail());
             accountManager.createAccount(usuario.getLogin(), usuario.getSenha(), atributes);
-
             return true;
         }
         return false;
