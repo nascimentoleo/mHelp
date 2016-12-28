@@ -11,6 +11,8 @@ public interface IDao {
 
     boolean persistir(IModel objeto, boolean updateChild) throws SQLException;
 
+    public void remover(IModel objeto, boolean updateChild) throws SQLException;
+
     void carregaId(IModel objeto) throws SQLException;
 
     String getMsgErro();

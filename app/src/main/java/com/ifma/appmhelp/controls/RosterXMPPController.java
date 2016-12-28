@@ -8,6 +8,7 @@ import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.roster.Roster;
+import org.jivesoftware.smack.roster.RosterEntry;
 
 
 /**
@@ -34,6 +35,13 @@ public class RosterXMPPController{
         String jId = JidTranslator.getjId(ConexaoXMPP.getInstance().getConexao(),usuario.getLogin());
         this.roster.createEntry(jId,usuario.getNome(),null);
 
+    }
+
+    public void removeRoster(Usuario usuario) throws SmackException.NotLoggedInException, XMPPException.XMPPErrorException, SmackException.NotConnectedException, SmackException.NoResponseException {
+        String jId = JidTranslator.getjId(ConexaoXMPP.getInstance().getConexao(),usuario.getLogin());
+        RosterEntry entry = this.roster.getEntry(jId);
+        if (entry != null)
+            this.roster.removeEntry(entry);
     }
 
 }

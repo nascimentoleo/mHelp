@@ -42,6 +42,16 @@ public class MedicosDao extends BaseController implements IDao {
     }
 
     @Override
+    public void remover(IModel objeto, boolean updateChild) throws SQLException {
+        Medico medico = (Medico) objeto;
+        if (updateChild)
+            new UsuariosDao(ctx).remover(medico.getUsuario(), updateChild);
+
+        Dao<Medico, Long> medicoDao = DbSqlHelper.getHelper(ctx).getDao(Medico.class);
+        medicoDao.delete(medico);
+    }
+
+    @Override
     public void carregaId(IModel objeto) throws SQLException {
         Dao<Medico, Long> dao = DbSqlHelper.getHelper(ctx).getDao(Medico.class);
         List<Medico> medicos = dao.queryForMatching((Medico) objeto);

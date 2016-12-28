@@ -123,14 +123,14 @@ public class AdicionarMedicoActivity extends AppCompatActivity {
                 .setTitle("Um médico deseja lhe adicionar")
                 .setMessage("Confirmar solicitação de "+ medico.getUsuario().getNome())
                 .setIcon(android.R.drawable.ic_dialog_alert)
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.resposta_sim, new DialogInterface.OnClickListener() {
 
                     public void onClick(DialogInterface dialog, int whichButton) {
                         enviaRespostaDaSolicitacao(StatusSolicitacaoRoster.APROVADA);
                         adicionarMedico(medico);
                     }})
 
-                .setNegativeButton(android.R.string.no,new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.resposta_nao,new DialogInterface.OnClickListener() {
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

@@ -55,4 +55,6 @@
     <string name="title_activity_adicionar_paciente">Adicionar Paciente</string>
     <string name="title_activity_list_pacientes">ListPacientesActivity</string>
     <string name="pacientes_name">Pacientes</string>
+    <string name="resposta_sim">Sim</string>
+    <string name="resposta_nao">Não</string>
 </resources>

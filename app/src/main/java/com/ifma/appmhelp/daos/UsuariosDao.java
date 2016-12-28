@@ -36,6 +36,11 @@ public class UsuariosDao extends BaseController implements IDao {
     }
 
     @Override
+    public void remover(IModel objeto, boolean updateChild) throws SQLException {
+
+    }
+
+    @Override
     public void carregaId(IModel objeto) throws SQLException {
         Dao<Usuario, Long> dao = DbSqlHelper.getHelper(ctx).getDao(Usuario.class);
         List<Usuario> usuarios = dao.queryForMatching((Usuario) objeto);

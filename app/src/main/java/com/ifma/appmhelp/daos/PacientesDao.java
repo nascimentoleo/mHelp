@@ -42,6 +42,17 @@ public class PacientesDao extends BaseController implements IDao {
     }
 
     @Override
+    public void remover(IModel objeto, boolean updateChild) throws SQLException {
+        Paciente paciente = (Paciente) objeto;
+        if (updateChild) {
+            new UsuariosDao(ctx).remover(paciente.getUsuario(), updateChild);
+            new ProntuarioDao(ctx).remover(paciente.getProntuario(), updateChild);
+        }
+        Dao<Paciente,Long> pacienteDao = DbSqlHelper.getHelper(ctx).getDao(Paciente.class);
+        pacienteDao.createOrUpdate(paciente);
+    }
+
+    @Override
     public void carregaId(IModel objeto) throws SQLException {
 
     }

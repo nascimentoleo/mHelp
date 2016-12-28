@@ -10,7 +10,7 @@ import com.j256.ormlite.table.DatabaseTable;
 public class MedicoPaciente implements IModel {
 
     @DatabaseField(generatedId = true)
-    private int id;
+    private Long id;
     @DatabaseField(foreign = true, foreignAutoRefresh = true)
     private Medico medico;
     @DatabaseField(foreign = true, foreignAutoRefresh = true)
@@ -26,12 +26,12 @@ public class MedicoPaciente implements IModel {
 
     @Override
     public Long getId() {
-        return null;
+        return id;
     }
 
     @Override
     public void setId(Long id) {
-
+        this.id = id;
     }
 
     public Medico getMedico() {

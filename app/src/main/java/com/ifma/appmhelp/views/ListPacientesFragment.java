@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class ListPacientesFragment extends Fragment implements AdapterView.OnItemClickListener{
+public class ListPacientesFragment extends Fragment implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener{
 
     private OnPatientSelectedListener mListener;
     private ListView listViewPacientes;
@@ -43,6 +43,7 @@ public class ListPacientesFragment extends Fragment implements AdapterView.OnIte
     private void carregaComponentes(){
         this.listViewPacientes = (ListView) getView().findViewById(R.id.list_view_pacientes);
         this.listViewPacientes.setOnItemClickListener(this);
+        this.listViewPacientes.setOnItemLongClickListener(this);
         List<Paciente> listaDePacientes = (List<Paciente>) getArguments().getSerializable("lista_de_pacientes");
         this.listViewPacientes.setAdapter(new PacientesAdapter(getContext(),listaDePacientes));
     }
@@ -60,16 +61,23 @@ public class ListPacientesFragment extends Fragment implements AdapterView.OnIte
             mListener = (OnPatientSelectedListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnArticleSelectedListener");
+                    + " must implement OnPatientSelectedListener");
         }
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        mListener.onPacienteSelected((Paciente) this.listViewPacientes.getAdapter().getItem(position));
+        mListener.onPatientSelected((Paciente) this.listViewPacientes.getAdapter().getItem(position));
+    }
+
+    @Override
+    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+        mListener.onPatientLongSelected((Paciente) this.listViewPacientes.getAdapter().getItem(position));
+        return true;
     }
 
     public interface OnPatientSelectedListener {
-        void onPacienteSelected(Paciente paciente);
+        void onPatientSelected(Paciente paciente);
+        void onPatientLongSelected(Paciente paciente);
     }
 }

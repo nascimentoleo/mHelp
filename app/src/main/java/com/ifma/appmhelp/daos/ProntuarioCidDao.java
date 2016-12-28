@@ -24,6 +24,11 @@ public class ProntuarioCidDao extends BaseController implements IDao {
     }
 
     @Override
+    public void remover(IModel objeto, boolean updateChild) throws SQLException {
+
+    }
+
+    @Override
     public void carregaId(IModel objeto) throws SQLException {
 
     }

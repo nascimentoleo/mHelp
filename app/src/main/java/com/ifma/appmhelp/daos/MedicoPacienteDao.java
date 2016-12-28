@@ -39,7 +39,10 @@ public class MedicoPacienteDao extends BaseController implements IDao {
 
     @Override
     public void carregaId(IModel objeto) throws SQLException {
-
+        Dao<MedicoPaciente, Long> dao = DbSqlHelper.getHelper(ctx).getDao(MedicoPaciente.class);
+        List<MedicoPaciente> medicoPacientes = dao.queryForMatching((MedicoPaciente) objeto);
+        if(!medicoPacientes.isEmpty())
+            objeto.setId(medicoPacientes.get(0).getId());
     }
 
     public List<Paciente> getPacientesByMedico(Medico medico) throws SQLException {
@@ -54,6 +57,19 @@ public class MedicoPacienteDao extends BaseController implements IDao {
         }
         return null;
 
+    }
+
+    @Override
+    public void remover(IModel objeto, boolean updateChild) throws SQLException {
+        MedicoPaciente medicoPaciente = (MedicoPaciente) objeto;
+
+        if (updateChild){
+            new MedicosDao(ctx).remover(medicoPaciente.getMedico(),updateChild);
+            new PacientesDao(ctx).remover(medicoPaciente.getPaciente(),updateChild);
+        }
+
+        Dao<MedicoPaciente, Long> dao = DbSqlHelper.getHelper(ctx).getDao(MedicoPaciente.class);
+        dao.delete(medicoPaciente);
     }
 
 }
