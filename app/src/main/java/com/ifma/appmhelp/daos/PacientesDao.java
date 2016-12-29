@@ -25,8 +25,9 @@ public class PacientesDao extends BaseController implements IDao {
         Dao<Paciente, Long> dao = DbSqlHelper.getHelper(ctx).getDao(Paciente.class);
         List<Paciente> pacientes = dao.queryForMatching(new Paciente(usuario));
         if (!pacientes.isEmpty())
-            return pacientes.get(0);
+           return pacientes.get(0);
         return null;
+
     }
 
     @Override

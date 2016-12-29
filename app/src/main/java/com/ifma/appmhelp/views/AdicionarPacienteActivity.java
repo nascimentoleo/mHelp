@@ -16,19 +16,14 @@ import android.widget.Toast;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.ifma.appmhelp.R;
-import com.ifma.appmhelp.daos.MedicoPacienteDao;
 import com.ifma.appmhelp.controls.MensagemController;
-import com.ifma.appmhelp.daos.PacientesDao;
-import com.ifma.appmhelp.controls.RosterXMPPController;
-import com.ifma.appmhelp.daos.UsuariosDao;
+import com.ifma.appmhelp.controls.SolicitacoesController;
 import com.ifma.appmhelp.enums.StatusSolicitacaoRoster;
 import com.ifma.appmhelp.enums.TipoDeMensagem;
 import com.ifma.appmhelp.models.Medico;
-import com.ifma.appmhelp.models.MedicoPaciente;
 import com.ifma.appmhelp.models.Mensagem;
 import com.ifma.appmhelp.models.Paciente;
 import com.ifma.appmhelp.models.SolicitacaoRoster;
-import com.ifma.appmhelp.models.Usuario;
 import com.ifma.appmhelp.models.UsuarioLogado;
 
 public class AdicionarPacienteActivity extends AppCompatActivity {
@@ -101,37 +96,13 @@ public class AdicionarPacienteActivity extends AppCompatActivity {
 
     private void adicionarPaciente(Paciente paciente) {
         try {
-            //Adiciono o roster
-            new RosterXMPPController().addRoster(paciente.getUsuario());
-            PacientesDao pacientesController = new PacientesDao(AdicionarPacienteActivity.this);
-            UsuariosDao usuariosController = new UsuariosDao(AdicionarPacienteActivity.this);
-
-            //Verifico se esse usuário já foi adicionado anteriormente
-            Usuario usuarioDB = usuariosController.getUsuarioByLogin(paciente.getUsuario().getLogin());
-            if (usuarioDB == null) {
-                //Novos ids serão criados
-                paciente.setId(null);
-                paciente.getUsuario().setId(null);
-            } else {
-                //Pego ids existentes
-                paciente.getUsuario().setId(usuarioDB.getId());
-                Paciente pacienteDB = pacientesController.getPacienteByUsuario(usuarioDB);
-
-                if (pacienteDB != null) {
-                    paciente.setId(pacienteDB.getId());
-                }
-            }
-            MedicoPaciente medicoPaciente = new MedicoPaciente(medico, paciente);
-            new MedicoPacienteDao(AdicionarPacienteActivity.this).persistir(medicoPaciente, true);
-
-            Toast.makeText(AdicionarPacienteActivity.this, "Paciente adicionado! ", Toast.LENGTH_LONG).show();
+            SolicitacoesController.adicionarUsuario(this, medico, paciente);
+            Toast.makeText(this, "Paciente adicionado! ", Toast.LENGTH_LONG).show();
         } catch (Exception e) {
             e.printStackTrace();
-            Toast.makeText(AdicionarPacienteActivity.this, "Erro ao adicionar paciente: " +
+            Toast.makeText(this, "Erro ao adicionar paciente: " +
                     e.getMessage(), Toast.LENGTH_SHORT).show();
         }
-
-
     }
 
 }

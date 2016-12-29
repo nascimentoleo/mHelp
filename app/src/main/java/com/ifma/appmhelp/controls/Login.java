@@ -56,7 +56,7 @@ public class Login extends BaseController{
 
     private IModel carregaUsuario(Usuario usuario) throws Exception {
         IModel result;
-        usuario.setSenha(null); //Limpo a senha pois não é mais necessária
+        usuario.setSenha(null); //Limpo a senha para ignorar na busca
         new UsuariosDao(ctx).carregaId(usuario);
         result = new MedicosDao(ctx).getMedicoByUsuario(usuario);
         if(result == null)

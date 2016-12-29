@@ -13,7 +13,7 @@ public class SolicitacaoRoster {
     private StatusSolicitacaoRoster status;
 
     public SolicitacaoRoster(Usuario usuario, StatusSolicitacaoRoster status) {
-        this.usuario = usuario;
+        this.setUsuario(usuario);
         this.status = status;
     }
 
@@ -23,6 +23,11 @@ public class SolicitacaoRoster {
 
     public IModel getUsuario() {
         return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+        this.usuario.setSenha(null);
     }
 
     public String toJson(){

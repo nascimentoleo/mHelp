@@ -12,12 +12,11 @@ import android.widget.Toast;
 
 import com.ifma.appmhelp.R;
 import com.ifma.appmhelp.controls.MensagemController;
-import com.ifma.appmhelp.controls.RosterXMPPController;
+import com.ifma.appmhelp.controls.SolicitacoesController;
 import com.ifma.appmhelp.daos.MedicoPacienteDao;
 import com.ifma.appmhelp.enums.StatusSolicitacaoRoster;
 import com.ifma.appmhelp.enums.TipoDeMensagem;
 import com.ifma.appmhelp.models.Medico;
-import com.ifma.appmhelp.models.MedicoPaciente;
 import com.ifma.appmhelp.models.Mensagem;
 import com.ifma.appmhelp.models.Paciente;
 import com.ifma.appmhelp.models.SolicitacaoRoster;
@@ -45,6 +44,10 @@ public class ListPacientesActivity extends AppCompatActivity implements ListPaci
             }
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        this.inicializaAdapter();
+    }
+
+    private void inicializaAdapter(){
         ArrayList<Paciente> listaDePacientes = (ArrayList<Paciente>) this.carregaPacientes();
         if(listaDePacientes != null){
             getSupportFragmentManager().beginTransaction().add(R.id.container_list_pacientes,ListPacientesFragment.newInstance(listaDePacientes)).commit();
@@ -52,7 +55,6 @@ public class ListPacientesActivity extends AppCompatActivity implements ListPaci
             Toast.makeText(this, "Este médico não possui pacientes adicionados", Toast.LENGTH_SHORT).show();
             finish();
         }
-
     }
 
     private List<Paciente> carregaPacientes(){
@@ -103,32 +105,21 @@ public class ListPacientesActivity extends AppCompatActivity implements ListPaci
     }
 
     private void removerPaciente(Paciente paciente){
-        if (removerRoster(paciente)){
-            Medico medico = (Medico) UsuarioLogado.getInstance().getModelo();
-            MedicoPaciente medicoPaciente = new MedicoPaciente(medico, paciente);
-            try {
-                MedicoPacienteDao dao = new MedicoPacienteDao(this);
-                dao.carregaId(medicoPaciente);
-                dao.remover(medicoPaciente, true);
-            } catch (SQLException e) {
-                e.printStackTrace();
-                Toast.makeText(this, "Não foi possível remover o paciente: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
-    private boolean removerRoster(Paciente paciente){
         try {
-            new RosterXMPPController().removeRoster(paciente.getUsuario());
-            SolicitacaoRoster solicitacaoRoster = new SolicitacaoRoster(paciente.getUsuario(), StatusSolicitacaoRoster.REMOVIDA);
-            Mensagem mensagem = new Mensagem(solicitacaoRoster.toJson(), TipoDeMensagem.SOLICITACAO_ROSTER);
-            MensagemController.enviaMensagem(paciente.getUsuario(), mensagem);
+            if (SolicitacoesController.removerUsuario(this, paciente)) {
+                //Aviso que paciente foi excluido
+                Medico medico = (Medico) UsuarioLogado.getInstance().getModelo();
+                SolicitacaoRoster solicitacaoRoster = new SolicitacaoRoster(medico.getUsuario(), StatusSolicitacaoRoster.REMOVIDA);
+                Mensagem mensagem = new Mensagem(solicitacaoRoster.toJson(), TipoDeMensagem.SOLICITACAO_ROSTER);
+                MensagemController.enviaMensagem(paciente.getUsuario(), mensagem);
+
+                Toast.makeText(this, "Paciente removido !", Toast.LENGTH_SHORT).show();
+                this.inicializaAdapter();
+            }
         } catch (Exception e) {
             e.printStackTrace();
             Toast.makeText(this, "Não foi possível remover o paciente: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-            return false;
         }
-        return true;
     }
 
 }

@@ -58,6 +58,11 @@ public class Paciente implements IModel, Cloneable{
         return usuario;
     }
 
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
+
+
     public Prontuario getProntuario() {
         return prontuario;
     }

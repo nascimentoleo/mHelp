@@ -24,15 +24,11 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.ifma.appmhelp.R;
-import com.ifma.appmhelp.daos.MedicoPacienteDao;
-import com.ifma.appmhelp.daos.MedicosDao;
 import com.ifma.appmhelp.controls.MensagemController;
-import com.ifma.appmhelp.controls.RosterXMPPController;
-import com.ifma.appmhelp.daos.UsuariosDao;
+import com.ifma.appmhelp.controls.SolicitacoesController;
 import com.ifma.appmhelp.enums.StatusSolicitacaoRoster;
 import com.ifma.appmhelp.enums.TipoDeMensagem;
 import com.ifma.appmhelp.models.Medico;
-import com.ifma.appmhelp.models.MedicoPaciente;
 import com.ifma.appmhelp.models.Mensagem;
 import com.ifma.appmhelp.models.Paciente;
 import com.ifma.appmhelp.models.SolicitacaoRoster;
@@ -153,31 +149,12 @@ public class AdicionarMedicoActivity extends AppCompatActivity {
 
     private void adicionarMedico(Medico medico){
         try {
-            RosterXMPPController roster = new RosterXMPPController();
-            roster.addRoster(medico.getUsuario());
-            UsuariosDao usuariosController  = new UsuariosDao(AdicionarMedicoActivity.this);
-            MedicosDao medicosController    = new MedicosDao(AdicionarMedicoActivity.this);
-
-            Usuario usuarioDB = usuariosController.getUsuarioByLogin(medico.getUsuario().getLogin());
-            if (usuarioDB == null){
-                medico.setId(null);
-                medico.getUsuario().setId(null);
-            }else{
-                medico.getUsuario().setId(usuarioDB.getId());
-
-                Medico medicoDB = medicosController.getMedicoByUsuario(usuarioDB);
-                if(medicoDB != null){
-                    medico.setId(medicoDB.getId());
-                }
-
-            }
-
-            MedicoPaciente medicoPaciente = new MedicoPaciente(medico, paciente);
-            new MedicoPacienteDao(AdicionarMedicoActivity.this).persistir(medicoPaciente, true);
-            Toast.makeText(AdicionarMedicoActivity.this, "Médico adicionado! ", Toast.LENGTH_LONG).show();
-
+            SolicitacoesController.adicionarUsuario(this, paciente, medico);
+            Toast.makeText(this, "Médico adicionado! ", Toast.LENGTH_LONG).show();
         } catch (Exception e) {
             e.printStackTrace();
+            Toast.makeText(this, "Erro ao adicionar médico: " + e.getMessage(), Toast.LENGTH_LONG).show();
+
         }
     }
 
