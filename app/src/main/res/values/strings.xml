@@ -68,4 +68,6 @@
     <string name="estado_civil_name">Estado Civil</string>
     <string name="telefone_do_responsavel_name">Telefone do Responsável</string>
     <string name="observacoes_name">Observações</string>
+    <string name="alterar_name">Alterar</string>
+    <string name="alterar_prontuario_name">Alterar Prontuário</string>
 </resources>

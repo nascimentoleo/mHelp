@@ -26,38 +26,46 @@
         android:id="@+id/txtNomePacienteProntuario"
         android:textSize="18sp" />
 
-    <TextView
-        android:text="@string/idade_name"
+
+    <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/txtIdadeProntuario" />
+        android:layout_height="wrap_content">
 
-    <EditText
-        android:layout_width="70dp"
-        android:layout_height="wrap_content"
-        android:inputType="number"
-        android:ems="3"
-        android:maxLength="3"
-        android:id="@+id/edIdadeProntuario" />
+        <EditText
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:ems="3"
+            android:maxLength="3"
+            android:hint="@string/idade_name"
+            android:imeOptions="actionNext"
+            android:id="@+id/edIdadeProntuario" />
 
-    <TextView
-        android:text="@string/data_de_nascimento_name"
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/txtDataDeNascimentoProntuario" />
+        android:layout_height="wrap_content">
 
-    <EditText
-        android:layout_width="185dp"
-        android:layout_height="wrap_content"
-        android:inputType="date"
-        android:ems="10"
-        android:id="@+id/edDataDeNascimentoProntuario" />
+        <EditText
+            android:layout_width="185dp"
+            android:layout_height="wrap_content"
+            android:inputType="date"
+            android:ems="10"
+            android:imeOptions="actionNext"
+            android:hint="@string/data_de_nascimento_name"
+            android:id="@+id/edDataDeNascimentoProntuario" />
+
+    </android.support.design.widget.TextInputLayout>
 
     <TextView
+        android:layout_width="320dp"
+        android:layout_height="wrap_content"
         android:text="@string/sexo_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/txtSexoProntuario" />
+        android:textSize="8pt"
+        android:layout_marginTop="20px"
+        android:layout_marginLeft="8px"
+        android:layout_marginBottom="20px"/>
 
     <Spinner
         android:layout_width="185dp"
@@ -65,106 +73,130 @@
         android:id="@+id/spSexoProntuario" />
 
     <TextView
-        android:text="@string/estado_civil_name"
-        android:layout_width="match_parent"
+        android:layout_width="320dp"
         android:layout_height="wrap_content"
-        android:id="@+id/txtEstadoCivilProntuario" />
+        android:text="@string/estado_civil_name"
+        android:textSize="8pt"
+        android:layout_marginTop="20px"
+        android:layout_marginLeft="8px"
+        android:layout_marginBottom="20px"/>
 
     <Spinner
         android:layout_width="185dp"
         android:layout_height="wrap_content"
         android:id="@+id/spEstadoCivilProntuario" />
 
-    <TextView
-        android:text="@string/endereco_name"
+    <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/txtEnderecoProntuario" />
+        android:layout_height="wrap_content">
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textAutoComplete"
+        android:imeOptions="actionNext"
         android:ems="10"
+        android:hint="@string/endereco_name"
         android:id="@+id/edEnderecoProntuario" />
 
+    </android.support.design.widget.TextInputLayout>
+
     <TextView
-        android:text="@string/tipo_sanguineo_name"
-        android:layout_width="match_parent"
+        android:layout_width="320dp"
         android:layout_height="wrap_content"
-        android:id="@+id/txtTipoSanguineoProntuario" />
+        android:text="@string/tipo_sanguineo_name"
+        android:textSize="8pt"
+        android:layout_marginTop="20px"
+        android:layout_marginLeft="8px"
+        android:layout_marginBottom="20px"/>
 
     <Spinner
         android:layout_width="91dp"
         android:layout_height="wrap_content"
         android:id="@+id/spTipoSanguineoProntuario" />
 
-    <TextView
-        android:text="@string/nome_da_mae_name"
+    <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/txtNomeDaMaeProntuario" />
+        android:layout_height="wrap_content">
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textAutoComplete"
+        android:imeOptions="actionNext"
         android:ems="10"
+        android:hint="@string/nome_da_mae_name"
         android:id="@+id/edNomeDaMaeProntuario" />
 
-    <TextView
-        android:text="@string/nome_do_pai_name"
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/txtNomeDoPaiProntuario" />
+        android:layout_height="wrap_content">
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textAutoComplete"
+        android:imeOptions="actionNext"
         android:ems="10"
+        android:hint="@string/nome_do_pai_name"
         android:id="@+id/edNomeDoPaiProntuario" />
 
-    <TextView
-        android:text="@string/telefone_name"
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/txtTelefonePacienteProntuario" />
+        android:layout_height="wrap_content">
 
     <EditText
         android:layout_width="169dp"
         android:layout_height="wrap_content"
         android:inputType="phone"
+        android:imeOptions="actionNext"
         android:ems="10"
+        android:hint="@string/telefone_name"
         android:id="@+id/edTelefonePacienteProntuario" />
 
-    <TextView
-        android:text="@string/telefone_do_responsavel_name"
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/txtTelefoneResponsavelProntuario" />
+        android:layout_height="wrap_content">
 
     <EditText
         android:layout_width="169dp"
         android:layout_height="wrap_content"
         android:inputType="phone"
+        android:imeOptions="actionNext"
         android:ems="10"
+        android:hint="@string/telefone_do_responsavel_name"
         android:id="@+id/edTelefoneResponsavelProntuario" />
 
-    <TextView
-        android:text="@string/observacoes_name"
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/txtObservacoesProntuario" />
+        android:layout_height="wrap_content">
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:inputType="textCapSentences|textMultiLine"
         android:ems="10"
+        android:imeOptions="actionDone"
+        android:hint="@string/observacoes_name"
         android:maxLines="4"
         android:id="@+id/edObservacoesProntuario" />
 
+    </android.support.design.widget.TextInputLayout>
+
+    <Button
+        android:text="@string/alterar_prontuario_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnAlterarProntuario"
+        android:onClick="alterarProntuario"/>
 
 
 </LinearLayout>

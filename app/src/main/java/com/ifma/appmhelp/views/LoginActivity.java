@@ -151,7 +151,7 @@ public class LoginActivity extends AppCompatActivity
             Snackbar.make(findViewById(android.R.id.content), "Preencha uma senha", Snackbar.LENGTH_LONG).show();
             edSenha.setFocusable(true);
             return false;
-        } else
-            return true;
+        }
+        return true;
     }
 }
