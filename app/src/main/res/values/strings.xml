@@ -63,4 +63,9 @@
     <string name="sexo_name">Sexo</string>
     <string name="tipo_sanguineo_name">Tipo Sanguíneo</string>
     <string name="nome_da_mae_name">Nome da Mãe</string>
+    <string name="data_de_nascimento_name">Data de Nascimento</string>
+    <string name="nome_do_pai_name">Nome do Pai</string>
+    <string name="estado_civil_name">Estado Civil</string>
+    <string name="telefone_do_responsavel_name">Telefone do Responsável</string>
+    <string name="observacoes_name">Observações</string>
 </resources>

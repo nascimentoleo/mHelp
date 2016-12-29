@@ -1,7 +1,6 @@
 package com.ifma.appmhelp.views;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -39,14 +38,6 @@ public class CadastroActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         registrarComponentes();
@@ -67,7 +58,9 @@ public class CadastroActivity extends AppCompatActivity {
                     novoUsuario.setSenha(BlowfishCrypt.encrypt(novoUsuario.getSenha()));
                     usuariosDao.persistir(novoUsuario, false);
                     this.registrarUsuario(novoUsuario);
-                    Toast.makeText(this, "Usuário cadastrado", Toast.LENGTH_SHORT).show();
+                    Snackbar.make(findViewById(android.R.id.content), "Usuário cadastrado", Snackbar.LENGTH_LONG).show();
+
+                    //Toast.makeText(this, "Usuário cadastrado", Toast.LENGTH_SHORT).show();
                     novoUsuario.setSenha(BlowfishCrypt.decrypt(novoUsuario.getSenha()));
 
                     if(!clientXMPPController.cadastrarUsuario(novoUsuario)){
