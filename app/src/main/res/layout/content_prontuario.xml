@@ -126,6 +126,19 @@
         android:id="@+id/edNomeDoPaiProntuario" />
 
     <TextView
+        android:text="@string/telefone_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtTelefonePacienteProntuario" />
+
+    <EditText
+        android:layout_width="169dp"
+        android:layout_height="wrap_content"
+        android:inputType="phone"
+        android:ems="10"
+        android:id="@+id/edTelefonePacienteProntuario" />
+
+    <TextView
         android:text="@string/telefone_do_responsavel_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
