@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content_prontuario"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.ifma.appmhelp.views.ProntuarioActivity"
+    tools:showIn="@layout/activity_prontuario">
+
+    <TextView
+        android:text="@string/nome_do_paciente_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:id="@+id/txtNomePacienteProntuario"
+        android:textSize="18sp" />
+
+    <TextView
+        android:text="@string/idade_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView3" />
+
+    <EditText
+        android:layout_width="70dp"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:ems="3"
+        android:id="@+id/editText" />
+
+    <TextView
+        android:text="@string/sexo_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView4" />
+
+    <Spinner
+        android:layout_width="185dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/spSexo" />
+
+    <TextView
+        android:text="@string/tipo_sanguineo_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView5" />
+
+    <Spinner
+        android:layout_width="91dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/spTipoSanguineo" />
+
+    <TextView
+        android:text="@string/nome_da_mae_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView6" />
+
+
+</LinearLayout>

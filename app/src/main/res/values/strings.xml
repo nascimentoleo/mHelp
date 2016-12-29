@@ -57,4 +57,10 @@
     <string name="pacientes_name">Pacientes</string>
     <string name="resposta_sim">Sim</string>
     <string name="resposta_nao">Não</string>
+    <string name="title_activity_prontuario">Prontuário</string>
+    <string name="nome_do_paciente_name">Nome do Paciente:</string>
+    <string name="idade_name">Idade</string>
+    <string name="sexo_name">Sexo</string>
+    <string name="tipo_sanguineo_name">Tipo Sanguíneo</string>
+    <string name="nome_da_mae_name">Nome da Mãe</string>
 </resources>

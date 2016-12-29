@@ -1,11 +1,14 @@
 package com.ifma.appmhelp.models;
 
+import com.ifma.appmhelp.enums.EstadoCivil;
 import com.ifma.appmhelp.enums.Sexo;
 import com.ifma.appmhelp.enums.TipoSanguineo;
 import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
+
+import java.sql.Date;
 
 /**
  * Created by leo on 12/23/16.
@@ -22,6 +25,10 @@ public class Prontuario implements IModel {
     private int idade;
     @DatabaseField
     private TipoSanguineo tipoSanguineo;
+    @DatabaseField
+    private Date dataDeNascimento;
+    @DatabaseField
+    private EstadoCivil estadoCivil;
     @DatabaseField
     private String nomeDaMae;
     @DatabaseField
@@ -111,5 +118,21 @@ public class Prontuario implements IModel {
 
     public void setIdade(int idade) {
         this.idade = idade;
+    }
+
+    public Date getDataDeNascimento() {
+        return dataDeNascimento;
+    }
+
+    public void setDataDeNascimento(Date dataDeNascimento) {
+        this.dataDeNascimento = dataDeNascimento;
+    }
+
+    public EstadoCivil getEstadoCivil() {
+        return estadoCivil;
+    }
+
+    public void setEstadoCivil(EstadoCivil estadoCivil) {
+        this.estadoCivil = estadoCivil;
     }
 }

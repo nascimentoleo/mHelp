@@ -1,6 +1,7 @@
 package com.ifma.appmhelp.views;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -14,6 +15,7 @@ import com.ifma.appmhelp.R;
 import com.ifma.appmhelp.controls.MensagemController;
 import com.ifma.appmhelp.controls.SolicitacoesController;
 import com.ifma.appmhelp.daos.MedicoPacienteDao;
+import com.ifma.appmhelp.enums.BundleKeys;
 import com.ifma.appmhelp.enums.StatusSolicitacaoRoster;
 import com.ifma.appmhelp.enums.TipoDeMensagem;
 import com.ifma.appmhelp.models.Medico;
@@ -70,7 +72,9 @@ public class ListPacientesActivity extends AppCompatActivity implements ListPaci
 
     @Override
     public void onPatientSelected(Paciente paciente) {
-        Paciente novo = paciente;
+        Intent it = new Intent(this, ProntuarioActivity.class);
+        it.putExtra(BundleKeys.PACIENTE.getValue(),paciente);
+        startActivity(it);
     }
 
     @Override
