@@ -3,6 +3,7 @@ package com.ifma.appmhelp.views;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -80,8 +81,8 @@ public class LoginActivity extends AppCompatActivity
             case R.id.nav_cadastrar :  if(ConexaoXMPP.getInstance().conexaoEstaAtiva())
                                          startActivity(new Intent(this, CadastroActivity.class));
                                        else
-                                         Toast.makeText(this, "Não é possível realizar cadastro, " +
-                                                              "pois não foi feita a conexão com o servidor", Toast.LENGTH_SHORT).show();
+                Snackbar.make(findViewById(android.R.id.content), "Não é possível realizar cadastro, " +
+                        "pois não foi feita a conexão com o servidor", Snackbar.LENGTH_LONG).show();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -106,8 +107,8 @@ public class LoginActivity extends AppCompatActivity
 
                 }
         }else
-             Toast.makeText(this, "Não foi possível fazer login, pois não foi feita a conexão com o servidor", Toast.LENGTH_SHORT).show();
-    }
+            Snackbar.make(findViewById(android.R.id.content), "Não é possível fazer o login, " +
+                    "pois não foi feita a conexão com o servidor", Snackbar.LENGTH_LONG).show();  }
 
     private void relogarUsuarioSalvo(){
         if(ConexaoXMPP.getInstance().conexaoEstaAtiva()){
@@ -142,12 +143,12 @@ public class LoginActivity extends AppCompatActivity
 
     private boolean loginEhValido() {
         if (edLogin.getText().toString().trim().equals("")) {
-            Toast.makeText(this, "Preencha um usuário", Toast.LENGTH_SHORT).show();
+            Snackbar.make(findViewById(android.R.id.content), "Preencha um usuário", Snackbar.LENGTH_LONG).show();
             edLogin.setFocusable(true);
             return false;
         }
         else if (edSenha.getText().toString().trim().equals("")) {
-            Toast.makeText(this, "Preencha uma senha", Toast.LENGTH_SHORT).show();
+            Snackbar.make(findViewById(android.R.id.content), "Preencha uma senha", Snackbar.LENGTH_LONG).show();
             edSenha.setFocusable(true);
             return false;
         } else

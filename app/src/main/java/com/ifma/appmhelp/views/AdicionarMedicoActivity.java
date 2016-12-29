@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -139,7 +140,7 @@ public class AdicionarMedicoActivity extends AppCompatActivity {
     private void adicionarMedico(Medico medico){
         try {
             SolicitacoesController.adicionarUsuario(this, paciente, medico);
-            Toast.makeText(this, "Médico adicionado! ", Toast.LENGTH_LONG).show();
+            Snackbar.make(findViewById(android.R.id.content), "Médico adicionado", Snackbar.LENGTH_LONG).show();
         } catch (Exception e) {
             e.printStackTrace();
             Toast.makeText(this, "Erro ao adicionar médico: " + e.getMessage(), Toast.LENGTH_LONG).show();

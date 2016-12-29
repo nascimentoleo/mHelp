@@ -60,17 +60,17 @@ public class CadastroActivity extends AppCompatActivity {
                     this.registrarUsuario(novoUsuario);
                     Snackbar.make(findViewById(android.R.id.content), "Usuário cadastrado", Snackbar.LENGTH_LONG).show();
 
-                    //Toast.makeText(this, "Usuário cadastrado", Toast.LENGTH_SHORT).show();
                     novoUsuario.setSenha(BlowfishCrypt.decrypt(novoUsuario.getSenha()));
 
                     if(!clientXMPPController.cadastrarUsuario(novoUsuario)){
                         novoUsuario.setSenha(BlowfishCrypt.encrypt(novoUsuario.getSenha()));
-                        Toast.makeText(this,"Não foi possível cadastrar, conexão não estabelecida",Toast.LENGTH_SHORT).show();
+                        Snackbar.make(findViewById(android.R.id.content), "Não foi possível cadastrar, conexão não estabelecida", Snackbar.LENGTH_LONG).show();
+
                         usuariosDao.deletar(novoUsuario);
                     }
 
                 }else
-                    Toast.makeText(this,"Usuário já existe",Toast.LENGTH_SHORT).show();
+                    Snackbar.make(findViewById(android.R.id.content), "Usuário já existe", Snackbar.LENGTH_LONG).show();
 
                  } catch (Exception  e) {
                 e.printStackTrace();
@@ -103,17 +103,17 @@ public class CadastroActivity extends AppCompatActivity {
 
     private boolean cadastroEhValido(){
         if(edUsuarioCadastro.getText().toString().trim().equals("")){
-            Toast.makeText(this, "Preencha um usuário", Toast.LENGTH_SHORT).show();
+            Snackbar.make(findViewById(android.R.id.content), "Preencha um usuário", Snackbar.LENGTH_LONG).show();
             edUsuarioCadastro.setFocusable(true);
             return false;
         }
         if(edSenhaCadastro.getText().toString().trim().equals("")){
-            Toast.makeText(this, "Preencha uma senha", Toast.LENGTH_SHORT).show();
+            Snackbar.make(findViewById(android.R.id.content), "Preencha uma senha", Snackbar.LENGTH_LONG).show();
             edSenhaCadastro.setFocusable(true);
             return false;
         }
         if(rGroupCadastro.getCheckedRadioButtonId() < 0){
-            Toast.makeText(this, "Preencha um tipo de Usuário", Toast.LENGTH_SHORT).show();
+            Snackbar.make(findViewById(android.R.id.content), "Preencha um tipo de Usuário", Snackbar.LENGTH_LONG).show();
             return false;
         }
         return true;

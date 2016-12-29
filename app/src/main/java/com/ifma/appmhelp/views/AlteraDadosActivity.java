@@ -1,6 +1,7 @@
 package com.ifma.appmhelp.views;
 
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -50,7 +51,7 @@ public class AlteraDadosActivity extends AppCompatActivity implements OnSaveMode
         IDao controller = FactoryController.getController(this,modelo);
         try {
             if (controller.persistir(modelo, true)) {
-                Toast.makeText(this, "Dados alterados com sucesso!", Toast.LENGTH_SHORT).show();
+                Snackbar.make(findViewById(android.R.id.content), "Dados alterados", Snackbar.LENGTH_LONG).show();
             }else
                 Toast.makeText(this, controller.getMsgErro() ,Toast.LENGTH_SHORT).show();
         } catch (SQLException e) {

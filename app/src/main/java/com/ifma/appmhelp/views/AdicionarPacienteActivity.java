@@ -87,6 +87,7 @@ public class AdicionarPacienteActivity extends AppCompatActivity {
         try {
             SolicitacoesController.adicionarUsuario(this, medico, paciente);
             Toast.makeText(this, "Paciente adicionado! ", Toast.LENGTH_LONG).show();
+            finish();
         } catch (Exception e) {
             e.printStackTrace();
             Toast.makeText(this, "Erro ao adicionar paciente: " +
