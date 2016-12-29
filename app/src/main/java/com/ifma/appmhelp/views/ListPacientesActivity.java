@@ -62,7 +62,7 @@ public class ListPacientesActivity extends AppCompatActivity implements ListPaci
     @Override
     public void onPatientSelected(Paciente paciente) {
         Intent it = new Intent(this, ProntuarioActivity.class);
-        it.putExtra(BundleKeys.PACIENTE.getValue(),paciente);
+        it.putExtra(BundleKeys.PACIENTE.toString(),paciente);
         startActivity(it);
     }
 

@@ -5,5 +5,5 @@ package com.ifma.appmhelp.enums;
  */
 
 public enum EstadoCivil {
-    SOLTEIRO, CASADO, DIVORCIADO, VIUVO;
+    Solteiro, Casado, Divorciado, Viúvo;
 }

@@ -5,5 +5,17 @@ package com.ifma.appmhelp.enums;
  */
 
 public enum TipoSanguineo {
-    A_POSTIVO, A_NEGATIVO, B_POSITIVO, B_NEGATIVO, AB_POSITIVO, AB_NEGATIVO, O_POSITIVO, O_NEGATIVO;
+    A_POSTIVO("A+"), A_NEGATIVO("A-"), B_POSITIVO("B+"), B_NEGATIVO("B-"),
+    AB_POSITIVO("AB+"), AB_NEGATIVO("AB-"), O_POSITIVO("O+"), O_NEGATIVO("O-");
+
+    private String value;
+
+    TipoSanguineo(String value) {
+        this.value = value;
+    }
+
+    @Override
+    public String toString() {
+        return this.value;
+    }
 }

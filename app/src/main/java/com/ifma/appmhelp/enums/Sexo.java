@@ -5,5 +5,5 @@ package com.ifma.appmhelp.enums;
  */
 
 public enum Sexo {
-    MASCULINO, FEMININO, OUTRO;
+    Masculino, Feminino, Outro;
 }
