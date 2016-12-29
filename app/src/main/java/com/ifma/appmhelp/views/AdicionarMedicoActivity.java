@@ -24,6 +24,8 @@ import com.google.zxing.qrcode.QRCodeWriter;
 import com.ifma.appmhelp.R;
 import com.ifma.appmhelp.controls.MensagemController;
 import com.ifma.appmhelp.controls.SolicitacoesController;
+import com.ifma.appmhelp.enums.IntentType;
+import com.ifma.appmhelp.enums.SolicitacaoBundleKeys;
 import com.ifma.appmhelp.enums.StatusSolicitacaoRoster;
 import com.ifma.appmhelp.enums.TipoDeMensagem;
 import com.ifma.appmhelp.models.Medico;
@@ -43,7 +45,7 @@ public class AdicionarMedicoActivity extends AppCompatActivity {
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Usuario usuarioMedico = (Usuario) intent.getSerializableExtra("usuario_medico");
+            Usuario usuarioMedico = (Usuario) intent.getSerializableExtra(SolicitacaoBundleKeys.USUARIO_MEDICO.toString());
             medico = new Medico(usuarioMedico);
             //Precisa rodar dentro da thread para evitar que seja executado com a Activity em background
             runOnUiThread(new Runnable() {
@@ -65,7 +67,7 @@ public class AdicionarMedicoActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, new IntentFilter("solicitacao_roster"));
+        LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, new IntentFilter(IntentType.SOLICITACAO_ROSTER.toString()));
         this.carregaComponentes();
         this.exibeQRCode();
 
@@ -121,7 +123,7 @@ public class AdicionarMedicoActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         enviaRespostaDaSolicitacao(StatusSolicitacaoRoster.REPROVADA);
-                        Toast.makeText(AdicionarMedicoActivity.this, "Médico recusado! ", Toast.LENGTH_LONG).show();
+                        Snackbar.make(findViewById(android.R.id.content), "Médico recusado", Snackbar.LENGTH_LONG).show();
                     }
                 }).create();
     }

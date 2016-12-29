@@ -7,6 +7,8 @@ import android.widget.Toast;
 
 import com.ifma.appmhelp.daos.MedicosDao;
 import com.ifma.appmhelp.daos.UsuariosDao;
+import com.ifma.appmhelp.enums.IntentType;
+import com.ifma.appmhelp.enums.SolicitacaoBundleKeys;
 import com.ifma.appmhelp.enums.StatusSolicitacaoRoster;
 import com.ifma.appmhelp.models.Medico;
 import com.ifma.appmhelp.models.Mensagem;
@@ -23,11 +25,11 @@ public class ProcessadorDeSolicitacoes implements ProcessadorDeMensagens {
     public void processar(Context ctx, Mensagem mensagem) throws Exception {
         SolicitacaoRoster solicitacaoRoster = SolicitacaoRoster.fromJson(mensagem.getMsg());
         LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(ctx);
-        Intent it = new Intent("solicitacao_roster");
+        Intent it = new Intent(IntentType.SOLICITACAO_ROSTER.toString());
 
         if (solicitacaoRoster.getStatus() == StatusSolicitacaoRoster.ENVIADA) {
-            it.putExtra("usuario_medico", solicitacaoRoster.getUsuario());
-            it.putExtra("finalizou", false);
+            it.putExtra(SolicitacaoBundleKeys.USUARIO_MEDICO.toString(), solicitacaoRoster.getUsuario());
+            it.putExtra(SolicitacaoBundleKeys.FINALIZOU.toString(), false);
 
             //Remove o médico
         } else if (solicitacaoRoster.getStatus() == StatusSolicitacaoRoster.REMOVIDA) {
@@ -43,11 +45,11 @@ public class ProcessadorDeSolicitacoes implements ProcessadorDeMensagens {
                     Toast.makeText(ctx, "Você foi removido pelo médico " + usuario.getNome(), Toast.LENGTH_SHORT).show();
             }
         } else {
-            it.putExtra("finalizou", true);
+            it.putExtra(SolicitacaoBundleKeys.FINALIZOU.toString(), true);
             if (solicitacaoRoster.getStatus() == StatusSolicitacaoRoster.APROVADA) {
-                it.putExtra("aceitou_solicitacao", true);
+                it.putExtra(SolicitacaoBundleKeys.ACEITOU_SOLICITACAO.toString(), true);
             } else
-                it.putExtra("aceitou_solicitacao", false);
+                it.putExtra(SolicitacaoBundleKeys.ACEITOU_SOLICITACAO.toString(), false);
         }
 
         lbm.sendBroadcast(it);

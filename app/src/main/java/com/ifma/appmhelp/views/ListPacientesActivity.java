@@ -12,7 +12,7 @@ import com.ifma.appmhelp.R;
 import com.ifma.appmhelp.controls.MensagemController;
 import com.ifma.appmhelp.controls.SolicitacoesController;
 import com.ifma.appmhelp.daos.MedicoPacienteDao;
-import com.ifma.appmhelp.enums.BundleKeys;
+import com.ifma.appmhelp.enums.GenericBundleKeys;
 import com.ifma.appmhelp.enums.StatusSolicitacaoRoster;
 import com.ifma.appmhelp.enums.TipoDeMensagem;
 import com.ifma.appmhelp.models.Medico;
@@ -62,7 +62,7 @@ public class ListPacientesActivity extends AppCompatActivity implements ListPaci
     @Override
     public void onPatientSelected(Paciente paciente) {
         Intent it = new Intent(this, ProntuarioActivity.class);
-        it.putExtra(BundleKeys.PACIENTE.toString(),paciente);
+        it.putExtra(GenericBundleKeys.PACIENTE.toString(),paciente);
         startActivity(it);
     }
 
