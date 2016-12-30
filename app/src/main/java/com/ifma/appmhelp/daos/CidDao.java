@@ -32,4 +32,6 @@ public class CidDao extends BaseController implements IDao {
     public void carregaId(IModel objeto) throws SQLException {
 
     }
+
+
 }

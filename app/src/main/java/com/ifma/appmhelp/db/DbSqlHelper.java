@@ -16,6 +16,7 @@ import java.sql.SQLException;
 public class DbSqlHelper extends OrmLiteSqliteOpenHelper {
 
    private String msgErro;
+   private Context ctx;
 
    private static DbSqlHelper instance = null;
 
@@ -26,12 +27,12 @@ public class DbSqlHelper extends OrmLiteSqliteOpenHelper {
     }
 
    private DbSqlHelper(Context context) {
-        super(context, DbInfo.getNomeBanco(), null, DbInfo.getVersaoBanco(), R.raw.ormlite_config);
-        checkDatabaseVersion();
-    }
+       super(context, DbInfo.getNomeBanco(), null, DbInfo.getVersaoBanco(), R.raw.ormlite_config);
+       this.ctx = context;
+       checkDatabaseVersion();
+   }
 
-
-    public String getMsgErro() {
+   public String getMsgErro() {
         return this.msgErro;
     }
 
@@ -40,6 +41,10 @@ public class DbSqlHelper extends OrmLiteSqliteOpenHelper {
         try {
             for(Class classeDb : DbClass.getClasses())
                 TableUtils.createTableIfNotExists(connectionSource, classeDb);
+            //Inserindo cids
+            DbPopulation.insertCid(ctx, this);
+
+
            } catch (SQLException e) {
             this.msgErro = e.getMessage();
             e.printStackTrace();
@@ -51,6 +56,7 @@ public class DbSqlHelper extends OrmLiteSqliteOpenHelper {
         try {
             for(Class classeDb : DbClass.getClasses())
                 TableUtils.dropTable(connectionSource, classeDb, true);
+
             this.onCreate(database, connectionSource);
         } catch (SQLException e) {
             this.msgErro = e.getMessage();
