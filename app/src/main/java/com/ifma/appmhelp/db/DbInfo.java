@@ -5,7 +5,7 @@ package com.ifma.appmhelp.db;
  */
 public class DbInfo {
     private static final String NOME_BANCO = "mhelpdb";
-    private static final int VERSAO_BANCO = 22;
+    private static final int VERSAO_BANCO = 24;
 
     public static int getVersaoBanco() {
         return VERSAO_BANCO;

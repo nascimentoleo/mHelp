@@ -50,12 +50,15 @@ public class ListPacientesActivity extends AppCompatActivity implements ListPaci
 
     private List<Paciente> carregaPacientes(){
         Medico medico = (Medico) UsuarioLogado.getInstance().getModelo();
-        try {
-            return new MedicoPacienteDao(this).getPacientesByMedico(medico);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            Toast.makeText(this, "Erro ao carregar pacientes: " + e.getMessage(),Toast.LENGTH_SHORT).show();
-        }
+        if (medico != null){
+            try {
+                return new MedicoPacienteDao(this).getPacientesByMedico(medico);
+            } catch (SQLException e) {
+                e.printStackTrace();
+                Toast.makeText(this, "Erro ao carregar pacientes: " + e.getMessage(),Toast.LENGTH_SHORT).show();
+            }
+        }else
+            Toast.makeText(this, "Erro ao carregar pacientes: Médico não está logado",Toast.LENGTH_SHORT).show();
         return null;
     }
 

@@ -18,12 +18,12 @@ import com.ifma.appmhelp.enums.EstadoCivil;
 import com.ifma.appmhelp.enums.GenericBundleKeys;
 import com.ifma.appmhelp.enums.Sexo;
 import com.ifma.appmhelp.enums.TipoSanguineo;
+import com.ifma.appmhelp.lib.DataLib;
 import com.ifma.appmhelp.lib.KeyboardLib;
 import com.ifma.appmhelp.lib.Mask;
 import com.ifma.appmhelp.models.Paciente;
 import com.ifma.appmhelp.models.Prontuario;
 
-import java.sql.Date;
 import java.sql.SQLException;
 
 public class ProntuarioActivity extends AppCompatActivity {
@@ -35,7 +35,7 @@ public class ProntuarioActivity extends AppCompatActivity {
     private TextView txtNomePaciente;
     private TextView txtEndereco;
     private TextView txtTelefonePaciente;
-    private EditText edIdade;
+    private TextView txtIdade;
     private EditText edDataDeNascimento;
     private EditText edNomeDaMae;
     private EditText edNomeDoPai;
@@ -67,32 +67,43 @@ public class ProntuarioActivity extends AppCompatActivity {
         spSexo                = (Spinner) findViewById(R.id.spSexoProntuario);
         spEstadoCivil         = (Spinner) findViewById(R.id.spEstadoCivilProntuario);
         spTipoSanguineo       = (Spinner) findViewById(R.id.spTipoSanguineoProntuario);
-        edIdade               = (EditText) findViewById(R.id.edIdadeProntuario);
-        edDataDeNascimento    = (EditText) findViewById(R.id.edDataDeNascimentoProntuario);
-        edDataDeNascimento.addTextChangedListener(Mask.insert("##/##/####", edDataDeNascimento));
+        txtIdade               = (TextView) findViewById(R.id.txtIdadeProntuario);
         edNomeDaMae           = (EditText) findViewById(R.id.edNomeDaMaeProntuario);
         edNomeDoPai           = (EditText) findViewById(R.id.edNomeDoPaiProntuario);
         edTelefoneResponsavel = (EditText) findViewById(R.id.edTelefoneResponsavelProntuario);
         edObservacoes         = (EditText) findViewById(R.id.edObservacoesProntuario);
+
+        edDataDeNascimento    = (EditText) findViewById(R.id.edDataDeNascimentoProntuario);
+        edDataDeNascimento.addTextChangedListener(Mask.insert("##/##/####", edDataDeNascimento));
+
+        edDataDeNascimento.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                preencherIdade();
+            }
+        });
+
     }
 
     private void carregaProntuarioDoPaciente(){
         paciente = (Paciente) getIntent().getSerializableExtra(GenericBundleKeys.PACIENTE.toString());
         if (paciente != null) {
-            if(!paciente.getUsuario().getNome().equals(""))
+            if(paciente.getUsuario().getNome() != null)
                 txtNomePaciente.setText(txtNomePaciente.getText() + ": " + paciente.getUsuario().getNome());
-            if(!paciente.getEndereco().equals(""))
+            if(paciente.getEndereco() != null)
                 txtEndereco.setText(txtEndereco.getText() + ": " + paciente.getEndereco());
-            if(!paciente.getTelefone().equals(""))
+            if(paciente.getTelefone() != null)
                 txtTelefonePaciente.setText(txtTelefonePaciente.getText() + ": " +paciente.getTelefone());
 
             if (paciente.getProntuario() != null){
 
                 if (paciente.getProntuario().getIdade() > 0)
-                    edIdade.setText(Integer.toString(paciente.getProntuario().getIdade()));
+                    txtIdade.setText(Integer.toString(paciente.getProntuario().getIdade()) + " anos");
+                else
+                    txtIdade.setText("");
 
                 if (paciente.getProntuario().getDataDeNascimento() != null)
-                    edDataDeNascimento.setText(paciente.getProntuario().getDataDeNascimento().toString());
+                    edDataDeNascimento.setText(paciente.getProntuario().getDataDeNascimentoString());
 
                 edNomeDaMae.setText(paciente.getProntuario().getNomeDaMae());
                 edNomeDoPai.setText(paciente.getProntuario().getNomeDoPai());
@@ -151,10 +162,11 @@ public class ProntuarioActivity extends AppCompatActivity {
     }
 
     private void preencherProntuario(Prontuario prontuario){
-        prontuario.setIdade(Integer.parseInt(edIdade.getText().toString().trim()));
+        int idade = Integer.parseInt(txtIdade.getText().toString().trim().replaceAll("\\D", ""));
+        prontuario.setIdade(idade);
         prontuario.setNomeDaMae(edNomeDaMae.getText().toString().trim());
         prontuario.setNomeDoPai(edNomeDoPai.getText().toString().trim());
-        prontuario.setDataDeNascimento(Date.valueOf(edDataDeNascimento.getText().toString().trim()));
+        prontuario.setDataDeNascimento(DataLib.converterData(edDataDeNascimento.getText().toString().trim()));
         prontuario.setTelefoneDoResponsavel(edTelefoneResponsavel.getText().toString().trim());
         prontuario.setObservacoes(edObservacoes.getText().toString().trim());
         prontuario.setSexo((Sexo) spSexo.getSelectedItem());
@@ -164,18 +176,27 @@ public class ProntuarioActivity extends AppCompatActivity {
     }
 
     private boolean prontuarioEhValido(){
-        if (edIdade.getText().toString().trim().equals("")) {
-            Snackbar.make(findViewById(android.R.id.content), "Preencha a idade", Snackbar.LENGTH_LONG).show();
-            edIdade.setFocusable(true);
-            return false;
-        }
-        else if (edDataDeNascimento.getText().toString().trim().equals("")) {
+       if (edDataDeNascimento.getText().toString().trim().equals("")) {
             Snackbar.make(findViewById(android.R.id.content), "Preencha a Data de Nascimento", Snackbar.LENGTH_LONG).show();
             edDataDeNascimento.setFocusable(true);
             return false;
         }
 
         return true;
+    }
+
+    private void preencherIdade() {
+        if (!edDataDeNascimento.getText().toString().equals(""))
+            if (dataEhValida(edDataDeNascimento.getText().toString()))
+                txtIdade.setText(DataLib.calulaIdade(DataLib.converterData(edDataDeNascimento.getText().toString())) + " anos");
+            else {
+                Toast.makeText(this,"Data de Nascimento inválida", Toast.LENGTH_SHORT).show();
+                edDataDeNascimento.setText("");
+            }
+    }
+
+    private boolean dataEhValida(String data){
+        return DataLib.validarDataDeNascimento(data);
     }
 
 }

@@ -44,18 +44,52 @@
         android:id="@+id/txtTelefoneProntuario"
         android:textSize="18sp" />
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="date"
+                android:ems="10"
+                android:imeOptions="actionNext"
+                android:hint="@string/data_de_nascimento_name"
+                android:id="@+id/edDataDeNascimentoProntuario" />
+
+        </android.support.design.widget.TextInputLayout>
+
+
+        <TextView
+            android:layout_width="320dp"
+            android:layout_height="wrap_content"
+            android:text="@string/idade_name"
+            android:textSize="8pt"
+            android:layout_marginTop="42px"
+            android:layout_marginLeft="8px"
+            android:layout_marginBottom="20px"
+            android:id="@+id/txtIdadeProntuario"/>
+
+
+    </LinearLayout>
+
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <EditText
-            android:layout_width="185dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="date"
-            android:ems="10"
+            android:inputType="textAutoComplete"
             android:imeOptions="actionNext"
-            android:hint="@string/data_de_nascimento_name"
-            android:id="@+id/edDataDeNascimentoProntuario" />
+            android:ems="10"
+            android:hint="@string/nome_da_mae_name"
+            android:id="@+id/edNomeDaMaeProntuario" />
 
     </android.support.design.widget.TextInputLayout>
 
@@ -64,15 +98,13 @@
         android:layout_height="wrap_content">
 
         <EditText
-            android:layout_width="70dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="number"
-            android:ems="3"
-            android:maxLength="3"
-            android:hint="@string/idade_name"
+            android:inputType="textAutoComplete"
             android:imeOptions="actionNext"
-            android:id="@+id/edIdadeProntuario"
-            android:enabled="false"/>
+            android:ems="10"
+            android:hint="@string/nome_do_pai_name"
+            android:id="@+id/edNomeDoPaiProntuario" />
 
     </android.support.design.widget.TextInputLayout>
 
@@ -118,42 +150,13 @@
         android:layout_height="wrap_content"
         android:id="@+id/spTipoSanguineoProntuario" />
 
-    <android.support.design.widget.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textAutoComplete"
-        android:imeOptions="actionNext"
-        android:ems="10"
-        android:hint="@string/nome_da_mae_name"
-        android:id="@+id/edNomeDaMaeProntuario" />
-
-    </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
     <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textAutoComplete"
-        android:imeOptions="actionNext"
-        android:ems="10"
-        android:hint="@string/nome_do_pai_name"
-        android:id="@+id/edNomeDoPaiProntuario" />
-
-    </android.support.design.widget.TextInputLayout>
-
-    <android.support.design.widget.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-    <EditText
-        android:layout_width="169dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:inputType="phone"
         android:imeOptions="actionNext"

@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.ifma.appmhelp.R;
 import com.ifma.appmhelp.controls.Login;
 import com.ifma.appmhelp.factories.FactoryLogadoActivity;
+import com.ifma.appmhelp.lib.KeyboardLib;
 import com.ifma.appmhelp.models.ConexaoXMPP;
 import com.ifma.appmhelp.models.IModel;
 import com.ifma.appmhelp.models.Usuario;
@@ -97,6 +98,7 @@ public class LoginActivity extends AppCompatActivity
     }
 
     public void efetuarLogin(View v){
+        KeyboardLib.fecharTeclado(this);
         if(ConexaoXMPP.getInstance().conexaoEstaAtiva()){
             if(loginEhValido())
                 try {

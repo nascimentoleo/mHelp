@@ -3,12 +3,13 @@ package com.ifma.appmhelp.models;
 import com.ifma.appmhelp.enums.EstadoCivil;
 import com.ifma.appmhelp.enums.Sexo;
 import com.ifma.appmhelp.enums.TipoSanguineo;
+import com.ifma.appmhelp.lib.DataLib;
 import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 
-import java.sql.Date;
+import java.util.Date;
 
 /**
  * Created by leo on 12/23/16.
@@ -134,5 +135,10 @@ public class Prontuario implements IModel {
 
     public void setEstadoCivil(EstadoCivil estadoCivil) {
         this.estadoCivil = estadoCivil;
+    }
+
+
+    public String getDataDeNascimentoString(){
+        return DataLib.converterData(this.dataDeNascimento);
     }
 }
