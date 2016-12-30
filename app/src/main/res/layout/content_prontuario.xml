@@ -16,7 +16,9 @@
     android:id="@+id/content_prontuario"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:weightSum="1">
+
 
     <TextView
         android:text="@string/nome_do_paciente_name"
@@ -26,22 +28,21 @@
         android:id="@+id/txtNomePacienteProntuario"
         android:textSize="18sp" />
 
-
-    <android.support.design.widget.TextInputLayout
+    <TextView
+        android:text="@string/endereco_name"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:id="@+id/txtEnderecoProntuario"
+        android:textSize="18sp" />
 
-        <EditText
-            android:layout_width="70dp"
-            android:layout_height="wrap_content"
-            android:inputType="number"
-            android:ems="3"
-            android:maxLength="3"
-            android:hint="@string/idade_name"
-            android:imeOptions="actionNext"
-            android:id="@+id/edIdadeProntuario" />
-
-    </android.support.design.widget.TextInputLayout>
+    <TextView
+        android:text="@string/telefone_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:id="@+id/txtTelefoneProntuario"
+        android:textSize="18sp" />
 
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
@@ -55,6 +56,23 @@
             android:imeOptions="actionNext"
             android:hint="@string/data_de_nascimento_name"
             android:id="@+id/edDataDeNascimentoProntuario" />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:ems="3"
+            android:maxLength="3"
+            android:hint="@string/idade_name"
+            android:imeOptions="actionNext"
+            android:id="@+id/edIdadeProntuario"
+            android:enabled="false"/>
 
     </android.support.design.widget.TextInputLayout>
 
@@ -85,21 +103,6 @@
         android:layout_width="185dp"
         android:layout_height="wrap_content"
         android:id="@+id/spEstadoCivilProntuario" />
-
-    <android.support.design.widget.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textAutoComplete"
-        android:imeOptions="actionNext"
-        android:ems="10"
-        android:hint="@string/endereco_name"
-        android:id="@+id/edEnderecoProntuario" />
-
-    </android.support.design.widget.TextInputLayout>
 
     <TextView
         android:layout_width="320dp"
@@ -142,21 +145,6 @@
         android:ems="10"
         android:hint="@string/nome_do_pai_name"
         android:id="@+id/edNomeDoPaiProntuario" />
-
-    </android.support.design.widget.TextInputLayout>
-
-    <android.support.design.widget.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-    <EditText
-        android:layout_width="169dp"
-        android:layout_height="wrap_content"
-        android:inputType="phone"
-        android:imeOptions="actionNext"
-        android:ems="10"
-        android:hint="@string/telefone_name"
-        android:id="@+id/edTelefonePacienteProntuario" />
 
     </android.support.design.widget.TextInputLayout>
 

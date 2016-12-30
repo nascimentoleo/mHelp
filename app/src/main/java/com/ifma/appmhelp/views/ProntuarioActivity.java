@@ -33,13 +33,13 @@ public class ProntuarioActivity extends AppCompatActivity {
     private Spinner spEstadoCivil;
     private Spinner spTipoSanguineo;
     private TextView txtNomePaciente;
+    private TextView txtEndereco;
+    private TextView txtTelefonePaciente;
     private EditText edIdade;
     private EditText edDataDeNascimento;
-    private EditText edEndereco;
     private EditText edNomeDaMae;
     private EditText edNomeDoPai;
     private EditText edTelefoneResponsavel;
-    private EditText edTelefonePaciente;
     private EditText edObservacoes;
     private ArrayAdapter<Sexo> adapterSexo;
     private ArrayAdapter<EstadoCivil> adapterEstadoCivil;
@@ -61,27 +61,30 @@ public class ProntuarioActivity extends AppCompatActivity {
     }
 
     private void inicializaComponentes(){
+        txtNomePaciente       = (TextView) findViewById(R.id.txtNomePacienteProntuario);
+        txtEndereco           = (TextView) findViewById(R.id.txtEnderecoProntuario);
+        txtTelefonePaciente   = (TextView) findViewById(R.id.txtTelefoneProntuario);
         spSexo                = (Spinner) findViewById(R.id.spSexoProntuario);
         spEstadoCivil         = (Spinner) findViewById(R.id.spEstadoCivilProntuario);
         spTipoSanguineo       = (Spinner) findViewById(R.id.spTipoSanguineoProntuario);
-        txtNomePaciente       = (TextView) findViewById(R.id.txtNomePacienteProntuario);
         edIdade               = (EditText) findViewById(R.id.edIdadeProntuario);
         edDataDeNascimento    = (EditText) findViewById(R.id.edDataDeNascimentoProntuario);
         edDataDeNascimento.addTextChangedListener(Mask.insert("##/##/####", edDataDeNascimento));
-        edEndereco            = (EditText) findViewById(R.id.edEnderecoProntuario);
         edNomeDaMae           = (EditText) findViewById(R.id.edNomeDaMaeProntuario);
         edNomeDoPai           = (EditText) findViewById(R.id.edNomeDoPaiProntuario);
         edTelefoneResponsavel = (EditText) findViewById(R.id.edTelefoneResponsavelProntuario);
-        edTelefonePaciente    = (EditText) findViewById(R.id.edTelefonePacienteProntuario);
         edObservacoes         = (EditText) findViewById(R.id.edObservacoesProntuario);
     }
 
     private void carregaProntuarioDoPaciente(){
         paciente = (Paciente) getIntent().getSerializableExtra(GenericBundleKeys.PACIENTE.toString());
         if (paciente != null) {
-            txtNomePaciente.setText(txtNomePaciente.getText() + " " + paciente.getUsuario().getNome());
-            edEndereco.setText(paciente.getEndereco());
-            edTelefonePaciente.setText(paciente.getTelefone());
+            if(!paciente.getUsuario().getNome().equals(""))
+                txtNomePaciente.setText(txtNomePaciente.getText() + ": " + paciente.getUsuario().getNome());
+            if(!paciente.getEndereco().equals(""))
+                txtEndereco.setText(txtEndereco.getText() + ": " + paciente.getEndereco());
+            if(!paciente.getTelefone().equals(""))
+                txtTelefonePaciente.setText(txtTelefonePaciente.getText() + ": " +paciente.getTelefone());
 
             if (paciente.getProntuario() != null){
 
