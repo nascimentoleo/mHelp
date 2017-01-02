@@ -95,7 +95,16 @@
         <activity
             android:name=".views.ProntuarioActivity"
             android:label="@string/title_activity_prontuario"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".views.CidActivity"
+            android:label="@string/title_activity_cid"
+            android:parentActivityName=".views.ProntuarioActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.ifma.appmhelp.views.ProntuarioActivity" />
+        </activity>
     </application>
 
 </manifest>

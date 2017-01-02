@@ -38,7 +38,6 @@ public class AdicionarPacienteActivity extends AppCompatActivity {
                     adicionarPaciente(paciente);
                 }else
                     Toast.makeText(AdicionarPacienteActivity.this,"Paciente recusou a solicitação",Toast.LENGTH_SHORT).show();
-                finish();
             }
         }
     };

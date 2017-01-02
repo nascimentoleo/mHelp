@@ -89,6 +89,7 @@ public class AdicionarMedicoActivity extends AppCompatActivity {
         try {
             //Vou retirar a senha antes de gerar o qrcode
             Paciente pacienteParaEnvio = this.paciente.clone();
+            pacienteParaEnvio.setUsuario(this.paciente.getUsuario().clone());
             pacienteParaEnvio.getUsuario().setSenha(null); //Limpo a senha antes de enviar
             BitMatrix bitMatrix = new QRCodeWriter().encode(pacienteParaEnvio.toJson(), BarcodeFormat.QR_CODE,largura,altura);
             Bitmap bmp = Bitmap.createBitmap(largura, altura, Bitmap.Config.RGB_565);

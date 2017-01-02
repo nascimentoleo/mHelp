@@ -19,15 +19,9 @@ import android.widget.Toast;
 
 import com.ifma.appmhelp.R;
 import com.ifma.appmhelp.controls.Login;
-import com.ifma.appmhelp.factories.FactoryChat;
-import com.ifma.appmhelp.models.ConexaoXMPP;
 
-import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.chat.Chat;
 import org.jivesoftware.smack.chat.ChatManager;
-import org.jivesoftware.smack.chat.ChatManagerListener;
-import org.jivesoftware.smack.chat.ChatMessageListener;
-import org.jivesoftware.smack.packet.Message;
 
 public class MedicoActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -62,7 +56,6 @@ public class MedicoActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         registrarComponentes();
-        this.iniciaChat();
     }
 
     private void registrarComponentes() {
@@ -137,42 +130,6 @@ public class MedicoActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
-    }
-
-    public void iniciaChat(){
-        if (ConexaoXMPP.getInstance().conexaoEstaAtiva()){
-            chatManager = ChatManager.getInstanceFor(ConexaoXMPP.getInstance().getConexao());
-            chatManager.addChatListener(new MyChatManagerListener());
-        }
-    }
-
-    public void enviarMensagem(View v){
-        //if(this.chat != null){
-            try {
-                this.chat = FactoryChat.novoChat("medico", ConexaoXMPP.getInstance().getConexao());
-                this.chat.addMessageListener(new MyMessageListener());
-                this.chat.sendMessage(this.edMensagem.getText().toString());
-            } catch (SmackException.NotConnectedException e) {
-                Toast.makeText(MedicoActivity.this, "Não foi possível enviar a mensagem", Toast.LENGTH_SHORT).show();
-                e.printStackTrace();
-            }
-
-    }
-
-    class MyMessageListener implements ChatMessageListener{
-        @Override
-        public void processMessage(Chat chat, Message message) {
-            txtMsg.setText(message.getBody());
-        }
-
-    }
-
-    class MyChatManagerListener implements ChatManagerListener{
-        @Override
-        public void chatCreated(Chat chat, boolean createdLocally) {
-                if (!createdLocally)
-                    chat.addMessageListener(new MyMessageListener());;
-        }
     }
 
 }

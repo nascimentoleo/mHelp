@@ -49,11 +49,14 @@ public class SolicitacoesController {
 
             if (pacienteDB != null) {
                 paciente.setId(pacienteDB.getId());
+
+                if (paciente.getProntuario() == null)
+                    paciente.setProntuario(pacienteDB.getProntuario());
             }
         }
         MedicoPaciente medicoPaciente = new MedicoPaciente(medico, paciente);
         MedicoPacienteDao medicoPacienteDao = new MedicoPacienteDao(ctx);
-        //Adiciono primeiro o paciente em cascata
+
         pacientesDao.persistir(paciente,true);
         medicoPacienteDao.carregaId(medicoPaciente);
         medicoPacienteDao.persistir(medicoPaciente, false);

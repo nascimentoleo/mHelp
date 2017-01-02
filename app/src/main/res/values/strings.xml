@@ -70,5 +70,8 @@
     <string name="observacoes_name">Observações</string>
     <string name="alterar_name">Alterar</string>
     <string name="alterar_prontuario_name">Alterar Prontuário</string>
+    <string name="cadastrar_cids_name">Cadastrar Cids</string>
+    <string name="cadastrar_medicamentos_name">Cadastrar Medicamentos</string>
+    <string name="title_activity_cid">CidActivity</string>
 
 </resources>
