@@ -73,5 +73,8 @@
     <string name="cadastrar_cids_name">Cadastrar Cids</string>
     <string name="cadastrar_medicamentos_name">Cadastrar Medicamentos</string>
     <string name="title_activity_cid">CidActivity</string>
+    <string name="cid_name">Cid</string>
+    <string name="descricao_name">Descrição</string>
+    <string name="cids_name">Cids</string>
 
 </resources>
