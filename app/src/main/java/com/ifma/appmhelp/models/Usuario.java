@@ -8,7 +8,7 @@ import com.j256.ormlite.table.DatabaseTable;
  */
 
 @DatabaseTable(tableName = "usuarios")
-public class Usuario implements IModel{
+public class Usuario implements IModel, Cloneable{
 
     @DatabaseField(generatedId = true)
     private Long id;
@@ -73,6 +73,9 @@ public class Usuario implements IModel{
         return email;
     }
 
-
+    @Override
+    public Usuario clone() throws CloneNotSupportedException {
+        return (Usuario) super.clone();
+    }
 
 }

@@ -71,7 +71,7 @@ public class AdicionarPacienteActivity extends AppCompatActivity {
             if (intentResult.getContents() != null) {
                 try {
                     this.paciente = new Paciente().fromJson(intentResult.getContents());
-                    SolicitacaoRoster solicitacaoRoster = new SolicitacaoRoster(medico.getUsuario(), StatusSolicitacaoRoster.ENVIADA);
+                    SolicitacaoRoster solicitacaoRoster = new SolicitacaoRoster(medico.getUsuario().clone(), StatusSolicitacaoRoster.ENVIADA);
                     Mensagem mensagem = new Mensagem(solicitacaoRoster.toJson(), TipoDeMensagem.SOLICITACAO_ROSTER);
                     MensagemController.enviaMensagem(this.paciente.getUsuario(), mensagem);
                 } catch (Exception e) {

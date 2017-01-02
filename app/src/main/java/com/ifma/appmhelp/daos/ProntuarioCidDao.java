@@ -32,4 +32,5 @@ public class ProntuarioCidDao extends BaseController implements IDao {
     public void carregaId(IModel objeto) throws SQLException {
 
     }
+
 }

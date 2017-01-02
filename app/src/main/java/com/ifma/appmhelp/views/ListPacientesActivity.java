@@ -35,13 +35,21 @@ public class ListPacientesActivity extends AppCompatActivity implements ListPaci
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         this.inicializaAdapter();
     }
 
     private void inicializaAdapter(){
         ArrayList<Paciente> listaDePacientes = (ArrayList<Paciente>) this.carregaPacientes();
         if(listaDePacientes != null){
-            getSupportFragmentManager().beginTransaction().add(R.id.container_list_pacientes,ListPacientesFragment.newInstance(listaDePacientes)).commit();
+            //if (!getSupportFragmentManager().beginTransaction().isEmpty())
+                getSupportFragmentManager().beginTransaction().replace(R.id.container_list_pacientes,ListPacientesFragment.newInstance(listaDePacientes)).commit();
+            //else
+            //     getSupportFragmentManager().beginTransaction().add(R.id.container_list_pacientes,ListPacientesFragment.newInstance(listaDePacientes)).commit();
         }else {
             Toast.makeText(this, "Este médico não possui pacientes adicionados", Toast.LENGTH_SHORT).show();
             finish();
@@ -66,7 +74,7 @@ public class ListPacientesActivity extends AppCompatActivity implements ListPaci
     public void onPatientSelected(Paciente paciente) {
         Intent it = new Intent(this, ProntuarioActivity.class);
         it.putExtra(GenericBundleKeys.PACIENTE.toString(),paciente);
-        startActivity(it);
+        startActivityForResult(it,RESULT_FIRST_USER);
     }
 
     @Override

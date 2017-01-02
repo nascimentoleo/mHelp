@@ -131,7 +131,7 @@ public class AdicionarMedicoActivity extends AppCompatActivity {
 
     private void enviaRespostaDaSolicitacao(StatusSolicitacaoRoster statusResposta){
         try {
-            SolicitacaoRoster solicitacaoRoster = new SolicitacaoRoster(paciente.getUsuario(), statusResposta);
+            SolicitacaoRoster solicitacaoRoster = new SolicitacaoRoster(paciente.getUsuario().clone(), statusResposta);
             Mensagem mensagem = new Mensagem(solicitacaoRoster.toJson(), TipoDeMensagem.SOLICITACAO_ROSTER);
             MensagemController.enviaMensagem(medico.getUsuario(), mensagem);
         } catch (Exception e) {
