@@ -41,9 +41,11 @@ public class DbSqlHelper extends OrmLiteSqliteOpenHelper {
         try {
             for(Class classeDb : DbClass.getClasses())
                 TableUtils.createTableIfNotExists(connectionSource, classeDb);
+
             //Inserindo cids
             DbPopulation.insertCid(ctx, this);
-
+            //Inserindo medicamentos
+            DbPopulation.insertMedicamentos(ctx, this);
 
            } catch (SQLException e) {
             this.msgErro = e.getMessage();
