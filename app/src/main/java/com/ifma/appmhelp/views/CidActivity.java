@@ -7,9 +7,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import com.ifma.appmhelp.R;
 import com.ifma.appmhelp.adapters.RecycleCidsAdapter;
@@ -74,35 +77,76 @@ public class CidActivity extends AppCompatActivity {
 
         this.adapterCid = new ArrayList<>();
         this.rViewCids.setAdapter(new RecycleCidsAdapter(this,adapterCid));
-    }
+
+        this.edCidCodigo.setOnEditorActionListener(new OnEditorActionListener());
+        this.edCidDescricao.setOnEditorActionListener(new OnEditorActionListener());
+
+        this.edCidCodigo.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus){
+                    limparCamposDeBusca();
+                }
+            }
+        });
+
+        this.edCidDescricao.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus){
+                    limparCamposDeBusca();
+                }
+            }
+        });
+     }
 
     private void atualizaAdapter(int inicio, int fim){
         try {
-            List<Cid> listCids = new CidDao(this).getCids(Long.valueOf(inicio),Long.valueOf(fim));
+            List<Cid> listCids = null;
+            CidDao dao = new CidDao(this);
+
+            if(!edCidDescricao.getText().toString().isEmpty()) {
+                listCids = dao.getCidsByField(Long.valueOf(inicio), Long.valueOf(fim),
+                        "descricao", edCidDescricao.getText().toString().trim());
+                adapterCid.clear();
+            }
+            else if(!edCidCodigo.getText().toString().isEmpty()){
+                listCids = dao.getCidsByField(Long.valueOf(inicio), Long.valueOf(fim),
+                        "codigo", edCidCodigo.getText().toString().trim());
+                adapterCid.clear();
+            }else
+                listCids = dao.getCids(Long.valueOf(inicio),Long.valueOf(fim));
+
             adapterCid.addAll(listCids);
             rViewCids.getAdapter().notifyDataSetChanged();
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    private List<Cid> carregaCids(int qtdRegistros){
-        try {
-            return new CidDao(this).getTodos(qtdRegistros);
-        } catch (SQLException e) {
-            Toast.makeText(this, "Não foi possível carregar os cids: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-            e.printStackTrace();
-            return null;
-        }
+    private void limparCamposDeBusca(){
+        this.edCidCodigo.getText().clear();
+        this.edCidDescricao.getText().clear();
     }
 
     public void loadNextDataFromApi(int offset) {
-        try {
-            List<Cid> listCids = new CidDao(this).getCids(Long.valueOf(offset),Long.valueOf(offset + qtdRegistros));
-            adapterCid.addAll(listCids);
-            rViewCids.getAdapter().notifyDataSetChanged();
-        } catch (SQLException e) {
-            e.printStackTrace();
+        atualizaAdapter(offset, offset + qtdRegistros);
+    }
+
+    class OnEditorActionListener implements EditText.OnEditorActionListener{
+
+        @Override
+        public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+            if (actionId == EditorInfo.IME_ACTION_SEARCH || actionId == EditorInfo.IME_ACTION_DONE ||
+                actionId == EditorInfo.IME_ACTION_GO     || actionId == EditorInfo.IME_ACTION_NEXT ||
+                event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+                    atualizaAdapter(0,qtdRegistros);
+                    return true;
+            }
+            return false;
         }
     }
+
+
 }

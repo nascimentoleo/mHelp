@@ -7,6 +7,8 @@ import com.ifma.appmhelp.db.DbSqlHelper;
 import com.ifma.appmhelp.models.Cid;
 import com.ifma.appmhelp.models.IModel;
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.stmt.PreparedQuery;
+import com.j256.ormlite.stmt.QueryBuilder;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -45,6 +47,14 @@ public class CidDao extends BaseController implements IDao {
     public List<Cid> getTodos(int qtdRegistros) throws SQLException {
         Dao<Cid, Long> dao = DbSqlHelper.getHelper(ctx).getDao(Cid.class);
         return dao.queryForAll();
+    }
+
+    public List<Cid> getCidsByField(Long inicio, Long fim, String fieldName, String fieldValue) throws SQLException {
+        Dao<Cid, Long> dao = DbSqlHelper.getHelper(ctx).getDao(Cid.class);
+        QueryBuilder<Cid, Long> query = dao.queryBuilder().offset(inicio).limit(fim);
+        query.where().like(fieldName, "%" + fieldValue + "%");
+        PreparedQuery<Cid> prepare = query.prepare();
+        return dao.query(prepare);
     }
 
 
