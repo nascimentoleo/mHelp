@@ -37,7 +37,12 @@ public class CidDao extends BaseController implements IDao {
 
     }
 
-    public List<Cid> getTodos() throws SQLException {
+    public List<Cid> getCids(Long inicio, Long fim) throws SQLException {
+        Dao<Cid, Long> dao = DbSqlHelper.getHelper(ctx).getDao(Cid.class);
+        return dao.queryBuilder().offset(inicio).limit(fim).query();
+    }
+
+    public List<Cid> getTodos(int qtdRegistros) throws SQLException {
         Dao<Cid, Long> dao = DbSqlHelper.getHelper(ctx).getDao(Cid.class);
         return dao.queryForAll();
     }

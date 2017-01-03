@@ -19,8 +19,7 @@
                 android:hint="@string/nome_name"
                 android:inputType="textAutoComplete"
                 android:imeOptions="actionNext"
-                android:maxLines="1"
-                android:singleLine="true" />
+                android:maxLines="1" />
 
         </android.support.design.widget.TextInputLayout>
 
@@ -35,8 +34,7 @@
                 android:hint="@string/crm_name"
                 android:inputType="textAutoComplete"
                 android:imeOptions="actionNext"
-                android:maxLines="1"
-                android:singleLine="true" />
+                android:maxLines="1" />
 
         </android.support.design.widget.TextInputLayout>
 

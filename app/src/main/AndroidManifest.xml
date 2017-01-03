@@ -98,7 +98,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".views.CidActivity"
-            android:label="@string/title_activity_cid"
+            android:label="Cadastro de Cids"
             android:parentActivityName=".views.ProntuarioActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data

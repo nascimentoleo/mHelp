@@ -12,27 +12,51 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.ifma.appmhelp.views.CidActivity"
     tools:showIn="@layout/activity_cid"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:weightSum="1">
 
-    <TextView
-        android:layout_width="320dp"
-        android:layout_height="wrap_content"
-        android:text="@string/cids_name"
-        android:textSize="8pt"
-        android:layout_marginTop="20px"
-        android:layout_marginLeft="8px"
-        android:layout_marginBottom="20px"/>
-
-    <Spinner
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/spCids" />
+        android:orientation="horizontal">
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/edCidCodigo"
+                android:layout_width="93dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/cid_name"
+                android:inputType="textAutoComplete"
+                android:imeOptions="actionNext"
+                android:maxLines="1" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/edCidDescricao"
+                android:layout_width="273dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/descricao_name"
+                android:inputType="textAutoComplete"
+                android:imeOptions="actionNext"
+                android:maxLines="1" />
+
+        </android.support.design.widget.TextInputLayout>
+
+    </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/rListCids"
+        android:id="@+id/rViewCids"
         android:scrollbars="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="wrap_content" />
 
 
 </LinearLayout>
