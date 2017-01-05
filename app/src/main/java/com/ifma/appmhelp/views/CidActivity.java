@@ -17,7 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ifma.appmhelp.R;
-import com.ifma.appmhelp.adapters.RecycleCidsAdapter;
+import com.ifma.appmhelp.adapters.CidsAdapter;
 import com.ifma.appmhelp.daos.CidDao;
 import com.ifma.appmhelp.daos.ProntuarioCidDao;
 import com.ifma.appmhelp.enums.GenericBundleKeys;
@@ -30,7 +30,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CidActivity extends AppCompatActivity implements RecycleCidsAdapter.OnItemLongClickListener {
+public class CidActivity extends AppCompatActivity implements CidsAdapter.OnItemLongClickListener {
 
     private Paciente paciente;
     private RecyclerView rViewCids;
@@ -135,8 +135,8 @@ public class CidActivity extends AppCompatActivity implements RecycleCidsAdapter
         this.adapterCid = new ArrayList<>();
         this.adapterCidCadastrados = new ArrayList<>();
 
-        RecycleCidsAdapter cidsAdapter            = new RecycleCidsAdapter(this, adapterCid);
-        RecycleCidsAdapter cidsAdapterCadastrados = new RecycleCidsAdapter(this, adapterCidCadastrados);
+        CidsAdapter cidsAdapter            = new CidsAdapter(this, adapterCid);
+        CidsAdapter cidsAdapterCadastrados = new CidsAdapter(this, adapterCidCadastrados);
 
         cidsAdapter.setOnItemLongClickListener(this);
         this.rViewCids.setAdapter(cidsAdapter);

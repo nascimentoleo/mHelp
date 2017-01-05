@@ -3,11 +3,11 @@ package com.ifma.appmhelp.views;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ListView;
 
 import com.ifma.appmhelp.R;
 import com.ifma.appmhelp.adapters.PacientesAdapter;
@@ -17,10 +17,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class ListPacientesFragment extends Fragment implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener{
+public class ListPacientesFragment extends Fragment implements PacientesAdapter.OnItemClickListener, PacientesAdapter.OnItemLongClickListener{
 
     private OnPatientSelectedListener mListener;
-    private ListView listViewPacientes;
+    private RecyclerView rViewPacientes;
 
     public ListPacientesFragment() {
     }
@@ -41,11 +41,13 @@ public class ListPacientesFragment extends Fragment implements AdapterView.OnIte
     }
 
     private void carregaComponentes(){
-        this.listViewPacientes = (ListView) getView().findViewById(R.id.list_view_pacientes);
-        this.listViewPacientes.setOnItemClickListener(this);
-        this.listViewPacientes.setOnItemLongClickListener(this);
+        this.rViewPacientes  = (RecyclerView) getView().findViewById(R.id.rViewPacientes);
+        this.rViewPacientes.setLayoutManager(new LinearLayoutManager(getContext()));
         List<Paciente> listaDePacientes = (List<Paciente>) getArguments().getSerializable("lista_de_pacientes");
-        this.listViewPacientes.setAdapter(new PacientesAdapter(getContext(),listaDePacientes));
+        PacientesAdapter adapter = new PacientesAdapter(getContext(), listaDePacientes);
+        adapter.setOnItemClickListener(this);
+        adapter.setOnItemLongClickListener(this);
+        this.rViewPacientes.setAdapter(adapter);
     }
 
     @Override
@@ -66,14 +68,13 @@ public class ListPacientesFragment extends Fragment implements AdapterView.OnIte
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        mListener.onPatientSelected((Paciente) this.listViewPacientes.getAdapter().getItem(position));
+    public void onItemClick(Paciente item) {
+        mListener.onPatientSelected(item);
     }
 
     @Override
-    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-        mListener.onPatientLongSelected((Paciente) this.listViewPacientes.getAdapter().getItem(position));
-        return true;
+    public void onItemLongClick(Paciente item) {
+        mListener.onPatientLongSelected(item);
     }
 
     public interface OnPatientSelectedListener {
