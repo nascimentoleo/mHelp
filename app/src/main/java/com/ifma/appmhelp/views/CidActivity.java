@@ -3,6 +3,7 @@ package com.ifma.appmhelp.views;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,10 +14,12 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ifma.appmhelp.R;
 import com.ifma.appmhelp.adapters.RecycleCidsAdapter;
 import com.ifma.appmhelp.daos.CidDao;
+import com.ifma.appmhelp.daos.ProntuarioCidDao;
 import com.ifma.appmhelp.enums.GenericBundleKeys;
 import com.ifma.appmhelp.lib.EndlessRecyclerViewScrollListener;
 import com.ifma.appmhelp.models.Cid;
@@ -69,23 +72,45 @@ public class CidActivity extends AppCompatActivity implements RecycleCidsAdapter
     private void carregarCidsDoProntuario(){
         if(this.paciente != null){
             this.adapterCidCadastrados.clear();
-            exibeErroCidNotFound(this.paciente.getProntuario().getCids().isEmpty());
-
-            for(ProntuarioCid prontuarioCid : this.paciente.getProntuario().getCids())
+            try {
+                List<ProntuarioCid> prontuarioCidList = new ProntuarioCidDao(this).getProntuariosCids(this.paciente.getProntuario());
+                exibeErroCidNotFound(prontuarioCidList.isEmpty());
+                for(ProntuarioCid prontuarioCid: prontuarioCidList) {
                     this.adapterCidCadastrados.add(prontuarioCid.getCid());
-
-            rViewCidsCadastrados.getAdapter().notifyDataSetChanged();
+                    this.paciente.getProntuario().getCids().add(prontuarioCid.getCid());
+                }
+                rViewCidsCadastrados.getAdapter().notifyDataSetChanged();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
+    }
+
+    private void adicionarProntuarioCid(ProntuarioCid prontuarioCid){
+        try {
+            new ProntuarioCidDao(this).persistir(prontuarioCid,false);
+            this.paciente.getProntuario().getCids().add(prontuarioCid.getCid());
+            this.adapterCidCadastrados.add(prontuarioCid.getCid());
+            rViewCidsCadastrados.getAdapter().notifyDataSetChanged();
+            Snackbar.make(findViewById(android.R.id.content), "Cid adicionado", Snackbar.LENGTH_LONG).show();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Erro ao inserir cid: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     private void exibeErroCidNotFound(boolean mostraErro){
         if (mostraErro){
             txtCidNotFound.setVisibility(View.VISIBLE);
             txtCidNotFound.setPadding(0,10,0,10);
+            txtCidNotFound.setTextSize(17);
         }else{
             txtCidNotFound.setVisibility(View.INVISIBLE);
             txtCidNotFound.setPadding(0,0,0,0);
+            txtCidNotFound.setTextSize(0);
         }
+
     }
 
     private void carregaComponentes(){
@@ -172,10 +197,10 @@ public class CidActivity extends AppCompatActivity implements RecycleCidsAdapter
         atualizaAdapter(offset, offset + qtdRegistros);
     }
 
-
     @Override
     public void onItemLongClick(Cid item) {
-
+        ProntuarioCid prontuarioCid = new ProntuarioCid(this.paciente.getProntuario(), item);
+        this.adicionarProntuarioCid(prontuarioCid);
     }
 
     class OnEditorActionListener implements EditText.OnEditorActionListener{

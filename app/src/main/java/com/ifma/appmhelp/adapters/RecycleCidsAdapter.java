@@ -1,6 +1,7 @@
 package com.ifma.appmhelp.adapters;
 
 import android.content.Context;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -54,14 +55,16 @@ public class RecycleCidsAdapter extends RecyclerView.Adapter<RecycleCidsAdapter.
 
         private TextView txtDescricaoCid;
         private TextView txtCodigoCid;
+        private CardView cardViewCid;
 
         public RecycleCidsViewHolder(View itemView) {
             super(itemView);
 
             txtDescricaoCid = (TextView) itemView.findViewById(R.id.txtCidDescricaoList);
             txtCodigoCid    = (TextView) itemView.findViewById(R.id.txtCidCodigoList);
+            cardViewCid     = (CardView) itemView.findViewById(R.id.cardViewCid);
 
-            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            cardViewCid.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
                     if (listener != null)
@@ -70,6 +73,7 @@ public class RecycleCidsAdapter extends RecyclerView.Adapter<RecycleCidsAdapter.
                 }
 
             });
+
 
         }
     }

@@ -4,12 +4,12 @@ import com.ifma.appmhelp.enums.EstadoCivil;
 import com.ifma.appmhelp.enums.Sexo;
 import com.ifma.appmhelp.enums.TipoSanguineo;
 import com.ifma.appmhelp.lib.DataLib;
-import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by leo on 12/23/16.
@@ -38,13 +38,11 @@ public class Prontuario implements IModel {
     private  String telefoneDoResponsavel;
     @DatabaseField
     private  String observacoes;
-    @ForeignCollectionField(eager = true)
-    private ForeignCollection<ProntuarioMedicamento> medicamentos;
-    @ForeignCollectionField(eager = true)
-    private ForeignCollection<ProntuarioCid> cids;
+
+    private List<Cid> cids;
 
     public Prontuario() {
-
+        this.cids = new ArrayList<>();
     }
 
     @Override
@@ -105,14 +103,6 @@ public class Prontuario implements IModel {
         this.observacoes = observacoes;
     }
 
-    public ForeignCollection<ProntuarioMedicamento> getMedicamentos() {
-        return medicamentos;
-    }
-
-    public ForeignCollection<ProntuarioCid> getCids() {
-        return cids;
-    }
-
     public int getIdade() {
         return idade;
     }
@@ -140,5 +130,13 @@ public class Prontuario implements IModel {
 
     public String getDataDeNascimentoString(){
         return DataLib.converterData(this.dataDeNascimento);
+    }
+
+    public List<Cid> getCids() {
+        return cids;
+    }
+
+    public void setCids(List<Cid> cids) {
+        this.cids = cids;
     }
 }
