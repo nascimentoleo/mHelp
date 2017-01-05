@@ -76,5 +76,8 @@
     <string name="cid_name">Cid</string>
     <string name="descricao_name">Descrição</string>
     <string name="cids_name">Cids</string>
+    <string name="adicionar_cids_name">Adicionar Cids</string>
+    <string name="cids_do_paciente">Cids do paciente</string>
+    <string name="cid_not_found_name">Não existem cids cadastrados para esse paciente</string>
 
 </resources>

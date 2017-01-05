@@ -3,7 +3,10 @@ package com.ifma.appmhelp.daos;
 import android.content.Context;
 
 import com.ifma.appmhelp.controls.BaseController;
+import com.ifma.appmhelp.db.DbSqlHelper;
 import com.ifma.appmhelp.models.IModel;
+import com.ifma.appmhelp.models.ProntuarioCid;
+import com.j256.ormlite.dao.Dao;
 
 import java.sql.SQLException;
 
@@ -20,7 +23,9 @@ public class ProntuarioCidDao extends BaseController implements IDao {
 
     @Override
     public boolean persistir(IModel objeto, boolean updateChild) throws SQLException {
-        return false;
+        Dao<ProntuarioCid,Long> dao = DbSqlHelper.getHelper(ctx).getDao(ProntuarioCid.class);
+        dao.createOrUpdate((ProntuarioCid) objeto);
+        return true;
     }
 
     @Override
@@ -32,5 +37,7 @@ public class ProntuarioCidDao extends BaseController implements IDao {
     public void carregaId(IModel objeto) throws SQLException {
 
     }
+
+
 
 }

@@ -20,11 +20,15 @@ public class RecycleCidsAdapter extends RecyclerView.Adapter<RecycleCidsAdapter.
 
     private List<Cid> listaDeCids;
     private Context ctx;
-
+    private static OnItemLongClickListener listener;
 
     public RecycleCidsAdapter(Context ctx, List<Cid> listaDeCids) {
         this.listaDeCids = listaDeCids;
         this.ctx = ctx;
+    }
+
+    public void setOnItemLongClickListener(OnItemLongClickListener listener) {
+        this.listener = listener;
     }
 
     @Override
@@ -45,6 +49,7 @@ public class RecycleCidsAdapter extends RecyclerView.Adapter<RecycleCidsAdapter.
         return listaDeCids.size();
     }
 
+
     public class RecycleCidsViewHolder extends RecyclerView.ViewHolder {
 
         private TextView txtDescricaoCid;
@@ -56,6 +61,20 @@ public class RecycleCidsAdapter extends RecyclerView.Adapter<RecycleCidsAdapter.
             txtDescricaoCid = (TextView) itemView.findViewById(R.id.txtCidDescricaoList);
             txtCodigoCid    = (TextView) itemView.findViewById(R.id.txtCidCodigoList);
 
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    if (listener != null)
+                        listener.onItemLongClick(listaDeCids.get(getLayoutPosition()));
+                    return true;
+                }
+
+            });
+
         }
+    }
+
+    public interface OnItemLongClickListener {
+        void onItemLongClick(Cid item);
     }
 }

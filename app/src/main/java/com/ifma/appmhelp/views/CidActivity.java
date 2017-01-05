@@ -21,19 +21,23 @@ import com.ifma.appmhelp.enums.GenericBundleKeys;
 import com.ifma.appmhelp.lib.EndlessRecyclerViewScrollListener;
 import com.ifma.appmhelp.models.Cid;
 import com.ifma.appmhelp.models.Paciente;
+import com.ifma.appmhelp.models.ProntuarioCid;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CidActivity extends AppCompatActivity {
+public class CidActivity extends AppCompatActivity implements RecycleCidsAdapter.OnItemLongClickListener {
 
     private Paciente paciente;
     private RecyclerView rViewCids;
+    private RecyclerView rViewCidsCadastrados;
     private EditText edCidCodigo;
     private EditText edCidDescricao;
+    private TextView txtCidNotFound;
     private int qtdRegistros = 20; //Quantidade de registros por refresh do adapter
     private ArrayList<Cid> adapterCid;
+    private ArrayList<Cid> adapterCidCadastrados;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +49,7 @@ public class CidActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         this.paciente = (Paciente) getIntent().getSerializableExtra(GenericBundleKeys.PACIENTE.toString());
         this.carregaComponentes();
+        this.carregarCidsDoProntuario();
         this.atualizaAdapter(0, qtdRegistros);
     }
 
@@ -61,9 +66,33 @@ public class CidActivity extends AppCompatActivity {
         return false;
     }
 
+    private void carregarCidsDoProntuario(){
+        if(this.paciente != null){
+            this.adapterCidCadastrados.clear();
+            exibeErroCidNotFound(this.paciente.getProntuario().getCids().isEmpty());
+
+            for(ProntuarioCid prontuarioCid : this.paciente.getProntuario().getCids())
+                    this.adapterCidCadastrados.add(prontuarioCid.getCid());
+
+            rViewCidsCadastrados.getAdapter().notifyDataSetChanged();
+        }
+    }
+
+    private void exibeErroCidNotFound(boolean mostraErro){
+        if (mostraErro){
+            txtCidNotFound.setVisibility(View.VISIBLE);
+            txtCidNotFound.setPadding(0,10,0,10);
+        }else{
+            txtCidNotFound.setVisibility(View.INVISIBLE);
+            txtCidNotFound.setPadding(0,0,0,0);
+        }
+    }
+
     private void carregaComponentes(){
         this.edCidCodigo = (EditText) findViewById(R.id.edCidCodigo);
         this.edCidDescricao = (EditText) findViewById(R.id.edCidDescricao);
+        this.txtCidNotFound = (TextView) findViewById(R.id.txtCidNotFound);
+
         this.rViewCids = (RecyclerView) findViewById(R.id.rViewCids);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         this.rViewCids.setLayoutManager(linearLayoutManager);
@@ -75,8 +104,19 @@ public class CidActivity extends AppCompatActivity {
             }
         });
 
+        this.rViewCidsCadastrados = (RecyclerView) findViewById(R.id.rViewCidsCadastrados);
+        this.rViewCidsCadastrados.setLayoutManager(new LinearLayoutManager(this));
+
         this.adapterCid = new ArrayList<>();
-        this.rViewCids.setAdapter(new RecycleCidsAdapter(this,adapterCid));
+        this.adapterCidCadastrados = new ArrayList<>();
+
+        RecycleCidsAdapter cidsAdapter            = new RecycleCidsAdapter(this, adapterCid);
+        RecycleCidsAdapter cidsAdapterCadastrados = new RecycleCidsAdapter(this, adapterCidCadastrados);
+
+        cidsAdapter.setOnItemLongClickListener(this);
+        this.rViewCids.setAdapter(cidsAdapter);
+
+        this.rViewCidsCadastrados.setAdapter(cidsAdapterCadastrados);
 
         this.edCidCodigo.setOnEditorActionListener(new OnEditorActionListener());
         this.edCidDescricao.setOnEditorActionListener(new OnEditorActionListener());
@@ -130,6 +170,12 @@ public class CidActivity extends AppCompatActivity {
 
     public void loadNextDataFromApi(int offset) {
         atualizaAdapter(offset, offset + qtdRegistros);
+    }
+
+
+    @Override
+    public void onItemLongClick(Cid item) {
+
     }
 
     class OnEditorActionListener implements EditText.OnEditorActionListener{

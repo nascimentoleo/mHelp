@@ -39,7 +39,7 @@ public class ProntuarioTeste  {
 
         this.paciente = new Paciente(new Usuario("teste",""));
         this.paciente.setProntuario(new Prontuario());
-        this.paciente.getProntuario().setSexo(Sexo.MASCULINO);
+        this.paciente.getProntuario().setSexo(Sexo.Masculino);
         this.paciente.getProntuario().setTipoSanguineo(TipoSanguineo.A_NEGATIVO);
         this.paciente.getProntuario().setNomeDaMae("Mae");
         this.paciente.getProntuario().setNomeDaMae("Pai");
