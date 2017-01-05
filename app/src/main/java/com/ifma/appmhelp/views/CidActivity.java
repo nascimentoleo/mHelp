@@ -108,12 +108,10 @@ public class CidActivity extends AppCompatActivity {
             if(!edCidDescricao.getText().toString().isEmpty()) {
                 listCids = dao.getCidsByField(Long.valueOf(inicio), Long.valueOf(fim),
                         "descricao", edCidDescricao.getText().toString().trim());
-                adapterCid.clear();
             }
             else if(!edCidCodigo.getText().toString().isEmpty()){
                 listCids = dao.getCidsByField(Long.valueOf(inicio), Long.valueOf(fim),
                         "codigo", edCidCodigo.getText().toString().trim());
-                adapterCid.clear();
             }else
                 listCids = dao.getCids(Long.valueOf(inicio),Long.valueOf(fim));
 
@@ -141,6 +139,7 @@ public class CidActivity extends AppCompatActivity {
             if (actionId == EditorInfo.IME_ACTION_SEARCH || actionId == EditorInfo.IME_ACTION_DONE ||
                 actionId == EditorInfo.IME_ACTION_GO     || actionId == EditorInfo.IME_ACTION_NEXT ||
                 event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+                    adapterCid.clear();
                     atualizaAdapter(0,qtdRegistros);
                     return true;
             }
