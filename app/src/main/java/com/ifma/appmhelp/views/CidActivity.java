@@ -22,12 +22,14 @@ import com.ifma.appmhelp.daos.CidDao;
 import com.ifma.appmhelp.daos.ProntuarioCidDao;
 import com.ifma.appmhelp.enums.GenericBundleKeys;
 import com.ifma.appmhelp.lib.EndlessRecyclerViewScrollListener;
+import com.ifma.appmhelp.lib.ModelComparator;
 import com.ifma.appmhelp.models.Cid;
 import com.ifma.appmhelp.models.Paciente;
 import com.ifma.appmhelp.models.ProntuarioCid;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class CidActivity extends AppCompatActivity {
@@ -39,8 +41,8 @@ public class CidActivity extends AppCompatActivity {
     private EditText edCidDescricao;
     private TextView txtCidNotFound;
     private int qtdRegistros = 20; //Quantidade de registros por refresh do adapter
-    private ArrayList<Cid> adapterCid;
-    private ArrayList<Cid> adapterCidCadastrados;
+    private ArrayList<Cid> cidsDisponiveis;
+    private ArrayList<Cid> cidsCadastrados;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,12 +73,12 @@ public class CidActivity extends AppCompatActivity {
 
     private void carregarCidsDoProntuario(){
         if(this.paciente != null){
-            this.adapterCidCadastrados.clear();
+            this.cidsCadastrados.clear();
             try {
                 List<ProntuarioCid> prontuarioCidList = new ProntuarioCidDao(this).getProntuariosCids(this.paciente.getProntuario());
                 exibeErroCidNotFound(prontuarioCidList.isEmpty());
                 for(ProntuarioCid prontuarioCid: prontuarioCidList) {
-                    this.adapterCidCadastrados.add(prontuarioCid.getCid());
+                    this.cidsCadastrados.add(prontuarioCid.getCid());
                     this.paciente.getProntuario().getCids().add(prontuarioCid.getCid());
                 }
                 rViewCidsCadastrados.getAdapter().notifyDataSetChanged();
@@ -118,11 +120,11 @@ public class CidActivity extends AppCompatActivity {
         this.rViewCidsCadastrados = (RecyclerView) findViewById(R.id.rViewCidsCadastrados);
         this.rViewCidsCadastrados.setLayoutManager(new LinearLayoutManager(this));
 
-        this.adapterCid = new ArrayList<>();
-        this.adapterCidCadastrados = new ArrayList<>();
+        this.cidsDisponiveis = new ArrayList<>();
+        this.cidsCadastrados = new ArrayList<>();
 
-        CidsAdapter cidsAdapter            = new CidsAdapter(this, adapterCid);
-        CidsAdapter cidsAdapterCadastrados = new CidsAdapter(this, adapterCidCadastrados);
+        CidsAdapter cidsAdapter            = new CidsAdapter(this, cidsDisponiveis);
+        CidsAdapter cidsAdapterCadastrados = new CidsAdapter(this, cidsCadastrados);
 
         cidsAdapter.setOnItemLongClickListener(new AdicionarCidListener());
         cidsAdapterCadastrados.setOnItemLongClickListener(new RemoverCidListener());
@@ -168,7 +170,9 @@ public class CidActivity extends AppCompatActivity {
             }else
                 listCids = dao.getCids(Long.valueOf(inicio),Long.valueOf(fim));
 
-            adapterCid.addAll(listCids);
+            cidsDisponiveis.addAll(listCids);
+            //Excluo os cids já cadastrados da lista de cids disponíveis
+            cidsDisponiveis.removeAll(cidsCadastrados);
             rViewCids.getAdapter().notifyDataSetChanged();
 
         } catch (SQLException e) {
@@ -192,7 +196,7 @@ public class CidActivity extends AppCompatActivity {
             if (actionId == EditorInfo.IME_ACTION_SEARCH || actionId == EditorInfo.IME_ACTION_DONE ||
                 actionId == EditorInfo.IME_ACTION_GO     || actionId == EditorInfo.IME_ACTION_NEXT ||
                 event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
-                    adapterCid.clear();
+                    cidsDisponiveis.clear();
                     atualizaAdapter(0,qtdRegistros);
                     return true;
             }
@@ -213,8 +217,15 @@ public class CidActivity extends AppCompatActivity {
             try {
                 new ProntuarioCidDao(getApplicationContext()).persistir(prontuarioCid,false);
                 paciente.getProntuario().getCids().add(prontuarioCid.getCid());
-                adapterCidCadastrados.add(prontuarioCid.getCid());
+
+                //Adiciona o cid na lista de cadastrados, e remove da lista de disponíveis
+                cidsCadastrados.add(prontuarioCid.getCid());
                 rViewCidsCadastrados.getAdapter().notifyDataSetChanged();
+                exibeErroCidNotFound(cidsCadastrados.isEmpty());
+
+                cidsDisponiveis.remove(prontuarioCid.getCid());
+                rViewCids.getAdapter().notifyDataSetChanged();
+
                 Snackbar.make(findViewById(android.R.id.content), "Cid adicionado", Snackbar.LENGTH_LONG).show();
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -241,8 +252,16 @@ public class CidActivity extends AppCompatActivity {
                 dao.carregaId(prontuarioCid);
                 dao.remover(prontuarioCid,false);
                 paciente.getProntuario().getCids().add(prontuarioCid.getCid());
-                adapterCidCadastrados.remove(prontuarioCid.getCid());
+
+                //Remove o cid da lista de cadastrados, e adiciona na lista de disponíveis
+                cidsCadastrados.remove(prontuarioCid.getCid());
                 rViewCidsCadastrados.getAdapter().notifyDataSetChanged();
+                exibeErroCidNotFound(cidsCadastrados.isEmpty());
+                cidsDisponiveis.add(prontuarioCid.getCid());
+                Collections.sort(cidsDisponiveis,new ModelComparator());
+
+                rViewCids.getAdapter().notifyDataSetChanged();
+
                 Snackbar.make(findViewById(android.R.id.content), "Cid removido", Snackbar.LENGTH_LONG).show();
             } catch (SQLException e) {
                 e.printStackTrace();

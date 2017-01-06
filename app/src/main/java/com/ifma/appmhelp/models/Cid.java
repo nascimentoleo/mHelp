@@ -43,4 +43,15 @@ public class Cid implements IModel {
     public String getDescricao() {
         return descricao;
     }
+
+    @Override
+    public boolean equals(Object objeto) {
+        if (objeto == null)
+            return false;
+        if (objeto == this)
+            return true;
+        if (!(objeto instanceof Cid))
+            return false;
+        return (this.getId() == ((Cid)objeto).getId());
+    }
 }

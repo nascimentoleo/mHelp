@@ -34,9 +34,9 @@ public class ProntuarioActivity extends AppCompatActivity {
     private Spinner spSexo;
     private Spinner spEstadoCivil;
     private Spinner spTipoSanguineo;
-    private TextView txtNomePaciente;
+    /*private TextView txtNomePaciente;
     private TextView txtEndereco;
-    private TextView txtTelefonePaciente;
+    private TextView txtTelefonePaciente; */
     private TextView txtIdade;
     private EditText edDataDeNascimento;
     private EditText edNomeDaMae;
@@ -92,9 +92,9 @@ public class ProntuarioActivity extends AppCompatActivity {
     }
 
     private void inicializaComponentes(){
-        txtNomePaciente       = (TextView) findViewById(R.id.txtNomePacienteProntuario);
+        /*txtNomePaciente       = (TextView) findViewById(R.id.txtNomePacienteProntuario);
         txtEndereco           = (TextView) findViewById(R.id.txtEnderecoProntuario);
-        txtTelefonePaciente   = (TextView) findViewById(R.id.txtTelefoneProntuario);
+        txtTelefonePaciente   = (TextView) findViewById(R.id.txtTelefoneProntuario); */
         spSexo                = (Spinner) findViewById(R.id.spSexoProntuario);
         spEstadoCivil         = (Spinner) findViewById(R.id.spEstadoCivilProntuario);
         spTipoSanguineo       = (Spinner) findViewById(R.id.spTipoSanguineoProntuario);
@@ -119,13 +119,13 @@ public class ProntuarioActivity extends AppCompatActivity {
     private void carregaProntuarioDoPaciente(){
         paciente = (Paciente) getIntent().getSerializableExtra(GenericBundleKeys.PACIENTE.toString());
         if (paciente != null) {
-            if(paciente.getUsuario().getNome() != null)
+           /* if(paciente.getUsuario().getNome() != null)
                 txtNomePaciente.setText("Nome do Paciente: " + paciente.getUsuario().getNome());
             if(paciente.getEndereco() != null)
                 txtEndereco.setText("Endereço: " + paciente.getEndereco());
             if(paciente.getTelefone() != null)
                 txtTelefonePaciente.setText("Telefone: " +paciente.getTelefone());
-
+            */
             if (paciente.getProntuario() != null){
 
                 if (paciente.getProntuario().getIdade() > 0)

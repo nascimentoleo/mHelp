@@ -28,6 +28,10 @@ public class CidsAdapter extends RecyclerView.Adapter<CidsAdapter.RecycleCidsVie
         this.ctx = ctx;
     }
 
+    public List<Cid> getListaDeCids() {
+        return listaDeCids;
+    }
+
     public void setOnItemLongClickListener(OnItemLongClickListener listener) {
         this.listener = listener;
     }
