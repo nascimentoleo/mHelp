@@ -32,7 +32,8 @@ public class ProntuarioCidDao extends BaseController implements IDao {
 
     @Override
     public void remover(IModel objeto, boolean updateChild) throws SQLException {
-
+        Dao<ProntuarioCid, Long> dao = DbSqlHelper.getHelper(ctx).getDao(ProntuarioCid.class);
+        dao.delete((ProntuarioCid) objeto);
     }
 
     public List<ProntuarioCid> getProntuariosCids(Prontuario prontuario) throws SQLException {
@@ -43,6 +44,10 @@ public class ProntuarioCidDao extends BaseController implements IDao {
 
     @Override
     public void carregaId(IModel objeto) throws SQLException {
+        Dao<ProntuarioCid, Long> dao = DbSqlHelper.getHelper(ctx).getDao(ProntuarioCid.class);
+        List<ProntuarioCid> prontuarioCids = dao.queryForMatching((ProntuarioCid) objeto);
+        if(!prontuarioCids.isEmpty())
+            objeto.setId(prontuarioCids.get(0).getId());
 
     }
 

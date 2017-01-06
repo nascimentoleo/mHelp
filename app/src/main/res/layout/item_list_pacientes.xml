@@ -31,21 +31,21 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/txtNomePacienteList"
-                    android:textSize="25sp" />
+                    android:textSize="20sp" />
 
                 <TextView
                     android:text="@string/endereco_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/txtEnderecoPacienteList"
-                    android:textSize="18sp" />
+                    android:textSize="13sp" />
 
                 <TextView
                     android:text="@string/telefone_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/txtTelefonePacienteList"
-                    android:textSize="18sp" />
+                    android:textSize="13sp" />
 
             </LinearLayout>
 

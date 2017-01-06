@@ -21,7 +21,7 @@ public class CidsAdapter extends RecyclerView.Adapter<CidsAdapter.RecycleCidsVie
 
     private List<Cid> listaDeCids;
     private Context ctx;
-    private static OnItemLongClickListener listener;
+    private OnItemLongClickListener listener;
 
     public CidsAdapter(Context ctx, List<Cid> listaDeCids) {
         this.listaDeCids = listaDeCids;
@@ -73,8 +73,6 @@ public class CidsAdapter extends RecyclerView.Adapter<CidsAdapter.RecycleCidsVie
                 }
 
             });
-
-
         }
     }
 

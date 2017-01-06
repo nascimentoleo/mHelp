@@ -30,7 +30,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CidActivity extends AppCompatActivity implements CidsAdapter.OnItemLongClickListener {
+public class CidActivity extends AppCompatActivity {
 
     private Paciente paciente;
     private RecyclerView rViewCids;
@@ -86,20 +86,6 @@ public class CidActivity extends AppCompatActivity implements CidsAdapter.OnItem
         }
     }
 
-    private void adicionarProntuarioCid(ProntuarioCid prontuarioCid){
-        try {
-            new ProntuarioCidDao(this).persistir(prontuarioCid,false);
-            this.paciente.getProntuario().getCids().add(prontuarioCid.getCid());
-            this.adapterCidCadastrados.add(prontuarioCid.getCid());
-            rViewCidsCadastrados.getAdapter().notifyDataSetChanged();
-            Snackbar.make(findViewById(android.R.id.content), "Cid adicionado", Snackbar.LENGTH_LONG).show();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            Toast.makeText(this, "Erro ao inserir cid: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-        }
-
-    }
-
     private void exibeErroCidNotFound(boolean mostraErro){
         if (mostraErro){
             txtCidNotFound.setVisibility(View.VISIBLE);
@@ -138,7 +124,9 @@ public class CidActivity extends AppCompatActivity implements CidsAdapter.OnItem
         CidsAdapter cidsAdapter            = new CidsAdapter(this, adapterCid);
         CidsAdapter cidsAdapterCadastrados = new CidsAdapter(this, adapterCidCadastrados);
 
-        cidsAdapter.setOnItemLongClickListener(this);
+        cidsAdapter.setOnItemLongClickListener(new AdicionarCidListener());
+        cidsAdapterCadastrados.setOnItemLongClickListener(new RemoverCidListener());
+
         this.rViewCids.setAdapter(cidsAdapter);
 
         this.rViewCidsCadastrados.setAdapter(cidsAdapterCadastrados);
@@ -197,12 +185,6 @@ public class CidActivity extends AppCompatActivity implements CidsAdapter.OnItem
         atualizaAdapter(offset, offset + qtdRegistros);
     }
 
-    @Override
-    public void onItemLongClick(Cid item) {
-        ProntuarioCid prontuarioCid = new ProntuarioCid(this.paciente.getProntuario(), item);
-        this.adicionarProntuarioCid(prontuarioCid);
-    }
-
     class OnEditorActionListener implements EditText.OnEditorActionListener{
 
         @Override
@@ -217,6 +199,60 @@ public class CidActivity extends AppCompatActivity implements CidsAdapter.OnItem
             return false;
         }
     }
+
+    class AdicionarCidListener implements CidsAdapter.OnItemLongClickListener{
+
+        @Override
+        public void onItemLongClick(Cid item) {
+            ProntuarioCid prontuarioCid = new ProntuarioCid(paciente.getProntuario(), item);
+            this.adicionarProntuarioCid(prontuarioCid);
+
+        }
+
+        private void adicionarProntuarioCid(ProntuarioCid prontuarioCid){
+            try {
+                new ProntuarioCidDao(getApplicationContext()).persistir(prontuarioCid,false);
+                paciente.getProntuario().getCids().add(prontuarioCid.getCid());
+                adapterCidCadastrados.add(prontuarioCid.getCid());
+                rViewCidsCadastrados.getAdapter().notifyDataSetChanged();
+                Snackbar.make(findViewById(android.R.id.content), "Cid adicionado", Snackbar.LENGTH_LONG).show();
+            } catch (SQLException e) {
+                e.printStackTrace();
+                Toast.makeText(getApplicationContext(),
+                               "Erro ao inserir cid: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+
+        }
+
+    }
+
+    class RemoverCidListener implements CidsAdapter.OnItemLongClickListener{
+
+        @Override
+        public void onItemLongClick(Cid item) {
+            ProntuarioCid prontuarioCid = new ProntuarioCid(paciente.getProntuario(), item);
+            this.removerProntuarioCid(prontuarioCid);
+
+        }
+
+        private void removerProntuarioCid(ProntuarioCid prontuarioCid){
+            try {
+                ProntuarioCidDao dao = new ProntuarioCidDao(getApplicationContext());
+                dao.carregaId(prontuarioCid);
+                dao.remover(prontuarioCid,false);
+                paciente.getProntuario().getCids().add(prontuarioCid.getCid());
+                adapterCidCadastrados.remove(prontuarioCid.getCid());
+                rViewCidsCadastrados.getAdapter().notifyDataSetChanged();
+                Snackbar.make(findViewById(android.R.id.content), "Cid removido", Snackbar.LENGTH_LONG).show();
+            } catch (SQLException e) {
+                e.printStackTrace();
+                Toast.makeText(getApplicationContext(),
+                        "Erro ao remover cid: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+
 
 
 }

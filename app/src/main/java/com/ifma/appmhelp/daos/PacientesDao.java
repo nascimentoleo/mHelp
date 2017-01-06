@@ -50,7 +50,7 @@ public class PacientesDao extends BaseController implements IDao {
             new ProntuarioDao(ctx).remover(paciente.getProntuario(), updateChild);
         }
         Dao<Paciente,Long> pacienteDao = DbSqlHelper.getHelper(ctx).getDao(Paciente.class);
-        pacienteDao.createOrUpdate(paciente);
+        pacienteDao.delete(paciente);
     }
 
     @Override
