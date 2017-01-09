@@ -22,6 +22,32 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="9pt"
+            android:text="@string/medicamentos_do_paciente_name"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            android:id="@+id/txtMedicamentoNotFound"
+            android:text="@string/medicamento_not_found_name"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rViewMedicamentosCadastrados"
+            android:scrollbars="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="160dp" >
+
+        </android.support.v7.widget.RecyclerView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="9pt"
             android:paddingTop="10pt"
             android:text="@string/adicionar_medicamentos_name"/>
         <View

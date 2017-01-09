@@ -83,5 +83,7 @@
     <string name="doses_name">Doses</string>
     <string name="title_activity_medicamento">Medicamentos</string>
     <string name="adicionar_medicamentos_name">Adicionar Medicamentos</string>
+    <string name="medicamentos_do_paciente_name">Medicamentos do Paciente</string>
+    <string name="medicamento_not_found_name">Não existem medicamentos cadastrados para esse paciente</string>
 
 </resources>

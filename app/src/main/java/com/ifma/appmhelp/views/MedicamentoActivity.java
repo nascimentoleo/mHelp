@@ -9,17 +9,21 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import com.ifma.appmhelp.R;
 import com.ifma.appmhelp.adapters.MedicamentosAdapter;
+import com.ifma.appmhelp.adapters.ProntuarioMedicamentosAdapter;
 import com.ifma.appmhelp.daos.MedicamentoDao;
+import com.ifma.appmhelp.daos.ProntuarioMedicamentoDao;
 import com.ifma.appmhelp.enums.GenericBundleKeys;
 import com.ifma.appmhelp.lib.EndlessRecyclerViewScrollListener;
 import com.ifma.appmhelp.models.Medicamento;
 import com.ifma.appmhelp.models.Paciente;
+import com.ifma.appmhelp.models.ProntuarioMedicamento;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -29,8 +33,11 @@ public class MedicamentoActivity extends AppCompatActivity {
 
     private Paciente paciente;
     private RecyclerView rViewMedicamentos;
+    private RecyclerView rViewMedicamentosCadastrados;
+    private TextView txtMedicamentoNotFound;
     private EditText edNomeMedicamento;
     private ArrayList<Medicamento> medicamentosDisponiveis;
+    private ArrayList<ProntuarioMedicamento> prontuarioMedicamentosCadastrados;
     private int qtdRegistros = 20; //Quantidade de registros por refresh do adapter
 
     @Override
@@ -43,8 +50,10 @@ public class MedicamentoActivity extends AppCompatActivity {
 
         this.paciente = (Paciente) getIntent().getSerializableExtra(GenericBundleKeys.PACIENTE.toString());
         this.carregaComponentes();
+        this.carregarMedicamentosDoProntuario();
         this.atualizaAdapter(0, qtdRegistros);
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -59,9 +68,27 @@ public class MedicamentoActivity extends AppCompatActivity {
         return false;
     }
 
+    private void carregarMedicamentosDoProntuario() {
+        if(this.paciente != null){
+            this.prontuarioMedicamentosCadastrados.clear();
+            try {
+                List<ProntuarioMedicamento> prontuarioMedicamentosList = new ProntuarioMedicamentoDao(this)
+                                            .getProntuariosMedicamentos(this.paciente.getProntuario());
+                exibeErroCidNotFound(prontuarioMedicamentosList.isEmpty());
+                this.prontuarioMedicamentosCadastrados.addAll(prontuarioMedicamentosList);
+                rViewMedicamentosCadastrados.getAdapter().notifyDataSetChanged();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
     private void carregaComponentes() {
+        this.txtMedicamentoNotFound = (TextView) findViewById(R.id.txtMedicamentoNotFound);
         this.edNomeMedicamento = (EditText) findViewById(R.id.edMedicamentoNome);
         this.edNomeMedicamento.setOnEditorActionListener(new OnEditorActionListener());
+
         this.rViewMedicamentos = (RecyclerView) findViewById(R.id.rViewMedicamentos);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         this.rViewMedicamentos.setLayoutManager(linearLayoutManager);
@@ -77,6 +104,13 @@ public class MedicamentoActivity extends AppCompatActivity {
         MedicamentosAdapter medicamentosAdapter = new MedicamentosAdapter(this, medicamentosDisponiveis);
         medicamentosAdapter.setOnItemLongClickListener(new AdicionarMedicamentoListener());
         rViewMedicamentos.setAdapter(medicamentosAdapter);
+
+        this.rViewMedicamentosCadastrados = (RecyclerView) findViewById(R.id.rViewMedicamentosCadastrados);
+        this.rViewMedicamentos.setLayoutManager(new LinearLayoutManager(this));
+        this.prontuarioMedicamentosCadastrados = new ArrayList<>();
+        ProntuarioMedicamentosAdapter prontuarioMedicamentosAdapter = new ProntuarioMedicamentosAdapter(this, prontuarioMedicamentosCadastrados);
+        prontuarioMedicamentosAdapter.setOnItemLongClickListener(new RemoverMedicamentoListener());
+        rViewMedicamentosCadastrados.setAdapter(prontuarioMedicamentosAdapter);
 
     }
 
@@ -104,6 +138,19 @@ public class MedicamentoActivity extends AppCompatActivity {
         }
     }
 
+    private void exibeErroCidNotFound(boolean mostraErro){
+        if (mostraErro){
+            txtMedicamentoNotFound.setVisibility(View.VISIBLE);
+            txtMedicamentoNotFound.setPadding(0,10,0,10);
+            txtMedicamentoNotFound.setTextSize(17);
+        }else{
+            txtMedicamentoNotFound.setVisibility(View.INVISIBLE);
+            txtMedicamentoNotFound.setPadding(0,0,0,0);
+            txtMedicamentoNotFound.setTextSize(0);
+        }
+
+    }
+
     class OnEditorActionListener implements EditText.OnEditorActionListener{
 
         @Override
@@ -123,6 +170,14 @@ public class MedicamentoActivity extends AppCompatActivity {
 
         @Override
         public void onItemLongClick(Medicamento item) {
+
+        }
+    }
+
+    class RemoverMedicamentoListener implements ProntuarioMedicamentosAdapter.OnItemLongClickListener{
+
+        @Override
+        public void onItemLongClick(ProntuarioMedicamento item) {
 
         }
     }

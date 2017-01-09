@@ -22,7 +22,7 @@ public class ProntuarioMedicamento implements IModel {
 
     }
 
-    public ProntuarioMedicamento(String doses, Prontuario prontuario, Medicamento medicamento) {
+    public ProntuarioMedicamento(Prontuario prontuario, Medicamento medicamento, String doses) {
         this.doses = doses;
         this.prontuario = prontuario;
         this.medicamento = medicamento;
