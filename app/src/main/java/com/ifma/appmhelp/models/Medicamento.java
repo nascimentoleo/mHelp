@@ -37,4 +37,15 @@ public class Medicamento implements IModel {
         return nome;
     }
 
+    @Override
+    public boolean equals(Object objeto) {
+        if (objeto == null)
+            return false;
+        if (objeto == this)
+            return true;
+        if (!(objeto instanceof Medicamento))
+            return false;
+        return (this.getId() == ((Medicamento)objeto).getId());
+    }
+
 }

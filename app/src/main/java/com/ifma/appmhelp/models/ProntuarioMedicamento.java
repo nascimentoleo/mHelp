@@ -10,6 +10,7 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable(tableName = "prontuarios_medicamentos")
 public class ProntuarioMedicamento implements IModel {
 
+    @DatabaseField(generatedId = true)
     private Long id;
     @DatabaseField
     private String doses;

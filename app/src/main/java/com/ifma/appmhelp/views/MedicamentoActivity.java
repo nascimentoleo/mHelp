@@ -1,8 +1,11 @@
 package com.ifma.appmhelp.views;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,6 +16,7 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ifma.appmhelp.R;
 import com.ifma.appmhelp.adapters.MedicamentosAdapter;
@@ -74,10 +78,12 @@ public class MedicamentoActivity extends AppCompatActivity {
             try {
                 List<ProntuarioMedicamento> prontuarioMedicamentosList = new ProntuarioMedicamentoDao(this)
                                             .getProntuariosMedicamentos(this.paciente.getProntuario());
-                exibeErroCidNotFound(prontuarioMedicamentosList.isEmpty());
+                exibeErroMedicamentoNotFound(prontuarioMedicamentosList.isEmpty());
                 this.prontuarioMedicamentosCadastrados.addAll(prontuarioMedicamentosList);
+
                 rViewMedicamentosCadastrados.getAdapter().notifyDataSetChanged();
             } catch (SQLException e) {
+                Toast.makeText(this, "Erro ao carregar medicamentos: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
             }
         }
@@ -106,7 +112,7 @@ public class MedicamentoActivity extends AppCompatActivity {
         rViewMedicamentos.setAdapter(medicamentosAdapter);
 
         this.rViewMedicamentosCadastrados = (RecyclerView) findViewById(R.id.rViewMedicamentosCadastrados);
-        this.rViewMedicamentos.setLayoutManager(new LinearLayoutManager(this));
+        this.rViewMedicamentosCadastrados.setLayoutManager(new LinearLayoutManager(this));
         this.prontuarioMedicamentosCadastrados = new ArrayList<>();
         ProntuarioMedicamentosAdapter prontuarioMedicamentosAdapter = new ProntuarioMedicamentosAdapter(this, prontuarioMedicamentosCadastrados);
         prontuarioMedicamentosAdapter.setOnItemLongClickListener(new RemoverMedicamentoListener());
@@ -130,7 +136,9 @@ public class MedicamentoActivity extends AppCompatActivity {
                 listMedicamentos = dao.getMedicamentos(Long.valueOf(inicio),Long.valueOf(fim));
 
             medicamentosDisponiveis.addAll(listMedicamentos);
-            //cidsDisponiveis.removeAll(cidsCadastrados);
+            for (ProntuarioMedicamento prontuarioMedicamento : prontuarioMedicamentosCadastrados){
+                medicamentosDisponiveis.remove(prontuarioMedicamento.getMedicamento());
+            }
             rViewMedicamentos.getAdapter().notifyDataSetChanged();
 
         } catch (SQLException e) {
@@ -138,7 +146,7 @@ public class MedicamentoActivity extends AppCompatActivity {
         }
     }
 
-    private void exibeErroCidNotFound(boolean mostraErro){
+    private void exibeErroMedicamentoNotFound(boolean mostraErro){
         if (mostraErro){
             txtMedicamentoNotFound.setVisibility(View.VISIBLE);
             txtMedicamentoNotFound.setPadding(0,10,0,10);
@@ -169,8 +177,47 @@ public class MedicamentoActivity extends AppCompatActivity {
     class AdicionarMedicamentoListener implements MedicamentosAdapter.OnItemLongClickListener{
 
         @Override
-        public void onItemLongClick(Medicamento item) {
+        public void onItemLongClick(final Medicamento item) {
+            View viewDoses = getLayoutInflater().inflate(R.layout.alert_dialog_doses, null);
+            final EditText edDoses = (EditText) viewDoses.findViewById(R.id.edDoses);
 
+            AlertDialog alert = new AlertDialog.Builder(MedicamentoActivity.this)
+            .setMessage("Digite quantas doses do medicamento o paciente está tomando")
+            .setTitle("Cadastro de Medicamento")
+            .setView(viewDoses)
+            .setNeutralButton(R.string.cadastrar_name, new DialogInterface.OnClickListener() {
+
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    String doses = edDoses.getText().toString().trim();
+                    if(!doses.isEmpty()){
+                        ProntuarioMedicamento prontuarioMedicamento = new ProntuarioMedicamento(paciente.getProntuario(), item, doses);
+                        adicionarProntuarioMedicamento(prontuarioMedicamento);
+                    }else
+                        Toast.makeText(MedicamentoActivity.this, "Não é possível inserir um medicamento sem informar as doses",
+                                Toast.LENGTH_SHORT).show();
+                }}).create();
+
+            alert.show();
+
+        }
+
+        private void adicionarProntuarioMedicamento(ProntuarioMedicamento prontuarioMedicamento){
+            try {
+                new ProntuarioMedicamentoDao(getApplicationContext()).persistir(prontuarioMedicamento,false);
+                //Adiciona o medicamento na lista de cadastrados, e remove da lista de disponíveis
+                prontuarioMedicamentosCadastrados.add(prontuarioMedicamento);
+                rViewMedicamentosCadastrados.getAdapter().notifyDataSetChanged();
+                exibeErroMedicamentoNotFound(prontuarioMedicamentosCadastrados.isEmpty());
+
+                medicamentosDisponiveis.remove(prontuarioMedicamento.getMedicamento());
+                rViewMedicamentos.getAdapter().notifyDataSetChanged();
+
+                Snackbar.make(findViewById(android.R.id.content), "Medicamento adicionado", Snackbar.LENGTH_LONG).show();
+            } catch (SQLException e) {
+                e.printStackTrace();
+                Toast.makeText(getApplicationContext(),
+                        "Erro ao inserir medicamento: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
         }
     }
 

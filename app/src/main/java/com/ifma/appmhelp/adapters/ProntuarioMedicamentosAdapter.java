@@ -47,6 +47,7 @@ public class ProntuarioMedicamentosAdapter extends RecyclerView.Adapter<Prontuar
         ProntuarioMedicamento prontuarioMedicamento = listaDeProntuarioMedicamentos.get(position);
         holder.txtNomeMedicamento.setText(prontuarioMedicamento.getMedicamento().getNome());
         holder.txtDosesMedicamento.setText(prontuarioMedicamento.getDoses());
+        holder.txtDosesMedicamento.setVisibility(View.VISIBLE);
    }
 
     @Override
