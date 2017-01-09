@@ -77,12 +77,18 @@ public class ProntuarioActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Intent it;
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
                 return true;
             case R.id.action_cid :
-                Intent it = new Intent(this,CidActivity.class);
+                it = new Intent(this,CidActivity.class);
+                it.putExtra(GenericBundleKeys.PACIENTE.toString(),this.paciente);
+                startActivityForResult(it, RESULT_FIRST_USER);
+                return true;
+            case R.id.action_medicamentos :
+                it = new Intent(this,MedicamentoActivity.class);
                 it.putExtra(GenericBundleKeys.PACIENTE.toString(),this.paciente);
                 startActivityForResult(it, RESULT_FIRST_USER);
                 return true;

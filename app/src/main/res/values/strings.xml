@@ -79,5 +79,9 @@
     <string name="adicionar_cids_name">Adicionar Cids</string>
     <string name="cids_do_paciente">Cids do paciente</string>
     <string name="cid_not_found_name">Não existem cids cadastrados para esse paciente</string>
+    <string name="medicamento_name">Medicamento</string>
+    <string name="doses_name">Doses</string>
+    <string name="title_activity_medicamento">Medicamentos</string>
+    <string name="adicionar_medicamentos_name">Adicionar Medicamentos</string>
 
 </resources>

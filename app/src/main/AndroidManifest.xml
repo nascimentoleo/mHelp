@@ -105,6 +105,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.ifma.appmhelp.views.ProntuarioActivity" />
         </activity>
+        <activity
+            android:name=".views.MedicamentoActivity"
+            android:label="@string/title_activity_medicamento"
+            android:parentActivityName=".views.ProntuarioActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.ifma.appmhelp.views.ProntuarioActivity" />
+        </activity>
     </application>
 
 </manifest>
