@@ -25,12 +25,14 @@ import com.ifma.appmhelp.daos.MedicamentoDao;
 import com.ifma.appmhelp.daos.ProntuarioMedicamentoDao;
 import com.ifma.appmhelp.enums.GenericBundleKeys;
 import com.ifma.appmhelp.lib.EndlessRecyclerViewScrollListener;
+import com.ifma.appmhelp.lib.ModelComparator;
 import com.ifma.appmhelp.models.Medicamento;
 import com.ifma.appmhelp.models.Paciente;
 import com.ifma.appmhelp.models.ProntuarioMedicamento;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class MedicamentoActivity extends AppCompatActivity {
@@ -42,7 +44,7 @@ public class MedicamentoActivity extends AppCompatActivity {
     private EditText edNomeMedicamento;
     private ArrayList<Medicamento> medicamentosDisponiveis;
     private ArrayList<ProntuarioMedicamento> prontuarioMedicamentosCadastrados;
-    private int qtdRegistros = 20; //Quantidade de registros por refresh do adapter
+    private int qtdRegistros = 3; //Quantidade de registros por refresh do adapter
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,7 +123,7 @@ public class MedicamentoActivity extends AppCompatActivity {
     }
 
     private void loadNextDataFromApi(int offset) {
-        atualizaAdapter(offset, offset + qtdRegistros);
+        atualizaAdapter(offset, qtdRegistros);
     }
 
     private void atualizaAdapter(int inicio, int fim) {
@@ -225,7 +227,30 @@ public class MedicamentoActivity extends AppCompatActivity {
 
         @Override
         public void onItemLongClick(ProntuarioMedicamento item) {
+            this.removerProntuarioMedicamento(item);
+        }
 
+        private void removerProntuarioMedicamento(ProntuarioMedicamento prontuarioMedicamento) {
+            try {
+                ProntuarioMedicamentoDao dao = new ProntuarioMedicamentoDao(getApplicationContext());
+                dao.carregaId(prontuarioMedicamento);
+                dao.remover(prontuarioMedicamento,false);
+
+                //Remove o medicamento da lista de cadastrados, e adiciona na lista de disponíveis
+                prontuarioMedicamentosCadastrados.remove(prontuarioMedicamento);
+                rViewMedicamentosCadastrados.getAdapter().notifyDataSetChanged();
+                exibeErroMedicamentoNotFound(prontuarioMedicamentosCadastrados.isEmpty());
+                medicamentosDisponiveis.add(prontuarioMedicamento.getMedicamento());
+                Collections.sort(medicamentosDisponiveis,new ModelComparator());
+
+                rViewMedicamentos.getAdapter().notifyDataSetChanged();
+
+                Snackbar.make(findViewById(android.R.id.content), "Medicamento removido", Snackbar.LENGTH_LONG).show();
+            } catch (SQLException e) {
+                e.printStackTrace();
+                Toast.makeText(getApplicationContext(),
+                        "Erro ao remover medicamento: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
         }
     }
 

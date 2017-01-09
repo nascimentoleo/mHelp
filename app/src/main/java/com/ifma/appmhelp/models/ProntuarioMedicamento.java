@@ -62,4 +62,15 @@ public class ProntuarioMedicamento implements IModel {
     public void setMedicamento(Medicamento medicamento) {
         this.medicamento = medicamento;
     }
+
+    @Override
+    public boolean equals(Object objeto) {
+        if (objeto == null)
+            return false;
+        if (objeto == this)
+            return true;
+        if (!(objeto instanceof ProntuarioMedicamento))
+            return false;
+        return (this.getId() == ((ProntuarioMedicamento)objeto).getId());
+    }
 }

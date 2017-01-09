@@ -40,7 +40,7 @@ public class CidActivity extends AppCompatActivity {
     private EditText edCidCodigo;
     private EditText edCidDescricao;
     private TextView txtCidNotFound;
-    private int qtdRegistros = 20; //Quantidade de registros por refresh do adapter
+    private int qtdRegistros = 10; //Quantidade de registros por refresh do adapter
     private ArrayList<Cid> cidsDisponiveis;
     private ArrayList<Cid> cidsCadastrados;
 
