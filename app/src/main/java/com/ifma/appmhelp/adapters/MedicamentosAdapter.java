@@ -45,9 +45,8 @@ public class MedicamentosAdapter extends RecyclerView.Adapter<MedicamentosAdapte
     @Override
     public void onBindViewHolder(RecycleMedicamentosViewHolder holder, int position) {
         Medicamento medicamento = listaDeMedicamentos.get(position);
-        //holder.txtCodigoCid.setText(cid.getCodigo());
-        //holder.txtDescricaoCid.setText(cid.getDescricao());
-    }
+        holder.txtNomeMedicamento.setText(medicamento.getNome());
+   }
 
     @Override
     public int getItemCount() {
@@ -57,18 +56,16 @@ public class MedicamentosAdapter extends RecyclerView.Adapter<MedicamentosAdapte
 
     public class RecycleMedicamentosViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView txtDescricaoCid;
-        private TextView txtCodigoCid;
-        private CardView cardViewCid;
+        private TextView txtNomeMedicamento;
+        private CardView cardViewMedicamento;
 
         public RecycleMedicamentosViewHolder(View itemView) {
             super(itemView);
 
-            txtDescricaoCid = (TextView) itemView.findViewById(R.id.txtCidDescricaoList);
-            txtCodigoCid    = (TextView) itemView.findViewById(R.id.txtCidCodigoList);
-            cardViewCid     = (CardView) itemView.findViewById(R.id.cardViewCid);
+            txtNomeMedicamento   = (TextView) itemView.findViewById(R.id.txtMedicamentoNomeList);
+            cardViewMedicamento  = (CardView) itemView.findViewById(R.id.cardViewMedicamento);
 
-            cardViewCid.setOnLongClickListener(new View.OnLongClickListener() {
+            cardViewMedicamento.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
                     if (listener != null)

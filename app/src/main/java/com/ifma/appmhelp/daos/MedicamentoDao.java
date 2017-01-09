@@ -7,6 +7,8 @@ import com.ifma.appmhelp.db.DbSqlHelper;
 import com.ifma.appmhelp.models.IModel;
 import com.ifma.appmhelp.models.Medicamento;
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.stmt.PreparedQuery;
+import com.j256.ormlite.stmt.QueryBuilder;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -37,8 +39,16 @@ public class MedicamentoDao extends BaseController implements IDao {
 
     }
 
-    public List<Medicamento> getTodos() throws SQLException {
+    public List<Medicamento> getMedicamentos(Long inicio, Long fim) throws SQLException {
         Dao<Medicamento, Long> dao = DbSqlHelper.getHelper(ctx).getDao(Medicamento.class);
-        return dao.queryForAll();
+        return dao.queryBuilder().offset(inicio).limit(fim).query();
+    }
+
+    public List<Medicamento> getMedicamentosByField(Long inicio, Long fim, String fieldName, String fieldValue) throws SQLException {
+        Dao<Medicamento, Long> dao = DbSqlHelper.getHelper(ctx).getDao(Medicamento.class);
+        QueryBuilder<Medicamento, Long> query = dao.queryBuilder().offset(inicio).limit(fim);
+        query.where().like(fieldName, "%" + fieldValue + "%");
+        PreparedQuery<Medicamento> prepare = query.prepare();
+        return dao.query(prepare);
     }
 }
