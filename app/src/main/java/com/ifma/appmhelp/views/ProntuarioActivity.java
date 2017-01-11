@@ -132,7 +132,6 @@ public class ProntuarioActivity extends AppCompatActivity {
             if(paciente.getTelefone() != null)
                 txtTelefonePaciente.setText("Telefone: " +paciente.getTelefone());
             */
-            if (paciente.getProntuario() != null){
 
                 if (paciente.getProntuario().getIdade() > 0)
                     txtIdade.setText(Integer.toString(paciente.getProntuario().getIdade()) + " anos");
@@ -154,10 +153,6 @@ public class ProntuarioActivity extends AppCompatActivity {
                 spSexo.setSelection(spSexoPosition);
                 spEstadoCivil.setSelection(spEstadoCivilPosition);
                 spTipoSanguineo.setSelection(spTipoSanguineoPosition);
-
-            }else
-                paciente.setProntuario(new Prontuario());
-
         }else
             Snackbar.make(findViewById(android.R.id.content), "Não foi possível carregar os dados do paciente", Snackbar.LENGTH_LONG).show();
     }

@@ -12,12 +12,14 @@ import com.ifma.appmhelp.R;
 import com.ifma.appmhelp.controls.MensagemController;
 import com.ifma.appmhelp.controls.SolicitacoesController;
 import com.ifma.appmhelp.daos.MedicoPacienteDao;
+import com.ifma.appmhelp.daos.PacientesDao;
 import com.ifma.appmhelp.enums.GenericBundleKeys;
 import com.ifma.appmhelp.enums.StatusSolicitacaoRoster;
 import com.ifma.appmhelp.enums.TipoDeMensagem;
 import com.ifma.appmhelp.models.Medico;
 import com.ifma.appmhelp.models.Mensagem;
 import com.ifma.appmhelp.models.Paciente;
+import com.ifma.appmhelp.models.Prontuario;
 import com.ifma.appmhelp.models.SolicitacaoRoster;
 import com.ifma.appmhelp.models.UsuarioLogado;
 
@@ -72,7 +74,43 @@ public class ListPacientesActivity extends AppCompatActivity implements ListPaci
 
     @Override
     public void onPatientSelected(Paciente paciente) {
-        Intent it = new Intent(this, ProntuarioActivity.class);
+        if (paciente.getProntuario() == null || paciente.getProntuario().getId() == null)
+            confirmarCadastroDeProntuario(paciente);
+        else
+            abrirProntuario(paciente);
+    }
+
+    private void confirmarCadastroDeProntuario(final Paciente paciente){
+        new AlertDialog.Builder(this)
+                .setTitle("Novo Prontuário")
+                .setMessage("Paciente sem prontuário, deseja cadastrar um novo?")
+                .setPositiveButton(R.string.resposta_sim, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (cadastrarProntuario(paciente))
+                           abrirProntuario(paciente);
+
+                    }
+                })
+                .setNegativeButton(R.string.resposta_nao,null)
+                .show();
+
+    }
+
+    private boolean cadastrarProntuario(Paciente paciente){
+        try {
+            paciente.setProntuario(new Prontuario());
+            new PacientesDao(this).persistir(paciente, true);
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Erro ao cadastrar prontuário: "+ e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+        return false;
+    }
+
+    private void abrirProntuario(Paciente paciente){
+        Intent it = new Intent(ListPacientesActivity.this, ProntuarioActivity.class);
         it.putExtra(GenericBundleKeys.PACIENTE.toString(),paciente);
         startActivityForResult(it,RESULT_FIRST_USER);
     }
@@ -95,17 +133,17 @@ public class ListPacientesActivity extends AppCompatActivity implements ListPaci
     }
 
     private void confirmarRemocaoDePaciente(final Paciente paciente){
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Confirmação");
-        builder.setMessage("Deseja excluir o paciente " + paciente.getUsuario().getNome() + " ?");
-        builder.setNegativeButton(R.string.resposta_nao,null);
-        builder.setPositiveButton(R.string.resposta_sim, new DialogInterface.OnClickListener() {
+        new AlertDialog.Builder(this)
+        .setTitle("Confirmação")
+        .setMessage("Deseja excluir o paciente " + paciente.getUsuario().getNome() + " ?")
+        .setNegativeButton(R.string.resposta_nao,null)
+        .setPositiveButton(R.string.resposta_sim, new DialogInterface.OnClickListener() {
 
             public void onClick(DialogInterface dialog, int whichButton) {
                 removerPaciente(paciente);
-            }});
+            }})
 
-        builder.show();
+        .show();
     }
 
     private void removerPaciente(Paciente paciente){
