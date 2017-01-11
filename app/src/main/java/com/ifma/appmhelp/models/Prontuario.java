@@ -1,5 +1,6 @@
 package com.ifma.appmhelp.models;
 
+import com.google.gson.Gson;
 import com.ifma.appmhelp.enums.EstadoCivil;
 import com.ifma.appmhelp.enums.Sexo;
 import com.ifma.appmhelp.enums.TipoSanguineo;
@@ -138,5 +139,13 @@ public class Prontuario implements IModel {
 
     public void setCids(List<Cid> cids) {
         this.cids = cids;
+    }
+
+    public String toJson(){
+        return new Gson().toJson(this);
+    }
+
+    public static Prontuario fromJson(String jsonObject){
+        return new Gson().fromJson(jsonObject, Prontuario.class);
     }
 }

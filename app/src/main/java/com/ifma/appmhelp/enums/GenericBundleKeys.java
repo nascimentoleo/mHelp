@@ -5,7 +5,8 @@ package com.ifma.appmhelp.enums;
  */
 public enum GenericBundleKeys {
     USUARIO_LOGADO("USUARIO_LOGADO"),
-    PACIENTE("PACIENTE");
+    PACIENTE("PACIENTE"),
+    MODIFICOU_PRONTUARIO("MODIFICOU_PRONTUARIO");
 
     private final String value;
 

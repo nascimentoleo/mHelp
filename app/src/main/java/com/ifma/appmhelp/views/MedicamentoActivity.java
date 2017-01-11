@@ -45,6 +45,7 @@ public class MedicamentoActivity extends AppCompatActivity {
     private ArrayList<Medicamento> medicamentosDisponiveis;
     private ArrayList<ProntuarioMedicamento> prontuarioMedicamentosCadastrados;
     private int qtdRegistros = 3; //Quantidade de registros por refresh do adapter
+    private boolean modificouProntuario;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +68,7 @@ public class MedicamentoActivity extends AppCompatActivity {
             case android.R.id.home:
                 Intent returnIntent = new Intent();
                 returnIntent.putExtra(GenericBundleKeys.PACIENTE.toString(),paciente);
+                returnIntent.putExtra(GenericBundleKeys.MODIFICOU_PRONTUARIO.toString(),modificouProntuario);
                 setResult(Activity.RESULT_OK,returnIntent);
                 finish();
                 return true;
@@ -120,6 +122,7 @@ public class MedicamentoActivity extends AppCompatActivity {
         prontuarioMedicamentosAdapter.setOnItemLongClickListener(new RemoverMedicamentoListener());
         rViewMedicamentosCadastrados.setAdapter(prontuarioMedicamentosAdapter);
 
+        modificouProntuario = false;
     }
 
     private void loadNextDataFromApi(int offset) {
@@ -214,6 +217,8 @@ public class MedicamentoActivity extends AppCompatActivity {
                 medicamentosDisponiveis.remove(prontuarioMedicamento.getMedicamento());
                 rViewMedicamentos.getAdapter().notifyDataSetChanged();
 
+                modificouProntuario = true;
+
                 Snackbar.make(findViewById(android.R.id.content), "Medicamento adicionado", Snackbar.LENGTH_LONG).show();
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -244,6 +249,8 @@ public class MedicamentoActivity extends AppCompatActivity {
                 Collections.sort(medicamentosDisponiveis,new ModelComparator());
 
                 rViewMedicamentos.getAdapter().notifyDataSetChanged();
+
+                modificouProntuario = true;
 
                 Snackbar.make(findViewById(android.R.id.content), "Medicamento removido", Snackbar.LENGTH_LONG).show();
             } catch (SQLException e) {

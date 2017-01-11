@@ -43,6 +43,7 @@ public class CidActivity extends AppCompatActivity {
     private int qtdRegistros = 10; //Quantidade de registros por refresh do adapter
     private ArrayList<Cid> cidsDisponiveis;
     private ArrayList<Cid> cidsCadastrados;
+    private boolean modificouProntuario;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +65,7 @@ public class CidActivity extends AppCompatActivity {
             case android.R.id.home:
                 Intent returnIntent = new Intent();
                 returnIntent.putExtra(GenericBundleKeys.PACIENTE.toString(),paciente);
+                returnIntent.putExtra(GenericBundleKeys.MODIFICOU_PRONTUARIO.toString(), modificouProntuario);
                 setResult(Activity.RESULT_OK,returnIntent);
                 finish();
                 return true;
@@ -153,6 +155,7 @@ public class CidActivity extends AppCompatActivity {
                 }
             }
         });
+        modificouProntuario = false;
      }
 
     private void atualizaAdapter(int inicio, int fim){
@@ -226,6 +229,8 @@ public class CidActivity extends AppCompatActivity {
                 cidsDisponiveis.remove(prontuarioCid.getCid());
                 rViewCids.getAdapter().notifyDataSetChanged();
 
+                modificouProntuario = true;
+
                 Snackbar.make(findViewById(android.R.id.content), "Cid adicionado", Snackbar.LENGTH_LONG).show();
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -261,6 +266,8 @@ public class CidActivity extends AppCompatActivity {
                 Collections.sort(cidsDisponiveis,new ModelComparator());
 
                 rViewCids.getAdapter().notifyDataSetChanged();
+
+                modificouProntuario = true;
 
                 Snackbar.make(findViewById(android.R.id.content), "Cid removido", Snackbar.LENGTH_LONG).show();
             } catch (SQLException e) {

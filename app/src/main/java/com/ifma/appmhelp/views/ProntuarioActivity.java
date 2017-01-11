@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -46,6 +47,7 @@ public class ProntuarioActivity extends AppCompatActivity {
     private ArrayAdapter<Sexo> adapterSexo;
     private ArrayAdapter<EstadoCivil> adapterEstadoCivil;
     private ArrayAdapter<TipoSanguineo> adapterTipoSanguineo;
+    private boolean modificouProntuario; //Flag para saber se houve alterações
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +59,6 @@ public class ProntuarioActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         this.inicializaComponentes();
         this.carregaAdapters();
-
     }
 
     @Override
@@ -97,6 +98,13 @@ public class ProntuarioActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK)
+            if (!modificouProntuario)
+                modificouProntuario = data.getBooleanExtra(GenericBundleKeys.MODIFICOU_PRONTUARIO.toString(), false);
+    }
+
     private void inicializaComponentes(){
         /*txtNomePaciente       = (TextView) findViewById(R.id.txtNomePacienteProntuario);
         txtEndereco           = (TextView) findViewById(R.id.txtEnderecoProntuario);
@@ -120,18 +128,27 @@ public class ProntuarioActivity extends AppCompatActivity {
             }
         });
 
+        this.modificouProntuario = false;
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (modificouProntuario)
+            Log.d("ProntuarioActivity","Modificou o prontuário");
+        super.onDestroy();
     }
 
     private void carregaProntuarioDoPaciente(){
         paciente = (Paciente) getIntent().getSerializableExtra(GenericBundleKeys.PACIENTE.toString());
         if (paciente != null) {
-           /* if(paciente.getUsuario().getNome() != null)
-                txtNomePaciente.setText("Nome do Paciente: " + paciente.getUsuario().getNome());
-            if(paciente.getEndereco() != null)
-                txtEndereco.setText("Endereço: " + paciente.getEndereco());
-            if(paciente.getTelefone() != null)
-                txtTelefonePaciente.setText("Telefone: " +paciente.getTelefone());
-            */
+               /* if(paciente.getUsuario().getNome() != null)
+                    txtNomePaciente.setText("Nome do Paciente: " + paciente.getUsuario().getNome());
+                if(paciente.getEndereco() != null)
+                    txtEndereco.setText("Endereço: " + paciente.getEndereco());
+                if(paciente.getTelefone() != null)
+                    txtTelefonePaciente.setText("Telefone: " +paciente.getTelefone());
+                */
 
                 if (paciente.getProntuario().getIdade() > 0)
                     txtIdade.setText(Integer.toString(paciente.getProntuario().getIdade()) + " anos");
@@ -174,6 +191,7 @@ public class ProntuarioActivity extends AppCompatActivity {
             this.preencherProntuario(paciente.getProntuario());
             try {
                 new PacientesDao(this).persistir(paciente, true);
+                this.modificouProntuario = true;
                 Snackbar.make(findViewById(android.R.id.content), "Prontuário alterado", Snackbar.LENGTH_LONG).show();
             } catch (SQLException e) {
                 e.printStackTrace();
