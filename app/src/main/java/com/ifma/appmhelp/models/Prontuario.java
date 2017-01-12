@@ -1,6 +1,5 @@
 package com.ifma.appmhelp.models;
 
-import com.google.gson.Gson;
 import com.ifma.appmhelp.enums.EstadoCivil;
 import com.ifma.appmhelp.enums.Sexo;
 import com.ifma.appmhelp.enums.TipoSanguineo;
@@ -8,10 +7,7 @@ import com.ifma.appmhelp.lib.DataLib;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
 
 /**
  * Created by leo on 12/23/16.
@@ -41,12 +37,9 @@ public class Prontuario implements IModel {
     @DatabaseField
     private  String observacoes;
 
-    //Coleções usadas no envio do prontuário
-    private List<Cid> cids;
-    private HashMap<Medicamento, String> medicamentos;
 
     public Prontuario() {
-        this.cids = new ArrayList<>();
+
     }
 
     @Override
@@ -136,27 +129,4 @@ public class Prontuario implements IModel {
         return DataLib.converterData(this.dataDeNascimento);
     }
 
-    public List<Cid> getCids() {
-        return cids;
-    }
-
-    public void setCids(List<Cid> cids) {
-        this.cids = cids;
-    }
-
-    public HashMap getMedicamentos() {
-        return medicamentos;
-    }
-
-    public void setMedicamentos(HashMap medicamentos) {
-        this.medicamentos = medicamentos;
-    }
-
-    public String toJson(){
-        return new Gson().toJson(this);
-    }
-
-    public static Prontuario fromJson(String jsonObject){
-        return new Gson().fromJson(jsonObject, Prontuario.class);
-    }
 }

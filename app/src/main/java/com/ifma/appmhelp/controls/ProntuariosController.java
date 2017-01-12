@@ -7,9 +7,11 @@ import com.ifma.appmhelp.daos.ProntuarioMedicamentoDao;
 import com.ifma.appmhelp.enums.TipoDeMensagem;
 import com.ifma.appmhelp.models.Mensagem;
 import com.ifma.appmhelp.models.Prontuario;
+import com.ifma.appmhelp.models.ProntuarioCid;
+import com.ifma.appmhelp.models.ProntuarioMedicamento;
+import com.ifma.appmhelp.models.ProntuarioParaEnvio;
 import com.ifma.appmhelp.models.Usuario;
 
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -24,16 +26,22 @@ public class ProntuariosController extends BaseController {
 
     public boolean enviarProntuario(Prontuario prontuario, Usuario usuarioDestino){
         try {
+            ProntuarioParaEnvio prontuarioParaEnvio = new ProntuarioParaEnvio(prontuario);
+
             //Carrego os medicamentos
-            HashMap medicamentos = new ProntuarioMedicamentoDao(ctx).getMedicamentos(prontuario);
-            prontuario.setMedicamentos(medicamentos);
+            List<ProntuarioMedicamento> medicamentos = new ProntuarioMedicamentoDao(ctx).getMedicamentos(prontuario);
+            for (ProntuarioMedicamento prontuarioMedicamento : medicamentos){
+                prontuarioParaEnvio.addMedicamento(prontuarioMedicamento);
+            }
 
             //Carrego os cids
-            List cids = new ProntuarioCidDao(ctx).getCids(prontuario);
-            prontuario.setCids(cids);
+            List<ProntuarioCid> cids = new ProntuarioCidDao(ctx).getCids(prontuario);
+            for (ProntuarioCid prontuarioCid : cids){
+                prontuarioParaEnvio.addCid(prontuarioCid);
+            }
 
             //Envio a mensagem
-            Mensagem mensagem = new Mensagem(prontuario.toJson(), TipoDeMensagem.ATUALIZACAO_PRONTUARIO);
+            Mensagem mensagem = new Mensagem(prontuarioParaEnvio.toJson(), TipoDeMensagem.ATUALIZACAO_PRONTUARIO);
             MensagemController.enviaMensagem(usuarioDestino, mensagem);
             return true;
         } catch (Exception e) {
