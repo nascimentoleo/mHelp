@@ -28,8 +28,8 @@ public class MedicoPacienteDao extends BaseController implements IDao {
     public boolean persistir(IModel objeto, boolean updateChild) throws SQLException {
         MedicoPaciente medicoPaciente = (MedicoPaciente) objeto;
         if (updateChild){
-           new MedicosDao(ctx).persistir(medicoPaciente.getMedico(),updateChild);
-           new PacientesDao(ctx).persistir(medicoPaciente.getPaciente(),updateChild);
+           new MedicoDao(ctx).persistir(medicoPaciente.getMedico(),updateChild);
+           new PacienteDao(ctx).persistir(medicoPaciente.getPaciente(),updateChild);
         }
 
         Dao<MedicoPaciente, Long> dao = DbSqlHelper.getHelper(ctx).getDao(MedicoPaciente.class);
@@ -64,8 +64,8 @@ public class MedicoPacienteDao extends BaseController implements IDao {
         MedicoPaciente medicoPaciente = (MedicoPaciente) objeto;
 
         if (updateChild){
-            new MedicosDao(ctx).remover(medicoPaciente.getMedico(),updateChild);
-            new PacientesDao(ctx).remover(medicoPaciente.getPaciente(),updateChild);
+            new MedicoDao(ctx).remover(medicoPaciente.getMedico(),updateChild);
+            new PacienteDao(ctx).remover(medicoPaciente.getPaciente(),updateChild);
         }
 
         Dao<MedicoPaciente, Long> dao = DbSqlHelper.getHelper(ctx).getDao(MedicoPaciente.class);

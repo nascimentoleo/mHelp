@@ -4,12 +4,14 @@ import android.content.Context;
 
 import com.ifma.appmhelp.controls.BaseController;
 import com.ifma.appmhelp.db.DbSqlHelper;
+import com.ifma.appmhelp.models.Cid;
 import com.ifma.appmhelp.models.IModel;
 import com.ifma.appmhelp.models.Prontuario;
 import com.ifma.appmhelp.models.ProntuarioCid;
 import com.j256.ormlite.dao.Dao;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,7 +19,6 @@ import java.util.List;
  */
 
 public class ProntuarioCidDao extends BaseController implements IDao {
-
 
     public ProntuarioCidDao(Context ctx) {
         super(ctx);
@@ -50,6 +51,22 @@ public class ProntuarioCidDao extends BaseController implements IDao {
             objeto.setId(prontuarioCids.get(0).getId());
 
     }
+
+    public List getCids(Prontuario prontuario) throws SQLException {
+        Dao<ProntuarioCid, Long> dao = DbSqlHelper.getHelper(ctx).getDao(ProntuarioCid.class);
+        List<ProntuarioCid> list = dao.queryForMatchingArgs(new ProntuarioCid(prontuario, null));
+
+        if (list.isEmpty())
+            return null;
+
+        List<Cid> listCids = new ArrayList<>();
+        for (ProntuarioCid prontuarioCid : list){
+            listCids.add(prontuarioCid.getCid());
+        }
+
+        return listCids;
+    }
+
 
 
 

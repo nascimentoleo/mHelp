@@ -24,10 +24,6 @@ public class ProntuarioDao extends BaseController implements IDao {
     @Override
     public boolean persistir(IModel objeto, boolean updateChild) throws SQLException {
         Prontuario prontuario = (Prontuario) objeto;
-        if (updateChild) {
-            //new MedicamentoDao(ctx).persistir(,updateChild);
-        }
-
         Dao<Prontuario,Long> dao = DbSqlHelper.getHelper(ctx).getDao(Prontuario.class);
         dao.createOrUpdate(prontuario);
         return true;
@@ -36,13 +32,8 @@ public class ProntuarioDao extends BaseController implements IDao {
     @Override
     public void remover(IModel objeto, boolean updateChild) throws SQLException {
         Prontuario prontuario = (Prontuario) objeto;
-        if (updateChild) {
-            //new MedicamentoDao(ctx).persistir(,updateChild);
-        }
-
         Dao<Prontuario,Long> dao = DbSqlHelper.getHelper(ctx).getDao(Prontuario.class);
         dao.delete(prontuario);
-
     }
 
     @Override

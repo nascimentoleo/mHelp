@@ -2,7 +2,7 @@ package com.ifma.appmhelp;
 
 import android.content.Context;
 
-import com.ifma.appmhelp.daos.PacientesDao;
+import com.ifma.appmhelp.daos.PacienteDao;
 import com.ifma.appmhelp.db.DbSqlHelper;
 import com.ifma.appmhelp.enums.Sexo;
 import com.ifma.appmhelp.enums.TipoSanguineo;
@@ -51,7 +51,7 @@ public class ProntuarioTeste  {
     public void tentaCadastrarProntuario()  {
         try {
 
-            PacientesDao dao = new PacientesDao(ctx);
+            PacienteDao dao = new PacienteDao(ctx);
             dao.persistir(this.paciente, true);
             Paciente pacienteDB = dao.getPacienteByUsuario(paciente.getUsuario());
             assertEquals(paciente, pacienteDB);

@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,7 +15,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ifma.appmhelp.R;
-import com.ifma.appmhelp.daos.PacientesDao;
+import com.ifma.appmhelp.controls.ProntuariosController;
+import com.ifma.appmhelp.daos.PacienteDao;
 import com.ifma.appmhelp.enums.EstadoCivil;
 import com.ifma.appmhelp.enums.GenericBundleKeys;
 import com.ifma.appmhelp.enums.Sexo;
@@ -100,9 +100,11 @@ public class ProntuarioActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK)
+        if (resultCode == RESULT_OK) {
+            this.paciente = (Paciente) data.getSerializableExtra(GenericBundleKeys.PACIENTE.toString());
             if (!modificouProntuario)
                 modificouProntuario = data.getBooleanExtra(GenericBundleKeys.MODIFICOU_PRONTUARIO.toString(), false);
+        }
     }
 
     private void inicializaComponentes(){
@@ -134,8 +136,15 @@ public class ProntuarioActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        if (modificouProntuario)
-            Log.d("ProntuarioActivity","Modificou o prontuário");
+        if (modificouProntuario) {
+            ProntuariosController controller = new ProntuariosController(this);
+            if (controller.enviarProntuario(this.paciente.getProntuario(), this.paciente.getUsuario()))
+                Toast.makeText(this, "Prontuário enviado" , Toast.LENGTH_SHORT).show();
+            else
+                Toast.makeText(this, "Erro ao enviar prontuário: " + controller.getMsgErro(), Toast.LENGTH_SHORT).show();
+
+        }
+
         super.onDestroy();
     }
 
@@ -190,7 +199,7 @@ public class ProntuarioActivity extends AppCompatActivity {
         if (this.prontuarioEhValido()){
             this.preencherProntuario(paciente.getProntuario());
             try {
-                new PacientesDao(this).persistir(paciente, true);
+                new PacienteDao(this).persistir(paciente, true);
                 this.modificouProntuario = true;
                 Snackbar.make(findViewById(android.R.id.content), "Prontuário alterado", Snackbar.LENGTH_LONG).show();
             } catch (SQLException e) {

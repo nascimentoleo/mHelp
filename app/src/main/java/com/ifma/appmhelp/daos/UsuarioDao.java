@@ -14,9 +14,9 @@ import java.util.List;
 /**
  * Created by leo on 11/28/16.
  */
-public class UsuariosDao extends BaseController implements IDao {
+public class UsuarioDao extends BaseController implements IDao {
 
-    public UsuariosDao(Context ctx) {
+    public UsuarioDao(Context ctx) {
         super(ctx);
     }
 

@@ -12,7 +12,7 @@ import com.ifma.appmhelp.R;
 import com.ifma.appmhelp.controls.MensagemController;
 import com.ifma.appmhelp.controls.SolicitacoesController;
 import com.ifma.appmhelp.daos.MedicoPacienteDao;
-import com.ifma.appmhelp.daos.PacientesDao;
+import com.ifma.appmhelp.daos.PacienteDao;
 import com.ifma.appmhelp.enums.GenericBundleKeys;
 import com.ifma.appmhelp.enums.StatusSolicitacaoRoster;
 import com.ifma.appmhelp.enums.TipoDeMensagem;
@@ -100,7 +100,7 @@ public class ListPacientesActivity extends AppCompatActivity implements ListPaci
     private boolean cadastrarProntuario(Paciente paciente){
         try {
             paciente.setProntuario(new Prontuario());
-            new PacientesDao(this).persistir(paciente, true);
+            new PacienteDao(this).persistir(paciente, true);
             return true;
         } catch (SQLException e) {
             e.printStackTrace();

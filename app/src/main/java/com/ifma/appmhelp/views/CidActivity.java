@@ -81,7 +81,6 @@ public class CidActivity extends AppCompatActivity {
                 exibeErroCidNotFound(prontuarioCidList.isEmpty());
                 for(ProntuarioCid prontuarioCid: prontuarioCidList) {
                     this.cidsCadastrados.add(prontuarioCid.getCid());
-                    this.paciente.getProntuario().getCids().add(prontuarioCid.getCid());
                 }
                 rViewCidsCadastrados.getAdapter().notifyDataSetChanged();
             } catch (SQLException e) {
@@ -219,7 +218,6 @@ public class CidActivity extends AppCompatActivity {
         private void adicionarProntuarioCid(ProntuarioCid prontuarioCid){
             try {
                 new ProntuarioCidDao(getApplicationContext()).persistir(prontuarioCid,false);
-                paciente.getProntuario().getCids().add(prontuarioCid.getCid());
 
                 //Adiciona o cid na lista de cadastrados, e remove da lista de disponíveis
                 cidsCadastrados.add(prontuarioCid.getCid());
@@ -256,7 +254,6 @@ public class CidActivity extends AppCompatActivity {
                 ProntuarioCidDao dao = new ProntuarioCidDao(getApplicationContext());
                 dao.carregaId(prontuarioCid);
                 dao.remover(prontuarioCid,false);
-                paciente.getProntuario().getCids().add(prontuarioCid.getCid());
 
                 //Remove o cid da lista de cadastrados, e adiciona na lista de disponíveis
                 cidsCadastrados.remove(prontuarioCid.getCid());

@@ -1,6 +1,7 @@
 package com.ifma.appmhelp.services;
 
 import android.content.Context;
+import android.widget.Toast;
 
 import com.ifma.appmhelp.controls.ProcessadorDeMensagens;
 import com.ifma.appmhelp.lib.BlowfishCrypt;
@@ -36,6 +37,7 @@ public class StanzaXMPPListener implements StanzaListener{
                     this.processarMensagem((Message) packet);
                 } catch (Exception e) {
                     e.printStackTrace();
+                    Toast.makeText(ctx, "Erro ao processar mensagem: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
         }

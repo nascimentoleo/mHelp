@@ -5,8 +5,8 @@ import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 import android.widget.Toast;
 
-import com.ifma.appmhelp.daos.MedicosDao;
-import com.ifma.appmhelp.daos.UsuariosDao;
+import com.ifma.appmhelp.daos.MedicoDao;
+import com.ifma.appmhelp.daos.UsuarioDao;
 import com.ifma.appmhelp.enums.IntentType;
 import com.ifma.appmhelp.enums.SolicitacaoBundleKeys;
 import com.ifma.appmhelp.enums.StatusSolicitacaoRoster;
@@ -37,9 +37,9 @@ public class ProcessadorDeSolicitacoes implements ProcessadorDeMensagens {
             //Procuro o usuario
             Usuario usuario = (Usuario) solicitacaoRoster.getUsuario();
             usuario.setId(null);
-            new UsuariosDao(ctx).carregaId(usuario);
+            new UsuarioDao(ctx).carregaId(usuario);
             //Agora procuro o médico
-            Medico medico = new MedicosDao(ctx).getMedicoByUsuario(usuario);
+            Medico medico = new MedicoDao(ctx).getMedicoByUsuario(usuario);
             if (medico != null){
                 if (SolicitacoesController.removerUsuario(ctx, medico))
                     Toast.makeText(ctx, "Você foi removido pelo médico " + usuario.getNome(), Toast.LENGTH_SHORT).show();

@@ -10,6 +10,7 @@ import com.j256.ormlite.table.DatabaseTable;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -40,7 +41,9 @@ public class Prontuario implements IModel {
     @DatabaseField
     private  String observacoes;
 
+    //Coleções usadas no envio do prontuário
     private List<Cid> cids;
+    private HashMap<Medicamento, String> medicamentos;
 
     public Prontuario() {
         this.cids = new ArrayList<>();
@@ -139,6 +142,14 @@ public class Prontuario implements IModel {
 
     public void setCids(List<Cid> cids) {
         this.cids = cids;
+    }
+
+    public HashMap getMedicamentos() {
+        return medicamentos;
+    }
+
+    public void setMedicamentos(HashMap medicamentos) {
+        this.medicamentos = medicamentos;
     }
 
     public String toJson(){

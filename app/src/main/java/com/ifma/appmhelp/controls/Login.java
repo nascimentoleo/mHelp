@@ -3,9 +3,9 @@ package com.ifma.appmhelp.controls;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.ifma.appmhelp.daos.MedicosDao;
-import com.ifma.appmhelp.daos.PacientesDao;
-import com.ifma.appmhelp.daos.UsuariosDao;
+import com.ifma.appmhelp.daos.MedicoDao;
+import com.ifma.appmhelp.daos.PacienteDao;
+import com.ifma.appmhelp.daos.UsuarioDao;
 import com.ifma.appmhelp.lib.BlowfishCrypt;
 import com.ifma.appmhelp.models.ConexaoXMPP;
 import com.ifma.appmhelp.models.IModel;
@@ -39,7 +39,7 @@ public class Login extends BaseController{
     //Verifica se existe o usuário no banco, e se existir, compara as senhas oferecidas com a senha armazenada no banco
     //A senha fornecida no usuario deve estar sempre em texto pleno
     private boolean loginEhValido(Usuario usuario) throws Exception {
-        UsuariosDao usuariosController = new UsuariosDao(ctx);
+        UsuarioDao usuariosController = new UsuarioDao(ctx);
         Usuario usuarioDb =  usuariosController.getUsuarioByLogin(usuario.getLogin());
 
         if (usuarioDb != null) {
@@ -57,10 +57,10 @@ public class Login extends BaseController{
     private IModel carregaUsuario(Usuario usuario) throws Exception {
         IModel result;
         usuario.setSenha(null); //Limpo a senha para ignorar na busca
-        new UsuariosDao(ctx).carregaId(usuario);
-        result = new MedicosDao(ctx).getMedicoByUsuario(usuario);
+        new UsuarioDao(ctx).carregaId(usuario);
+        result = new MedicoDao(ctx).getMedicoByUsuario(usuario);
         if(result == null)
-            result = new PacientesDao(ctx).getPacienteByUsuario(usuario);
+            result = new PacienteDao(ctx).getPacienteByUsuario(usuario);
         return result;
     }
 

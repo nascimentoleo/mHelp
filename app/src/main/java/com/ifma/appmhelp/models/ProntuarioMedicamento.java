@@ -19,7 +19,7 @@ public class ProntuarioMedicamento implements IModel {
     @DatabaseField(foreign = true, foreignAutoRefresh = true)
     private Medicamento medicamento;
 
-    ProntuarioMedicamento(){
+    public ProntuarioMedicamento(){
 
     }
 

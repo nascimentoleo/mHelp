@@ -15,9 +15,9 @@ import java.util.List;
 /**
  * Created by leo on 11/29/16.
  */
-public class PacientesDao extends BaseController implements IDao {
+public class PacienteDao extends BaseController implements IDao {
 
-    public PacientesDao(Context ctx) {
+    public PacienteDao(Context ctx) {
         super(ctx);
     }
 
@@ -34,7 +34,7 @@ public class PacientesDao extends BaseController implements IDao {
     public boolean persistir(IModel objeto, boolean updateChild) throws SQLException {
         Paciente paciente = (Paciente) objeto;
         if (updateChild) {
-            new UsuariosDao(ctx).persistir(paciente.getUsuario(), updateChild);
+            new UsuarioDao(ctx).persistir(paciente.getUsuario(), updateChild);
             new ProntuarioDao(ctx).persistir(paciente.getProntuario(), updateChild);
         }
         Dao<Paciente,Long> pacienteDao = DbSqlHelper.getHelper(ctx).getDao(Paciente.class);
@@ -46,7 +46,7 @@ public class PacientesDao extends BaseController implements IDao {
     public void remover(IModel objeto, boolean updateChild) throws SQLException {
         Paciente paciente = (Paciente) objeto;
         if (updateChild) {
-            new UsuariosDao(ctx).remover(paciente.getUsuario(), updateChild);
+            new UsuarioDao(ctx).remover(paciente.getUsuario(), updateChild);
             new ProntuarioDao(ctx).remover(paciente.getProntuario(), updateChild);
         }
         Dao<Paciente,Long> pacienteDao = DbSqlHelper.getHelper(ctx).getDao(Paciente.class);
