@@ -17,9 +17,14 @@ import android.widget.Toast;
 
 import com.ifma.appmhelp.R;
 import com.ifma.appmhelp.controls.Login;
+import com.ifma.appmhelp.enums.GenericBundleKeys;
+import com.ifma.appmhelp.models.Paciente;
+import com.ifma.appmhelp.models.UsuarioLogado;
 
 public class PacienteActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    private Paciente paciente;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +50,8 @@ public class PacienteActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        paciente = (Paciente) UsuarioLogado.getInstance().getModelo();
     }
 
     @Override
@@ -91,6 +98,16 @@ public class PacienteActivity extends AppCompatActivity
             case R.id.nav_adicionar_medico :
                 intent = new Intent(this, AdicionarMedicoActivity.class);
                 startActivity(intent);
+                break;
+            case R.id.nav_prontuario :
+                if (paciente.getProntuario() != null){
+                    intent = new Intent(this, ProntuarioActivity.class);
+                    intent.putExtra(GenericBundleKeys.PRONTUARIO.toString(), paciente.getProntuario());
+                    startActivity(intent);
+                }else
+                    Toast.makeText(this, "Paciente não possui prontuário cadastrado ", Toast.LENGTH_SHORT).show();
+
+
                 break;
             case R.id.nav_logoff_paciente:
                 try {

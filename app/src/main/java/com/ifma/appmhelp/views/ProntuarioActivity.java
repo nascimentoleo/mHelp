@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -42,6 +43,7 @@ public class ProntuarioActivity extends AppCompatActivity {
     private EditText edNomeDoPai;
     private EditText edTelefoneResponsavel;
     private EditText edObservacoes;
+    private Button btnAlterarProntuario;
     private ArrayAdapter<Sexo> adapterSexo;
     private ArrayAdapter<EstadoCivil> adapterEstadoCivil;
     private ArrayAdapter<TipoSanguineo> adapterTipoSanguineo;
@@ -69,6 +71,7 @@ public class ProntuarioActivity extends AppCompatActivity {
 
         this.inicializaComponentes();
         this.carregaAdapters();
+        this.habilitaComponentes(permiteEditar);
     }
 
     @Override
@@ -123,7 +126,7 @@ public class ProntuarioActivity extends AppCompatActivity {
         spSexo                = (Spinner) findViewById(R.id.spSexoProntuario);
         spEstadoCivil         = (Spinner) findViewById(R.id.spEstadoCivilProntuario);
         spTipoSanguineo       = (Spinner) findViewById(R.id.spTipoSanguineoProntuario);
-        txtIdade               = (TextView) findViewById(R.id.txtIdadeProntuario);
+        txtIdade              = (TextView) findViewById(R.id.txtIdadeProntuario);
         edNomeDaMae           = (EditText) findViewById(R.id.edNomeDaMaeProntuario);
         edNomeDoPai           = (EditText) findViewById(R.id.edNomeDoPaiProntuario);
         edTelefoneResponsavel = (EditText) findViewById(R.id.edTelefoneResponsavelProntuario);
@@ -140,7 +143,21 @@ public class ProntuarioActivity extends AppCompatActivity {
         });
 
         this.modificouProntuario = false;
+        this.btnAlterarProntuario = (Button) findViewById(R.id.btnAlterarProntuario);
 
+    }
+    // Ativa ou não os componentes,de acordo com o modo  em que foi aberto a activity
+    // Visualização ou edição
+    private void habilitaComponentes(boolean habilita){
+        spSexo.setEnabled(habilita);
+        spEstadoCivil.setEnabled(habilita);
+        spTipoSanguineo.setEnabled(habilita);
+        edNomeDoPai.setEnabled(habilita);
+        edNomeDaMae.setEnabled(habilita);
+        edTelefoneResponsavel.setEnabled(habilita);
+        edObservacoes.setEnabled(habilita);
+        edDataDeNascimento.setEnabled(habilita);
+        btnAlterarProntuario.setVisibility(habilita ? View.VISIBLE : View.INVISIBLE);
     }
 
     @Override

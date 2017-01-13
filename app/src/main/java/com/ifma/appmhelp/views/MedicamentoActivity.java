@@ -103,8 +103,12 @@ public class MedicamentoActivity extends AppCompatActivity {
         this.edNomeMedicamento.setOnEditorActionListener(new OnEditorActionListener());
 
         this.rViewMedicamentos = (RecyclerView) findViewById(R.id.rViewMedicamentos);
+        this.rViewMedicamentosCadastrados = (RecyclerView) findViewById(R.id.rViewMedicamentosCadastrados);
+
+        this.rViewMedicamentosCadastrados.setLayoutManager(new LinearLayoutManager(this));
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         this.rViewMedicamentos.setLayoutManager(linearLayoutManager);
+
         this.rViewMedicamentos.addOnScrollListener(new EndlessRecyclerViewScrollListener(linearLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
@@ -114,15 +118,18 @@ public class MedicamentoActivity extends AppCompatActivity {
         });
 
         this.medicamentosDisponiveis = new ArrayList<>();
-        MedicamentosAdapter medicamentosAdapter = new MedicamentosAdapter(this, medicamentosDisponiveis);
-        medicamentosAdapter.setOnItemLongClickListener(new AdicionarMedicamentoListener());
-        rViewMedicamentos.setAdapter(medicamentosAdapter);
-
-        this.rViewMedicamentosCadastrados = (RecyclerView) findViewById(R.id.rViewMedicamentosCadastrados);
-        this.rViewMedicamentosCadastrados.setLayoutManager(new LinearLayoutManager(this));
         this.prontuarioMedicamentosCadastrados = new ArrayList<>();
+
+        MedicamentosAdapter medicamentosAdapter = new MedicamentosAdapter(this, medicamentosDisponiveis);
         ProntuarioMedicamentosAdapter prontuarioMedicamentosAdapter = new ProntuarioMedicamentosAdapter(this, prontuarioMedicamentosCadastrados);
-        prontuarioMedicamentosAdapter.setOnItemLongClickListener(new RemoverMedicamentoListener());
+
+        //Só habilita os eventos se o prontuário for aberto em modo de edição
+        if(this.permiteEditar) {
+            medicamentosAdapter.setOnItemLongClickListener(new AdicionarMedicamentoListener());
+            prontuarioMedicamentosAdapter.setOnItemLongClickListener(new RemoverMedicamentoListener());
+        }
+
+        rViewMedicamentos.setAdapter(medicamentosAdapter);
         rViewMedicamentosCadastrados.setAdapter(prontuarioMedicamentosAdapter);
 
         modificouProntuario = false;

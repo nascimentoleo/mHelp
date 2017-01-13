@@ -131,8 +131,11 @@ public class CidActivity extends AppCompatActivity {
         CidsAdapter cidsAdapter            = new CidsAdapter(this, cidsDisponiveis);
         CidsAdapter cidsAdapterCadastrados = new CidsAdapter(this, cidsCadastrados);
 
-        cidsAdapter.setOnItemLongClickListener(new AdicionarCidListener());
-        cidsAdapterCadastrados.setOnItemLongClickListener(new RemoverCidListener());
+        //Só habilita os eventos se o prontuário for aberto em modo de edição
+        if(this.permiteEditar){
+            cidsAdapter.setOnItemLongClickListener(new AdicionarCidListener());
+            cidsAdapterCadastrados.setOnItemLongClickListener(new RemoverCidListener());
+        }
 
         this.rViewCids.setAdapter(cidsAdapter);
 
