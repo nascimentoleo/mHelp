@@ -4,9 +4,11 @@ package com.ifma.appmhelp.enums;
  * Created by leo on 12/2/16.
  */
 public enum GenericBundleKeys {
-    USUARIO_LOGADO("USUARIO_LOGADO"),
+    USUARIO("USUARIO"),
     PACIENTE("PACIENTE"),
-    MODIFICOU_PRONTUARIO("MODIFICOU_PRONTUARIO");
+    MODIFICOU_PRONTUARIO("MODIFICOU_PRONTUARIO"),
+    PRONTUARIO("PRONTUARIO"),
+    EDITAR_PRONTUARIO("EDITAR_PRONTUARIO");
 
     private final String value;
 

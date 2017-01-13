@@ -27,7 +27,7 @@ import com.ifma.appmhelp.enums.GenericBundleKeys;
 import com.ifma.appmhelp.lib.EndlessRecyclerViewScrollListener;
 import com.ifma.appmhelp.lib.ModelComparator;
 import com.ifma.appmhelp.models.Medicamento;
-import com.ifma.appmhelp.models.Paciente;
+import com.ifma.appmhelp.models.Prontuario;
 import com.ifma.appmhelp.models.ProntuarioMedicamento;
 
 import java.sql.SQLException;
@@ -37,7 +37,7 @@ import java.util.List;
 
 public class MedicamentoActivity extends AppCompatActivity {
 
-    private Paciente paciente;
+    private Prontuario prontuario;
     private RecyclerView rViewMedicamentos;
     private RecyclerView rViewMedicamentosCadastrados;
     private TextView txtMedicamentoNotFound;
@@ -46,6 +46,7 @@ public class MedicamentoActivity extends AppCompatActivity {
     private ArrayList<ProntuarioMedicamento> prontuarioMedicamentosCadastrados;
     private int qtdRegistros = 3; //Quantidade de registros por refresh do adapter
     private boolean modificouProntuario;
+    private boolean permiteEditar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +56,9 @@ public class MedicamentoActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        this.paciente = (Paciente) getIntent().getSerializableExtra(GenericBundleKeys.PACIENTE.toString());
+        this.prontuario = (Prontuario) getIntent().getSerializableExtra(GenericBundleKeys.PRONTUARIO.toString());
+        this.permiteEditar = getIntent().getBooleanExtra(GenericBundleKeys.EDITAR_PRONTUARIO.toString(), false);
+
         this.carregaComponentes();
         this.carregarMedicamentosDoProntuario();
         this.atualizaAdapter(0, qtdRegistros);
@@ -67,7 +70,7 @@ public class MedicamentoActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 Intent returnIntent = new Intent();
-                returnIntent.putExtra(GenericBundleKeys.PACIENTE.toString(),paciente);
+                returnIntent.putExtra(GenericBundleKeys.PRONTUARIO.toString(),prontuario);
                 returnIntent.putExtra(GenericBundleKeys.MODIFICOU_PRONTUARIO.toString(),modificouProntuario);
                 setResult(Activity.RESULT_OK,returnIntent);
                 finish();
@@ -77,11 +80,11 @@ public class MedicamentoActivity extends AppCompatActivity {
     }
 
     private void carregarMedicamentosDoProntuario() {
-        if(this.paciente != null){
+        if(this.prontuario!= null){
             this.prontuarioMedicamentosCadastrados.clear();
             try {
                 List<ProntuarioMedicamento> prontuarioMedicamentosList = new ProntuarioMedicamentoDao(this)
-                                            .getProntuariosMedicamentos(this.paciente.getProntuario());
+                                            .getProntuariosMedicamentos(this.prontuario);
                 exibeErroMedicamentoNotFound(prontuarioMedicamentosList.isEmpty());
                 this.prontuarioMedicamentosCadastrados.addAll(prontuarioMedicamentosList);
 
@@ -195,7 +198,7 @@ public class MedicamentoActivity extends AppCompatActivity {
                 public void onClick(DialogInterface dialog, int whichButton) {
                     String doses = edDoses.getText().toString().trim();
                     if(!doses.isEmpty()){
-                        ProntuarioMedicamento prontuarioMedicamento = new ProntuarioMedicamento(paciente.getProntuario(), item, doses);
+                        ProntuarioMedicamento prontuarioMedicamento = new ProntuarioMedicamento(prontuario, item, doses);
                         adicionarProntuarioMedicamento(prontuarioMedicamento);
                     }else
                         Toast.makeText(MedicamentoActivity.this, "Não é possível inserir um medicamento sem informar as doses",

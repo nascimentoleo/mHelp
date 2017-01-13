@@ -24,7 +24,7 @@ import com.ifma.appmhelp.enums.GenericBundleKeys;
 import com.ifma.appmhelp.lib.EndlessRecyclerViewScrollListener;
 import com.ifma.appmhelp.lib.ModelComparator;
 import com.ifma.appmhelp.models.Cid;
-import com.ifma.appmhelp.models.Paciente;
+import com.ifma.appmhelp.models.Prontuario;
 import com.ifma.appmhelp.models.ProntuarioCid;
 
 import java.sql.SQLException;
@@ -34,7 +34,7 @@ import java.util.List;
 
 public class CidActivity extends AppCompatActivity {
 
-    private Paciente paciente;
+    private Prontuario prontuario;
     private RecyclerView rViewCids;
     private RecyclerView rViewCidsCadastrados;
     private EditText edCidCodigo;
@@ -44,6 +44,7 @@ public class CidActivity extends AppCompatActivity {
     private ArrayList<Cid> cidsDisponiveis;
     private ArrayList<Cid> cidsCadastrados;
     private boolean modificouProntuario;
+    private boolean permiteEditar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +54,10 @@ public class CidActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        this.paciente = (Paciente) getIntent().getSerializableExtra(GenericBundleKeys.PACIENTE.toString());
+
+        this.prontuario = (Prontuario) getIntent().getSerializableExtra(GenericBundleKeys.PRONTUARIO.toString());
+        this.permiteEditar = getIntent().getBooleanExtra(GenericBundleKeys.EDITAR_PRONTUARIO.toString(), false);
+
         this.carregaComponentes();
         this.carregarCidsDoProntuario();
         this.atualizaAdapter(0, qtdRegistros);
@@ -64,7 +68,7 @@ public class CidActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 Intent returnIntent = new Intent();
-                returnIntent.putExtra(GenericBundleKeys.PACIENTE.toString(),paciente);
+                returnIntent.putExtra(GenericBundleKeys.PRONTUARIO.toString(),prontuario);
                 returnIntent.putExtra(GenericBundleKeys.MODIFICOU_PRONTUARIO.toString(), modificouProntuario);
                 setResult(Activity.RESULT_OK,returnIntent);
                 finish();
@@ -74,10 +78,10 @@ public class CidActivity extends AppCompatActivity {
     }
 
     private void carregarCidsDoProntuario(){
-        if(this.paciente != null){
+        if(this.prontuario != null){
             this.cidsCadastrados.clear();
             try {
-                List<ProntuarioCid> prontuarioCidList = new ProntuarioCidDao(this).getProntuariosCids(this.paciente.getProntuario());
+                List<ProntuarioCid> prontuarioCidList = new ProntuarioCidDao(this).getProntuariosCids(this.prontuario);
                 exibeErroCidNotFound(prontuarioCidList.isEmpty());
                 for(ProntuarioCid prontuarioCid: prontuarioCidList) {
                     this.cidsCadastrados.add(prontuarioCid.getCid());
@@ -210,7 +214,7 @@ public class CidActivity extends AppCompatActivity {
 
         @Override
         public void onItemLongClick(Cid item) {
-            ProntuarioCid prontuarioCid = new ProntuarioCid(paciente.getProntuario(), item);
+            ProntuarioCid prontuarioCid = new ProntuarioCid(prontuario, item);
             this.adicionarProntuarioCid(prontuarioCid);
 
         }
@@ -244,7 +248,7 @@ public class CidActivity extends AppCompatActivity {
 
         @Override
         public void onItemLongClick(Cid item) {
-            ProntuarioCid prontuarioCid = new ProntuarioCid(paciente.getProntuario(), item);
+            ProntuarioCid prontuarioCid = new ProntuarioCid(prontuario, item);
             this.removerProntuarioCid(prontuarioCid);
 
         }

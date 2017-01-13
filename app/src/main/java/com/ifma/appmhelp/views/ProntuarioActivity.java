@@ -31,13 +31,11 @@ import java.sql.SQLException;
 
 public class ProntuarioActivity extends AppCompatActivity {
 
+    private Prontuario prontuario;
     private Paciente paciente;
     private Spinner spSexo;
     private Spinner spEstadoCivil;
     private Spinner spTipoSanguineo;
-    /*private TextView txtNomePaciente;
-    private TextView txtEndereco;
-    private TextView txtTelefonePaciente; */
     private TextView txtIdade;
     private EditText edDataDeNascimento;
     private EditText edNomeDaMae;
@@ -48,6 +46,7 @@ public class ProntuarioActivity extends AppCompatActivity {
     private ArrayAdapter<EstadoCivil> adapterEstadoCivil;
     private ArrayAdapter<TipoSanguineo> adapterTipoSanguineo;
     private boolean modificouProntuario; //Flag para saber se houve alterações
+    private boolean permiteEditar; //Flag para saber se o prontuário poderá ser editado
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +56,17 @@ public class ProntuarioActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        permiteEditar = getIntent().getBooleanExtra(GenericBundleKeys.EDITAR_PRONTUARIO.toString(), false);
+
+        //Somente médicos estão autorizados a editar um prontuário
+        if(permiteEditar){
+            paciente = (Paciente) getIntent().getSerializableExtra(GenericBundleKeys.PACIENTE.toString());
+            prontuario = paciente.getProntuario();
+        }
+        else
+            prontuario = (Prontuario) getIntent().getSerializableExtra(GenericBundleKeys.PRONTUARIO.toString());
+
         this.inicializaComponentes();
         this.carregaAdapters();
     }
@@ -64,8 +74,7 @@ public class ProntuarioActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        this.carregaProntuarioDoPaciente();
-
+        this.carregaProntuario();
     }
 
     @Override
@@ -85,12 +94,14 @@ public class ProntuarioActivity extends AppCompatActivity {
                 return true;
             case R.id.action_cid :
                 it = new Intent(this,CidActivity.class);
-                it.putExtra(GenericBundleKeys.PACIENTE.toString(),this.paciente);
+                it.putExtra(GenericBundleKeys.PRONTUARIO.toString(),this.prontuario);
+                it.putExtra(GenericBundleKeys.EDITAR_PRONTUARIO.toString(),permiteEditar);
                 startActivityForResult(it, RESULT_FIRST_USER);
                 return true;
             case R.id.action_medicamentos :
                 it = new Intent(this,MedicamentoActivity.class);
-                it.putExtra(GenericBundleKeys.PACIENTE.toString(),this.paciente);
+                it.putExtra(GenericBundleKeys.PRONTUARIO.toString(),this.prontuario);
+                it.putExtra(GenericBundleKeys.EDITAR_PRONTUARIO.toString(),permiteEditar);
                 startActivityForResult(it, RESULT_FIRST_USER);
                 return true;
         }
@@ -101,16 +112,14 @@ public class ProntuarioActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
-            this.paciente = (Paciente) data.getSerializableExtra(GenericBundleKeys.PACIENTE.toString());
+            this.prontuario = (Prontuario) data.getSerializableExtra(GenericBundleKeys.PRONTUARIO.toString());
+
             if (!modificouProntuario)
                 modificouProntuario = data.getBooleanExtra(GenericBundleKeys.MODIFICOU_PRONTUARIO.toString(), false);
         }
     }
 
     private void inicializaComponentes(){
-        /*txtNomePaciente       = (TextView) findViewById(R.id.txtNomePacienteProntuario);
-        txtEndereco           = (TextView) findViewById(R.id.txtEnderecoProntuario);
-        txtTelefonePaciente   = (TextView) findViewById(R.id.txtTelefoneProntuario); */
         spSexo                = (Spinner) findViewById(R.id.spSexoProntuario);
         spEstadoCivil         = (Spinner) findViewById(R.id.spEstadoCivilProntuario);
         spTipoSanguineo       = (Spinner) findViewById(R.id.spTipoSanguineoProntuario);
@@ -136,9 +145,9 @@ public class ProntuarioActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        if (modificouProntuario) {
+        if (permiteEditar && modificouProntuario){
             ProntuariosController controller = new ProntuariosController(this);
-            if (controller.enviarProntuario(this.paciente.getProntuario(), this.paciente.getUsuario()))
+            if (controller.enviarProntuario(this.prontuario, this.paciente.getUsuario()))
                 Toast.makeText(this, "Prontuário enviado" , Toast.LENGTH_SHORT).show();
             else
                 Toast.makeText(this, "Erro ao enviar prontuário: " + controller.getMsgErro(), Toast.LENGTH_SHORT).show();
@@ -148,37 +157,28 @@ public class ProntuarioActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
-    private void carregaProntuarioDoPaciente(){
-        paciente = (Paciente) getIntent().getSerializableExtra(GenericBundleKeys.PACIENTE.toString());
-        if (paciente != null) {
-               /* if(paciente.getUsuario().getNome() != null)
-                    txtNomePaciente.setText("Nome do Paciente: " + paciente.getUsuario().getNome());
-                if(paciente.getEndereco() != null)
-                    txtEndereco.setText("Endereço: " + paciente.getEndereco());
-                if(paciente.getTelefone() != null)
-                    txtTelefonePaciente.setText("Telefone: " +paciente.getTelefone());
-                */
+    private void carregaProntuario(){
+        if (this.prontuario != null) {
+            if (prontuario.getIdade() > 0)
+                txtIdade.setText(Integer.toString(prontuario.getIdade()) + " anos");
+            else
+                txtIdade.setText("");
 
-                if (paciente.getProntuario().getIdade() > 0)
-                    txtIdade.setText(Integer.toString(paciente.getProntuario().getIdade()) + " anos");
-                else
-                    txtIdade.setText("");
+            edDataDeNascimento.setText("");
+            if (prontuario.getDataDeNascimento() != null)
+                edDataDeNascimento.setText(prontuario.getDataDeNascimentoString());
 
-                edDataDeNascimento.setText("");
-                if (paciente.getProntuario().getDataDeNascimento() != null)
-                    edDataDeNascimento.setText(paciente.getProntuario().getDataDeNascimentoString());
+            edNomeDaMae.setText(prontuario.getNomeDaMae());
+            edNomeDoPai.setText(prontuario.getNomeDoPai());
+            edTelefoneResponsavel.setText(prontuario.getTelefoneDoResponsavel());
+            edObservacoes.setText(prontuario.getObservacoes());
 
-                edNomeDaMae.setText(paciente.getProntuario().getNomeDaMae());
-                edNomeDoPai.setText(paciente.getProntuario().getNomeDoPai());
-                edTelefoneResponsavel.setText(paciente.getProntuario().getTelefoneDoResponsavel());
-                edObservacoes.setText(paciente.getProntuario().getObservacoes());
-
-                int spSexoPosition          = adapterSexo.getPosition(paciente.getProntuario().getSexo());
-                int spEstadoCivilPosition   = adapterEstadoCivil.getPosition(paciente.getProntuario().getEstadoCivil());
-                int spTipoSanguineoPosition = adapterTipoSanguineo.getPosition(paciente.getProntuario().getTipoSanguineo());
-                spSexo.setSelection(spSexoPosition);
-                spEstadoCivil.setSelection(spEstadoCivilPosition);
-                spTipoSanguineo.setSelection(spTipoSanguineoPosition);
+            int spSexoPosition          = adapterSexo.getPosition(prontuario.getSexo());
+            int spEstadoCivilPosition   = adapterEstadoCivil.getPosition(prontuario.getEstadoCivil());
+            int spTipoSanguineoPosition = adapterTipoSanguineo.getPosition(prontuario.getTipoSanguineo());
+            spSexo.setSelection(spSexoPosition);
+            spEstadoCivil.setSelection(spEstadoCivilPosition);
+            spTipoSanguineo.setSelection(spTipoSanguineoPosition);
         }else
             Snackbar.make(findViewById(android.R.id.content), "Não foi possível carregar os dados do paciente", Snackbar.LENGTH_LONG).show();
     }
@@ -197,7 +197,7 @@ public class ProntuarioActivity extends AppCompatActivity {
     public void alterarProntuario(View v){
         KeyboardLib.fecharTeclado(this);
         if (this.prontuarioEhValido()){
-            this.preencherProntuario(paciente.getProntuario());
+            this.preencherProntuario(prontuario);
             try {
                 new PacienteDao(this).persistir(paciente, true);
                 this.modificouProntuario = true;

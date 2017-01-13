@@ -112,6 +112,7 @@ public class ListPacientesActivity extends AppCompatActivity implements ListPaci
     private void abrirProntuario(Paciente paciente){
         Intent it = new Intent(ListPacientesActivity.this, ProntuarioActivity.class);
         it.putExtra(GenericBundleKeys.PACIENTE.toString(),paciente);
+        it.putExtra(GenericBundleKeys.EDITAR_PRONTUARIO.toString(),true);
         startActivityForResult(it,RESULT_FIRST_USER);
     }
 
