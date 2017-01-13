@@ -1,8 +1,19 @@
 package com.ifma.appmhelp.controls;
 
 import android.content.Context;
+import android.widget.Toast;
 
+import com.ifma.appmhelp.daos.PacienteDao;
+import com.ifma.appmhelp.daos.ProntuarioCidDao;
+import com.ifma.appmhelp.daos.ProntuarioDao;
+import com.ifma.appmhelp.daos.ProntuarioMedicamentoDao;
+import com.ifma.appmhelp.models.Cid;
 import com.ifma.appmhelp.models.Mensagem;
+import com.ifma.appmhelp.models.Paciente;
+import com.ifma.appmhelp.models.ProntuarioCid;
+import com.ifma.appmhelp.models.ProntuarioMedicamento;
+import com.ifma.appmhelp.models.ProntuarioParaEnvio;
+import com.ifma.appmhelp.models.UsuarioLogado;
 
 /**
  * Created by leo on 1/11/17.
@@ -13,39 +24,34 @@ public class ProcessadorDeProntuarios implements ProcessadorDeMensagens {
     @Override
     public void processar(Context ctx, Mensagem mensagem) throws Exception {
 
-       /* Prontuario prontuario = Prontuario.fromJson(mensagem.getMsg());
+        ProntuarioParaEnvio prontuarioParaEnvio = ProntuarioParaEnvio.fromJson(mensagem.getMsg());
         Paciente paciente = (Paciente) UsuarioLogado.getInstance().getModelo();
 
         if (paciente.getProntuario() == null)
-            prontuario.setId(null);
+            prontuarioParaEnvio.getProntuario().setId(null);
         else
-            prontuario.setId(paciente.getProntuario().getId());
+            prontuarioParaEnvio.getProntuario().setId(paciente.getProntuario().getId());
 
-        new ProntuarioDao(ctx).persistir(prontuario, true);
-        paciente.setProntuario(prontuario);
+        new ProntuarioDao(ctx).persistir(prontuarioParaEnvio.getProntuario(), true);
+        paciente.setProntuario(prontuarioParaEnvio.getProntuario());
         new PacienteDao(ctx).persistir(paciente, false);
 
         //Adiciono cids
         ProntuarioCidDao prontuarioCidDao = new ProntuarioCidDao(ctx);
-        prontuarioCidDao.remover(new ProntuarioCid(prontuario, null), false);
-        for (Cid cid : prontuario.getCids()){
-            prontuarioCidDao.persistir(new ProntuarioCid(prontuario, cid), false);
+        prontuarioCidDao.removerTodos(paciente.getProntuario());
+        for (Cid cid : prontuarioParaEnvio.getCids()){
+            prontuarioCidDao.persistir(new ProntuarioCid(paciente.getProntuario(), cid), false);
         }
+
         //Adiciono medicamentos
         ProntuarioMedicamentoDao prontuarioMedicamentoDao = new ProntuarioMedicamentoDao(ctx);
-        prontuarioMedicamentoDao.remover(new ProntuarioMedicamento(prontuario, null, null), false);
+        prontuarioMedicamentoDao.removerTodos(paciente.getProntuario());
 
-        Iterator iterator = prontuario.getMedicamentos().entrySet().iterator();
-
-        while(iterator.hasNext()) {
-            Map.Entry registro = (Map.Entry) iterator.next();
-            Medicamento medicamento = (Medicamento) registro.getKey();
-            String doses            = (String) registro.getValue();
-            prontuarioMedicamentoDao.persistir(new ProntuarioMedicamento(prontuario, medicamento, doses), false);
+        for (ProntuarioParaEnvio.MedicamentoParaEnvio medicamento : prontuarioParaEnvio.getMedicamentos()){
+            prontuarioMedicamentoDao.persistir(new ProntuarioMedicamento(paciente.getProntuario(),
+                                               medicamento.getMedicamento(), medicamento.getDoses()), false);
         }
 
         Toast.makeText(ctx, "Prontuário atualizado", Toast.LENGTH_SHORT).show();
-
-        */
     }
 }

@@ -36,6 +36,13 @@ public class ProntuarioMedicamentoDao extends BaseController implements IDao {
         dao.delete((ProntuarioMedicamento) objeto);
     }
 
+    public void removerTodos(Prontuario prontuario) throws SQLException {
+        Dao<ProntuarioMedicamento, Long> dao = DbSqlHelper.getHelper(ctx).getDao(ProntuarioMedicamento.class);
+        List<ProntuarioMedicamento> prontuarioMedicamentos = dao.queryForMatching(new ProntuarioMedicamento(prontuario, null, null));
+        for(ProntuarioMedicamento prontuarioMedicamento : prontuarioMedicamentos)
+            remover(prontuarioMedicamento, false);
+    }
+
     public List<ProntuarioMedicamento> getProntuariosMedicamentos(Prontuario prontuario) throws SQLException {
         Dao<ProntuarioMedicamento,Long> dao = DbSqlHelper.getHelper(ctx).getDao(ProntuarioMedicamento.class);
         ProntuarioMedicamento prontuarioMedicamento = new ProntuarioMedicamento(prontuario, null, null);

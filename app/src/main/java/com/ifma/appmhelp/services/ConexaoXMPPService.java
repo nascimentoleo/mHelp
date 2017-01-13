@@ -84,8 +84,8 @@ public class ConexaoXMPPService extends Service {
             }
         }
         conectarTask = new ConectarXMPPTask(getApplicationContext());
-        //conectarTask.execute(new Host("192.168.1.24", 5222));
-        conectarTask.execute(new Host("192.168.0.8", 5222));
+        conectarTask.execute(new Host("192.168.1.24", 5222));
+        //conectarTask.execute(new Host("192.168.0.8", 5222));
         //conectarTask.execute(new Host("10.0.2.2",5222)); //For avd
         return true;
     }

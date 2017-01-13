@@ -56,13 +56,21 @@ public class ProntuarioParaEnvio {
         return gson.fromJson(jsonObject, ProntuarioParaEnvio.class);
     }
 
-    class MedicamentoParaEnvio{
+    public class MedicamentoParaEnvio{
         private Medicamento medicamento;
         private String doses;
 
         MedicamentoParaEnvio(Medicamento medicamento, String doses) {
             this.medicamento = medicamento;
             this.doses = doses;
+        }
+
+        public Medicamento getMedicamento() {
+            return medicamento;
+        }
+
+        public String getDoses() {
+            return doses;
         }
     }
 }
