@@ -41,7 +41,7 @@ public class ConexaoXMPPService extends Service {
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-         return new LocalBinder();
+         return new LocalBinder(this);
     }
 
     @Override
@@ -76,14 +76,6 @@ public class ConexaoXMPPService extends Service {
         startForeground(ServiceNotification.ID_NOTIFICATION,notification);
 
     }
-
-    public class LocalBinder extends Binder {
-
-        ConexaoXMPPService getService() {
-            return ConexaoXMPPService.this;
-        }
-    }
-
 
 }
 

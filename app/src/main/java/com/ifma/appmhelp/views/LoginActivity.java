@@ -23,6 +23,7 @@ import com.ifma.appmhelp.models.ConexaoXMPP;
 import com.ifma.appmhelp.models.IModel;
 import com.ifma.appmhelp.models.Usuario;
 import com.ifma.appmhelp.models.UsuarioLogado;
+import com.ifma.appmhelp.services.LocalBinder;
 
 public class LoginActivity extends AppCompatActivity
         implements  NavigationView.OnNavigationItemSelectedListener {
@@ -30,6 +31,7 @@ public class LoginActivity extends AppCompatActivity
     private EditText edLogin;
     private EditText edSenha;
     private Login login;
+    private LocalBinder binderService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +48,7 @@ public class LoginActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
+        binderService = (LocalBinder) getIntent().getSerializableExtra("binder");
         this.registrarComponentes();
 
     }
@@ -135,6 +137,10 @@ public class LoginActivity extends AppCompatActivity
             }else
                 Toast.makeText(this, login.getMsgErro(),
                         Toast.LENGTH_SHORT).show();
+
+            if (binderService != null)
+                binderService.getService().initNotification();
+
         } catch (Exception e) {
             e.printStackTrace();
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT)
