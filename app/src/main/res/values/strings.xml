@@ -85,5 +85,7 @@
     <string name="adicionar_medicamentos_name">Adicionar Medicamentos</string>
     <string name="medicamentos_do_paciente_name">Medicamentos do Paciente</string>
     <string name="medicamento_not_found_name">Não existem medicamentos cadastrados para esse paciente</string>
+    <string name="conexao_xmpp_notification_title">Você está conectado
+    </string>
 
 </resources>

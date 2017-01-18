@@ -22,7 +22,8 @@ public class Login extends BaseController{
 
     public IModel realizaLogin(Usuario usuario) throws Exception {
         if (loginEhValido(usuario)){
-            ConexaoXMPP.getInstance().getConexao().login(usuario.getLogin(), usuario.getSenha());
+            if(!ConexaoXMPP.getInstance().conexaoFoiAutenticada())
+                ConexaoXMPP.getInstance().getConexao().login(usuario.getLogin(), usuario.getSenha());
             this.salvarArquivoDePreferencias(usuario,true);
             return carregaUsuario(usuario);
         }

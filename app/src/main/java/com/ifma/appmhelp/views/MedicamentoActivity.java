@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,6 +26,7 @@ import com.ifma.appmhelp.daos.MedicamentoDao;
 import com.ifma.appmhelp.daos.ProntuarioMedicamentoDao;
 import com.ifma.appmhelp.enums.GenericBundleKeys;
 import com.ifma.appmhelp.lib.EndlessRecyclerViewScrollListener;
+import com.ifma.appmhelp.lib.KeyboardLib;
 import com.ifma.appmhelp.lib.ModelComparator;
 import com.ifma.appmhelp.models.Medicamento;
 import com.ifma.appmhelp.models.Prontuario;
@@ -193,7 +195,7 @@ public class MedicamentoActivity extends AppCompatActivity {
 
         @Override
         public void onItemLongClick(final Medicamento item) {
-            View viewDoses = getLayoutInflater().inflate(R.layout.alert_dialog_doses, null);
+            final View viewDoses = getLayoutInflater().inflate(R.layout.alert_dialog_doses, null);
             final EditText edDoses = (EditText) viewDoses.findViewById(R.id.edDoses);
 
             AlertDialog alert = new AlertDialog.Builder(MedicamentoActivity.this)
@@ -205,6 +207,7 @@ public class MedicamentoActivity extends AppCompatActivity {
                 public void onClick(DialogInterface dialog, int whichButton) {
                     String doses = edDoses.getText().toString().trim();
                     if(!doses.isEmpty()){
+                        edDoses.setInputType(InputType.TYPE_NULL);
                         ProntuarioMedicamento prontuarioMedicamento = new ProntuarioMedicamento(prontuario, item, doses);
                         adicionarProntuarioMedicamento(prontuarioMedicamento);
                     }else
@@ -228,6 +231,7 @@ public class MedicamentoActivity extends AppCompatActivity {
                 rViewMedicamentos.getAdapter().notifyDataSetChanged();
 
                 modificouProntuario = true;
+                KeyboardLib.fecharTeclado(MedicamentoActivity.this);
 
                 Snackbar.make(findViewById(android.R.id.content), "Medicamento adicionado", Snackbar.LENGTH_LONG).show();
             } catch (SQLException e) {
@@ -262,6 +266,7 @@ public class MedicamentoActivity extends AppCompatActivity {
 
                 modificouProntuario = true;
 
+                KeyboardLib.fecharTeclado(MedicamentoActivity.this);
                 Snackbar.make(findViewById(android.R.id.content), "Medicamento removido", Snackbar.LENGTH_LONG).show();
             } catch (SQLException e) {
                 e.printStackTrace();

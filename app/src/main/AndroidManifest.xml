@@ -9,6 +9,7 @@
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:name=".db.DbManager"
@@ -114,6 +115,12 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.ifma.appmhelp.views.ProntuarioActivity" />
         </activity>
+
+        <receiver android:name=".services.ReceiverDisconnect">
+            <intent-filter>
+                <action android:name="FINALIZAR_SERVICO"/>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

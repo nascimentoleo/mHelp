@@ -22,6 +22,7 @@ import com.ifma.appmhelp.daos.CidDao;
 import com.ifma.appmhelp.daos.ProntuarioCidDao;
 import com.ifma.appmhelp.enums.GenericBundleKeys;
 import com.ifma.appmhelp.lib.EndlessRecyclerViewScrollListener;
+import com.ifma.appmhelp.lib.KeyboardLib;
 import com.ifma.appmhelp.lib.ModelComparator;
 import com.ifma.appmhelp.models.Cid;
 import com.ifma.appmhelp.models.Prontuario;
@@ -235,6 +236,7 @@ public class CidActivity extends AppCompatActivity {
                 rViewCids.getAdapter().notifyDataSetChanged();
 
                 modificouProntuario = true;
+                KeyboardLib.fecharTeclado(CidActivity.this);
 
                 Snackbar.make(findViewById(android.R.id.content), "Cid adicionado", Snackbar.LENGTH_LONG).show();
             } catch (SQLException e) {
@@ -272,6 +274,7 @@ public class CidActivity extends AppCompatActivity {
                 rViewCids.getAdapter().notifyDataSetChanged();
 
                 modificouProntuario = true;
+                KeyboardLib.fecharTeclado(CidActivity.this);
 
                 Snackbar.make(findViewById(android.R.id.content), "Cid removido", Snackbar.LENGTH_LONG).show();
             } catch (SQLException e) {
