@@ -54,4 +54,5 @@ public class ProcessadorDeProntuarios implements ProcessadorDeMensagens {
 
         Toast.makeText(ctx, "Prontuário atualizado", Toast.LENGTH_SHORT).show();
     }
+
 }

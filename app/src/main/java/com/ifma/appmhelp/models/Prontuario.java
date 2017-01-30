@@ -37,7 +37,6 @@ public class Prontuario implements IModel {
     @DatabaseField
     private  String observacoes;
 
-
     public Prontuario() {
 
     }

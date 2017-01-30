@@ -74,6 +74,7 @@ public class Paciente implements IModel, Cloneable{
     public String toJson(){
         return new Gson().toJson(this);
     }
+
     public static Paciente fromJson(String jsonObject){
         return new Gson().fromJson(jsonObject, Paciente.class);
     }

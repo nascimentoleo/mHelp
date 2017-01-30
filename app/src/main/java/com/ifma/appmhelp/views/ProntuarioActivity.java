@@ -16,17 +16,21 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ifma.appmhelp.R;
+import com.ifma.appmhelp.controls.MensagemController;
 import com.ifma.appmhelp.controls.ProntuariosController;
 import com.ifma.appmhelp.daos.PacienteDao;
 import com.ifma.appmhelp.enums.EstadoCivil;
 import com.ifma.appmhelp.enums.GenericBundleKeys;
 import com.ifma.appmhelp.enums.Sexo;
+import com.ifma.appmhelp.enums.TipoDeMensagem;
 import com.ifma.appmhelp.enums.TipoSanguineo;
 import com.ifma.appmhelp.lib.DataLib;
 import com.ifma.appmhelp.lib.KeyboardLib;
 import com.ifma.appmhelp.lib.Mask;
+import com.ifma.appmhelp.models.Mensagem;
 import com.ifma.appmhelp.models.Paciente;
 import com.ifma.appmhelp.models.Prontuario;
+import com.ifma.appmhelp.models.ProntuarioParaEnvio;
 
 import java.sql.SQLException;
 
@@ -162,16 +166,23 @@ public class ProntuarioActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        if (permiteEditar && modificouProntuario){
-            ProntuariosController controller = new ProntuariosController(this);
-            if (controller.enviarProntuario(this.prontuario, this.paciente.getUsuario()))
-                Toast.makeText(this, "Prontuário enviado" , Toast.LENGTH_SHORT).show();
-            else
-                Toast.makeText(this, "Erro ao enviar prontuário: " + controller.getMsgErro(), Toast.LENGTH_SHORT).show();
-
-        }
-
+        if (permiteEditar && modificouProntuario)
+           enviarProntuario();
         super.onDestroy();
+    }
+
+    private void enviarProntuario(){
+        ProntuariosController controller = new ProntuariosController(this);
+        try {
+            ProntuarioParaEnvio prontuarioParaEnvio = controller.getProntuarioParaEnvio(this.prontuario);
+            Mensagem mensagem = new Mensagem(prontuarioParaEnvio.toJson(), TipoDeMensagem.ATUALIZACAO_PRONTUARIO);
+            MensagemController.enviaMensagem(this.paciente.getUsuario(), mensagem);
+            Toast.makeText(this, "Prontuário enviado" , Toast.LENGTH_SHORT).show();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Erro ao enviar prontuário: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void carregaProntuario(){
