@@ -8,6 +8,7 @@ import com.ifma.appmhelp.models.Prontuario;
 import com.ifma.appmhelp.models.ProntuarioCid;
 import com.ifma.appmhelp.models.ProntuarioMedicamento;
 import com.ifma.appmhelp.models.ProntuarioParaEnvio;
+import com.ifma.appmhelp.models.UsuarioLogado;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -23,7 +24,8 @@ public class ProntuariosController extends BaseController {
     }
 
     public ProntuarioParaEnvio getProntuarioParaEnvio(Prontuario prontuario) throws SQLException {
-        ProntuarioParaEnvio prontuarioParaEnvio = new ProntuarioParaEnvio(prontuario);
+
+        ProntuarioParaEnvio prontuarioParaEnvio = new ProntuarioParaEnvio(UsuarioLogado.getInstance().getUsuario(), prontuario);
 
         //Carrego os medicamentos
         List<ProntuarioMedicamento> medicamentos = new ProntuarioMedicamentoDao(ctx).getMedicamentos(prontuario);

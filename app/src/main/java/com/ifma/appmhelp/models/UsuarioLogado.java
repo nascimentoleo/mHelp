@@ -5,6 +5,7 @@ package com.ifma.appmhelp.models;
  */
 
 public class UsuarioLogado {
+
     private IModel modelo;
     private static UsuarioLogado instance = null;
 
@@ -20,5 +21,14 @@ public class UsuarioLogado {
 
     public IModel getModelo() {
         return modelo;
+    }
+
+    public Usuario getUsuario(){
+        if (this.modelo.getClass() == Medico.class)
+            return ((Medico) this.modelo).getUsuario();
+        else if (this.modelo.getClass() == Paciente.class)
+            return ((Paciente) this.modelo).getUsuario();
+        else
+            return null;
     }
 }

@@ -1,7 +1,6 @@
 package com.ifma.appmhelp.controls;
 
 import android.content.Context;
-import android.widget.Toast;
 
 import com.ifma.appmhelp.daos.PacienteDao;
 import com.ifma.appmhelp.daos.ProntuarioCidDao;
@@ -15,6 +14,8 @@ import com.ifma.appmhelp.models.ProntuarioMedicamento;
 import com.ifma.appmhelp.models.ProntuarioParaEnvio;
 import com.ifma.appmhelp.models.UsuarioLogado;
 
+import java.sql.SQLException;
+
 /**
  * Created by leo on 1/11/17.
  */
@@ -23,9 +24,19 @@ public class ProcessadorDeProntuarios implements ProcessadorDeMensagens {
 
     @Override
     public void processar(Context ctx, Mensagem mensagem) throws Exception {
-
         ProntuarioParaEnvio prontuarioParaEnvio = ProntuarioParaEnvio.fromJson(mensagem.getMsg());
-        Paciente paciente = (Paciente) UsuarioLogado.getInstance().getModelo();
+
+        //Carrego usuário de acordo com o usuario Logado que está processando o Prontuario
+        Paciente paciente;
+        if (UsuarioLogado.getInstance().getModelo().getClass() == Paciente.class)
+            paciente = (Paciente) UsuarioLogado.getInstance().getModelo();
+        else
+            paciente = new PacienteDao(ctx).getPacienteByUsuario(prontuarioParaEnvio.getUsuario());
+
+        this.atualizarProntuario(ctx, prontuarioParaEnvio, paciente);
+    }
+
+    private void atualizarProntuario(Context ctx, ProntuarioParaEnvio prontuarioParaEnvio, Paciente paciente) throws SQLException {
 
         if (paciente.getProntuario() == null)
             prontuarioParaEnvio.getProntuario().setId(null);
@@ -49,10 +60,8 @@ public class ProcessadorDeProntuarios implements ProcessadorDeMensagens {
 
         for (ProntuarioParaEnvio.MedicamentoParaEnvio medicamento : prontuarioParaEnvio.getMedicamentos()){
             prontuarioMedicamentoDao.persistir(new ProntuarioMedicamento(paciente.getProntuario(),
-                                               medicamento.getMedicamento(), medicamento.getDoses()), false);
+                    medicamento.getMedicamento(), medicamento.getDoses()), false);
         }
 
-        Toast.makeText(ctx, "Prontuário atualizado", Toast.LENGTH_SHORT).show();
     }
-
 }

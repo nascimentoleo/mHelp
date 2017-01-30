@@ -6,7 +6,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
@@ -64,8 +63,8 @@ public class ConexaoXMPPService extends Service {
             }
         }
         conectarTask = new ConectarXMPPTask(getApplicationContext());
-        conectarTask.execute(new Host("192.168.1.24", 5222));
-        //conectarTask.execute(new Host("192.168.0.8", 5222));
+        //conectarTask.execute(new Host("192.168.1.24", 5222));
+        conectarTask.execute(new Host("192.168.0.8", 5222));
         //conectarTask.execute(new Host("10.0.2.2",5222)); //For avd
         return true;
     }

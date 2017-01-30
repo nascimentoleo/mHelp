@@ -16,11 +16,13 @@ public class ProntuarioParaEnvio {
     private Prontuario prontuario;
     private List<Cid> cids;
     private List<MedicamentoParaEnvio> medicamentos;
+    private Usuario usuario;
 
-    public ProntuarioParaEnvio(Prontuario prontuario) {
+    public ProntuarioParaEnvio(Usuario usuario, Prontuario prontuario) {
         this.prontuario = prontuario;
         this.cids = new ArrayList<>();
         this.medicamentos = new ArrayList<>();
+        this.usuario = usuario;
     }
 
     public List<Cid> getCids() {
@@ -42,6 +44,10 @@ public class ProntuarioParaEnvio {
 
     public Prontuario getProntuario() {
         return prontuario;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
     }
 
     public String toJson(){

@@ -23,7 +23,6 @@ import java.sql.SQLException;
 
 public class SolicitacoesController {
 
-
     public static boolean adicionarUsuario(Context ctx, IModel modelOwner, IModel modelOwned) throws SQLException, SmackException.NotLoggedInException, XMPPException.XMPPErrorException, SmackException.NotConnectedException, SmackException.NoResponseException {
         if (modelOwner.getClass() == Medico.class)
             return adicionarPaciente(ctx, (Medico) modelOwner, (Paciente) modelOwned);

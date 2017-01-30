@@ -77,6 +77,7 @@ public class SplashActivity extends Activity {
     @Override
     protected void onPause() {
         super.onPause();
+        unbindService(serviceConnection);
         finish();
     }
 
