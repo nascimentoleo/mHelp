@@ -44,7 +44,7 @@ public class FactoryConexaoXMPP {
         });
 
         //Registra o ping para habilitar reconexão
-        PingManager.getInstanceFor(xmpptcpConnection).setPingInterval(60);
+        PingManager.getInstanceFor(xmpptcpConnection).setPingInterval(30);
         PingManager.getInstanceFor(xmpptcpConnection).registerPingFailedListener(new PingListener(ctx));
         return xmpptcpConnection.connect();
     }

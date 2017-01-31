@@ -44,12 +44,7 @@ public class ConexaoXMPPListener implements ConnectionListener {
     public void connectionClosedOnError(Exception e) {
         Log.d("SMACK", "Conexão fechada por erro: " + e.getMessage());
         //Reconectar
-        try {
-            ClientXMPPController.conectar(context, true);
-        } catch (Exception e1) {
-            e1.printStackTrace();
-            Log.d("SMACK", "Erro ao tentar reconectar: " + e1.getMessage());
-        }
+        ClientXMPPController.conectar(context);
     }
 
     @Override

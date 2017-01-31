@@ -5,7 +5,6 @@ import android.content.Context;
 import com.ifma.appmhelp.models.ConexaoXMPP;
 import com.ifma.appmhelp.models.Host;
 import com.ifma.appmhelp.models.Usuario;
-import com.ifma.appmhelp.models.UsuarioLogado;
 import com.ifma.appmhelp.services.ConectarXMPPTask;
 
 import org.jivesoftware.smack.SmackException;
@@ -34,23 +33,15 @@ public class ClientXMPPController{
 
     }
 
-    public static ConectarXMPPTask conectar(Context ctx, boolean autenticar) throws XMPPException, IOException, SmackException {
+    public static ConectarXMPPTask conectar(Context ctx){
         ConectarXMPPTask conectarTask = new ConectarXMPPTask(ctx);
         conectarTask.execute(new Host());
-
-        if (autenticar)
-            autenticar(UsuarioLogado.getInstance().getUsuario());
-
         return conectarTask;
-
     }
 
     public static void autenticar(Usuario usuario) throws IOException, XMPPException, SmackException {
         if (usuario != null)
             ConexaoXMPP.getInstance().getConexao().login(usuario.getLogin(), usuario.getSenha());
     }
-
-
-
 
 }

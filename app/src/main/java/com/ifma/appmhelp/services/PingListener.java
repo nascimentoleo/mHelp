@@ -24,12 +24,6 @@ public class PingListener implements PingFailedListener {
     public void pingFailed() {
         Log.d("SMACK", "Conexão Perdida, Reconectando");
         //Reconectar
-        try {
-            ClientXMPPController.conectar(context, true);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Log.d("SMACK", "Erro ao reconectar: " + e.getMessage());
-        }
-
+        ClientXMPPController.conectar(context);
     }
 }

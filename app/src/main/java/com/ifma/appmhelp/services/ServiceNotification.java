@@ -21,7 +21,7 @@ public class ServiceNotification {
 
     public static int ID_NOTIFICATION = 12345;
 
-    public static Notification createNotification(Context context){
+    public static Notification createNotification(Context context, String ticker, String msg){
         Intent notificationIntent = new Intent(context, SplashActivity.class);
         Intent deleteIntent = new Intent(IntentType.FINALIZAR_SERVICO.toString());
 
@@ -38,9 +38,9 @@ public class ServiceNotification {
                 .setSmallIcon(R.mipmap.ic_launcher) //Sem setar o icone não funciona
                 .setContentTitle("mHelp")
                 .setVisibility(Notification.VISIBILITY_SECRET)
-                .setTicker("Conectando")
+                .setTicker(ticker)
                 .setStyle(new NotificationCompat.BigTextStyle()
-                        .bigText("Você está conectado"))
+                        .bigText(msg))
                 .addAction(R.drawable.ic_cancel, "Fechar", deletePedingIntent)
                 .setContentIntent(pendingIntent).build();
     }

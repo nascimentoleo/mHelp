@@ -52,6 +52,7 @@ public class ConectarXMPPTask extends AsyncTask<Host, Integer, Boolean> {
 
         if(this.conexao != null) {
             it.putExtra(ConexaoXMPPKeys.CONECTOU.toString(), true);
+
         }else{
             it.putExtra(ConexaoXMPPKeys.CONECTOU.toString(), false);
             it.putExtra(ConexaoXMPPKeys.MSG_ERRO.toString(), this.msgErro);
@@ -60,5 +61,4 @@ public class ConectarXMPPTask extends AsyncTask<Host, Integer, Boolean> {
         lbm.sendBroadcast(it);
 
     }
-
 }

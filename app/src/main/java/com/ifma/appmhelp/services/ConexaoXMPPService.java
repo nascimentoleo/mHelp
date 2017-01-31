@@ -10,6 +10,7 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 
 import com.ifma.appmhelp.controls.ClientXMPPController;
 import com.ifma.appmhelp.enums.ConexaoXMPPKeys;
@@ -23,30 +24,33 @@ public class ConexaoXMPPService extends Service {
     private ConectarXMPPTask conectarTask;
     private AbstractXMPPConnection conexao;
     private final IBinder mBinder = new LocalBinder();
+    private boolean reconectando;
 
     private BroadcastReceiver mReceiverConectar = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if(intent.getBooleanExtra(ConexaoXMPPKeys.CONECTOU.toString(), false)) {
-                conexao = conectarTask.getConexao();
-                ConexaoXMPP.getInstance().setConexao(conexao);
-            }
+            verificaConexao(intent.getBooleanExtra(ConexaoXMPPKeys.CONECTOU.toString(), false));
         }
     };
 
     private BroadcastReceiver mReceiverAutenticou = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            initNotification();
+            initNotification("Conectado", "Você está conectado");
         }
     };
+
 
     @Override
     public void onCreate() {
         super.onCreate();
         LocalBroadcastManager.getInstance(this).registerReceiver(mReceiverConectar, new IntentFilter(ConexaoXMPPKeys.CONECTAR.toString()));
         LocalBroadcastManager.getInstance(this).registerReceiver(mReceiverAutenticou, new IntentFilter(ConexaoXMPPKeys.AUTENTICOU.toString()));
+    }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
     }
 
     @Nullable
@@ -69,27 +73,55 @@ public class ConexaoXMPPService extends Service {
     private boolean conectar(){
         if(this.conexao != null){
             if(this.conexao.isConnected()){
-                ConexaoXMPP.getInstance().setConexao(this.conexao);
-                return true;
+               ConexaoXMPP.getInstance().setConexao(this.conexao);
+               return true;
             }
         }
-
-        try {
-            conectarTask = ClientXMPPController.conectar(this, false);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        conectarTask = ClientXMPPController.conectar(this);
 
         return true;
     }
 
+    private void reconectar(){
+        new Thread(){
+            @Override
+            public void run() {
+               try {
+                    Thread.currentThread().sleep(3000);
+               } catch (InterruptedException e) {
+                   e.printStackTrace();
+               }finally {
+                   Log.d("Smack","Tentando reconectar...");
+                   conectar();
+               }
+            }
+        }.start();
+    }
+
+    private void verificaConexao(boolean conectou){
+        if(conectou) {
+            this.conexao = this.conectarTask.getConexao();
+            ConexaoXMPP.getInstance().setConexao(this.conexao);
+            if (reconectando)
+                initNotification("Conectado", "Você está conectado");
+
+        }else {
+            if (this.conexao != null){
+                this.conexao = null;
+                this.reconectando = true;
+                initNotification("Reconectando", "Conexão perdida, Reconectando");
+            }
+            this.reconectar();
+
+        }
+    }
+
     //Necessário para que o serviço rode em foreground, mesmo com a janela fechada
-    private void initNotification(){
-        Notification notification = ServiceNotification.createNotification(this);
+    private void initNotification(String msg, String ticker){
+        Notification notification = ServiceNotification.createNotification(this, msg, ticker);
         startForeground(ServiceNotification.ID_NOTIFICATION,notification);
 
     }
-
 
     public class LocalBinder extends Binder{
 

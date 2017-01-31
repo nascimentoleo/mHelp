@@ -28,7 +28,8 @@ public class SplashActivity extends Activity {
             if(intent.getBooleanExtra(ConexaoXMPPKeys.CONECTOU.toString(), false))
                 iniciaActivity();
             else {
-                Toast.makeText(SplashActivity.this, "Não foi possível conectar ao servidor, tente novamente mais tarde", Toast.LENGTH_SHORT).show();
+                Toast.makeText(SplashActivity.this, "Não foi possível conectar, tente novamente mais tarde",Toast.LENGTH_LONG).show();
+                LocalBroadcastManager.getInstance(SplashActivity.this).unregisterReceiver(mReceiver);
                 desconectar();
                 finish();
             }
@@ -62,6 +63,7 @@ public class SplashActivity extends Activity {
     @Override
     protected void onPause() {
         super.onPause();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mReceiver);
         finish();
     }
 
