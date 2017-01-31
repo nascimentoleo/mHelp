@@ -6,10 +6,12 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 
+import com.ifma.appmhelp.enums.ConexaoXMPPKeys;
 import com.ifma.appmhelp.models.ConexaoXMPP;
 import com.ifma.appmhelp.models.Host;
 
@@ -20,27 +22,37 @@ public class ConexaoXMPPService extends Service {
 
     private ConectarXMPPTask conectarTask;
     private AbstractXMPPConnection conexao;
+    private final IBinder mBinder = new LocalBinder();
 
     private BroadcastReceiver mReceiverConectar = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if(intent.getBooleanExtra("finalizou_conexao", false)) {
+            if(intent.getBooleanExtra(ConexaoXMPPKeys.CONECTOU.toString(), false)) {
                 conexao = conectarTask.getConexao();
                 ConexaoXMPP.getInstance().setConexao(conexao);
             }
         }
     };
 
+    private BroadcastReceiver mReceiverAutenticou = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            initNotification();
+        }
+    };
+
     @Override
     public void onCreate() {
         super.onCreate();
-        LocalBroadcastManager.getInstance(this).registerReceiver(mReceiverConectar, new IntentFilter("conectar"));
+        LocalBroadcastManager.getInstance(this).registerReceiver(mReceiverConectar, new IntentFilter(ConexaoXMPPKeys.CONECTAR.toString()));
+        LocalBroadcastManager.getInstance(this).registerReceiver(mReceiverAutenticou, new IntentFilter(ConexaoXMPPKeys.AUTENTICOU.toString()));
+
     }
 
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-         return new LocalBinder(this);
+         return mBinder;
     }
 
     @Override
@@ -63,17 +75,23 @@ public class ConexaoXMPPService extends Service {
             }
         }
         conectarTask = new ConectarXMPPTask(getApplicationContext());
-        //conectarTask.execute(new Host("192.168.1.24", 5222));
-        conectarTask.execute(new Host("192.168.0.8", 5222));
-        //conectarTask.execute(new Host("10.0.2.2",5222)); //For avd
+        conectarTask.execute(new Host());
         return true;
     }
 
     //Necessário para que o serviço rode em foreground, mesmo com a janela fechada
-    public void initNotification(){
+    private void initNotification(){
         Notification notification = ServiceNotification.createNotification(this);
         startForeground(ServiceNotification.ID_NOTIFICATION,notification);
 
+    }
+
+
+    public class LocalBinder extends Binder{
+
+        public ConexaoXMPPService getService() {
+            return ConexaoXMPPService.this;
+        }
     }
 
 }

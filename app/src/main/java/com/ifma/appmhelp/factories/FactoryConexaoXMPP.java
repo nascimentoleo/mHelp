@@ -2,6 +2,7 @@ package com.ifma.appmhelp.factories;
 
 import android.content.Context;
 
+import com.ifma.appmhelp.services.ConexaoXMPPListener;
 import com.ifma.appmhelp.services.StanzaXMPPListener;
 
 import org.jivesoftware.smack.AbstractXMPPConnection;
@@ -32,12 +33,17 @@ public class FactoryConexaoXMPP {
                 .build();
         XMPPTCPConnection xmpptcpConnection = new XMPPTCPConnection(config);
         xmpptcpConnection.setPacketReplyTimeout(10000);
+        xmpptcpConnection.addConnectionListener(new ConexaoXMPPListener(ctx));
         xmpptcpConnection.addAsyncStanzaListener(new StanzaXMPPListener(ctx), new StanzaFilter() {
             @Override
             public boolean accept(Stanza stanza) {
                 return true;
             }
         });
+
+        //Registra o ping para habilitar reconexão
+       // PingManager.getInstanceFor(xmpptcpConnection);
+       // PingManager.getInstanceFor(xmpptcpConnection).setPingInterval(600);
 
         return xmpptcpConnection.connect();
     }

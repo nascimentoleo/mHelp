@@ -6,7 +6,8 @@ package com.ifma.appmhelp.enums;
 public enum ConexaoXMPPKeys {
     CONECTAR("CONECTAR"),
     CONECTOU("CONECTOU"),
-    MSG_ERRO("MSG_ERRO");
+    MSG_ERRO("MSG_ERRO"),
+    AUTENTICOU("AUTENTICOU");
 
     private final String value;
 

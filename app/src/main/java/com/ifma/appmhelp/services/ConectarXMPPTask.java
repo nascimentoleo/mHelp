@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v4.content.LocalBroadcastManager;
 
+import com.ifma.appmhelp.enums.ConexaoXMPPKeys;
 import com.ifma.appmhelp.factories.FactoryConexaoXMPP;
 import com.ifma.appmhelp.models.Host;
 
@@ -47,13 +48,13 @@ public class ConectarXMPPTask extends AsyncTask<Host, Integer, Boolean> {
     @Override
     protected void onPostExecute(Boolean response) {
         LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this.ctx);
-        Intent it = new Intent("conectar");
+        Intent it = new Intent(ConexaoXMPPKeys.CONECTAR.toString());
 
         if(this.conexao != null) {
-            it.putExtra("finalizou_conexao", true);
+            it.putExtra(ConexaoXMPPKeys.CONECTOU.toString(), true);
         }else{
-            it.putExtra("finalizou_conexao", false);
-            it.putExtra("msg_erro", this.msgErro);
+            it.putExtra(ConexaoXMPPKeys.CONECTOU.toString(), false);
+            it.putExtra(ConexaoXMPPKeys.MSG_ERRO.toString(), this.msgErro);
         }
 
         lbm.sendBroadcast(it);

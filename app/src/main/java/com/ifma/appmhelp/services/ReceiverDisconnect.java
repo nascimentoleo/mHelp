@@ -8,6 +8,7 @@ import android.content.Intent;
 public class ReceiverDisconnect extends BroadcastReceiver {
 
     public ReceiverDisconnect() {
+
     }
 
     @Override
@@ -16,6 +17,8 @@ public class ReceiverDisconnect extends BroadcastReceiver {
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancel(ServiceNotification.ID_NOTIFICATION);
         context.stopService(new Intent(context,ConexaoXMPPService.class));
+        //Finaliza aplicação
+        android.os.Process.killProcess(android.os.Process.myPid());
     }
 
 }

@@ -20,6 +20,7 @@ import com.ifma.appmhelp.views.SplashActivity;
 public class ServiceNotification {
 
     public static int ID_NOTIFICATION = 12345;
+
     public static Notification createNotification(Context context){
         Intent notificationIntent = new Intent(context, SplashActivity.class);
         Intent deleteIntent = new Intent(IntentType.FINALIZAR_SERVICO.toString());

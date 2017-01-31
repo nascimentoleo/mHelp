@@ -48,7 +48,6 @@ public class LoginActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        binderService = (LocalBinder) getIntent().getSerializableExtra("binder");
         this.registrarComponentes();
 
     }
@@ -137,9 +136,6 @@ public class LoginActivity extends AppCompatActivity
             }else
                 Toast.makeText(this, login.getMsgErro(),
                         Toast.LENGTH_SHORT).show();
-
-            if (binderService != null)
-                binderService.getService().initNotification();
 
         } catch (Exception e) {
             e.printStackTrace();
