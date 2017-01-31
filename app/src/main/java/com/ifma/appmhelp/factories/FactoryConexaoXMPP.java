@@ -3,6 +3,7 @@ package com.ifma.appmhelp.factories;
 import android.content.Context;
 
 import com.ifma.appmhelp.services.ConexaoXMPPListener;
+import com.ifma.appmhelp.services.PingListener;
 import com.ifma.appmhelp.services.StanzaXMPPListener;
 
 import org.jivesoftware.smack.AbstractXMPPConnection;
@@ -13,6 +14,7 @@ import org.jivesoftware.smack.filter.StanzaFilter;
 import org.jivesoftware.smack.packet.Stanza;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
+import org.jivesoftware.smackx.ping.PingManager;
 
 import java.io.IOException;
 
@@ -42,9 +44,8 @@ public class FactoryConexaoXMPP {
         });
 
         //Registra o ping para habilitar reconexão
-       // PingManager.getInstanceFor(xmpptcpConnection);
-       // PingManager.getInstanceFor(xmpptcpConnection).setPingInterval(600);
-
+        PingManager.getInstanceFor(xmpptcpConnection).setPingInterval(60);
+        PingManager.getInstanceFor(xmpptcpConnection).registerPingFailedListener(new PingListener(ctx));
         return xmpptcpConnection.connect();
     }
 }

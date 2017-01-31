@@ -11,9 +11,9 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 
+import com.ifma.appmhelp.controls.ClientXMPPController;
 import com.ifma.appmhelp.enums.ConexaoXMPPKeys;
 import com.ifma.appmhelp.models.ConexaoXMPP;
-import com.ifma.appmhelp.models.Host;
 
 import org.jivesoftware.smack.AbstractXMPPConnection;
 
@@ -70,12 +70,16 @@ public class ConexaoXMPPService extends Service {
         if(this.conexao != null){
             if(this.conexao.isConnected()){
                 ConexaoXMPP.getInstance().setConexao(this.conexao);
-
                 return true;
             }
         }
-        conectarTask = new ConectarXMPPTask(getApplicationContext());
-        conectarTask.execute(new Host());
+
+        try {
+            conectarTask = ClientXMPPController.conectar(this, false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         return true;
     }
 

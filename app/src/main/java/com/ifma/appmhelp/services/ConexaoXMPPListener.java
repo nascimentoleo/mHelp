@@ -5,8 +5,8 @@ import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
+import com.ifma.appmhelp.controls.ClientXMPPController;
 import com.ifma.appmhelp.enums.ConexaoXMPPKeys;
-import com.ifma.appmhelp.models.Host;
 
 import org.jivesoftware.smack.ConnectionListener;
 import org.jivesoftware.smack.XMPPConnection;
@@ -44,8 +44,12 @@ public class ConexaoXMPPListener implements ConnectionListener {
     public void connectionClosedOnError(Exception e) {
         Log.d("SMACK", "Conexão fechada por erro: " + e.getMessage());
         //Reconectar
-        ConectarXMPPTask conectarTask = new ConectarXMPPTask(context);
-        conectarTask.execute(new Host());
+        try {
+            ClientXMPPController.conectar(context, true);
+        } catch (Exception e1) {
+            e1.printStackTrace();
+            Log.d("SMACK", "Erro ao tentar reconectar: " + e1.getMessage());
+        }
     }
 
     @Override

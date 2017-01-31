@@ -9,7 +9,7 @@ public enum SolicitacaoBundleKeys {
 
     private String value;
 
-    private SolicitacaoBundleKeys(String value) {
+    SolicitacaoBundleKeys(String value) {
         this.value = value;
     }
 

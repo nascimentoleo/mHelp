@@ -23,7 +23,6 @@ import com.ifma.appmhelp.models.ConexaoXMPP;
 import com.ifma.appmhelp.models.IModel;
 import com.ifma.appmhelp.models.Usuario;
 import com.ifma.appmhelp.models.UsuarioLogado;
-import com.ifma.appmhelp.services.LocalBinder;
 
 public class LoginActivity extends AppCompatActivity
         implements  NavigationView.OnNavigationItemSelectedListener {
@@ -31,7 +30,6 @@ public class LoginActivity extends AppCompatActivity
     private EditText edLogin;
     private EditText edSenha;
     private Login login;
-    private LocalBinder binderService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
