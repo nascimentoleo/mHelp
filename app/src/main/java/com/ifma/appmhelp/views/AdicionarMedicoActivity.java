@@ -23,6 +23,7 @@ import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.ifma.appmhelp.R;
 import com.ifma.appmhelp.controls.MensagemController;
+import com.ifma.appmhelp.controls.ProntuariosController;
 import com.ifma.appmhelp.controls.SolicitacoesController;
 import com.ifma.appmhelp.enums.IntentType;
 import com.ifma.appmhelp.enums.SolicitacaoBundleKeys;
@@ -31,6 +32,8 @@ import com.ifma.appmhelp.enums.TipoDeMensagem;
 import com.ifma.appmhelp.models.Medico;
 import com.ifma.appmhelp.models.Mensagem;
 import com.ifma.appmhelp.models.Paciente;
+import com.ifma.appmhelp.models.Prontuario;
+import com.ifma.appmhelp.models.ProntuarioParaEnvio;
 import com.ifma.appmhelp.models.SolicitacaoRoster;
 import com.ifma.appmhelp.models.Usuario;
 import com.ifma.appmhelp.models.UsuarioLogado;
@@ -117,6 +120,7 @@ public class AdicionarMedicoActivity extends AppCompatActivity {
 
                     public void onClick(DialogInterface dialog, int whichButton) {
                         enviaRespostaDaSolicitacao(StatusSolicitacaoRoster.APROVADA);
+                        enviaProntuario(medico.getUsuario(),paciente.getProntuario());
                         adicionarMedico(medico);
                     }})
 
@@ -137,8 +141,20 @@ public class AdicionarMedicoActivity extends AppCompatActivity {
             MensagemController.enviaMensagem(medico.getUsuario(), mensagem);
         } catch (Exception e) {
             e.printStackTrace();
+            Toast.makeText(this, "Erro ao enviar confirmação ao médico: " + e.getMessage(), Toast.LENGTH_LONG).show();
         }
 
+    }
+
+    private void enviaProntuario(Usuario usuarioTo, Prontuario prontuario){
+        try {
+            ProntuarioParaEnvio prontuarioParaEnvio = new ProntuariosController(this).getProntuarioParaEnvio(prontuario);
+            Mensagem mensagem = new Mensagem(prontuarioParaEnvio.toJson(), TipoDeMensagem.ATUALIZACAO_PRONTUARIO);
+            MensagemController.enviaMensagem(usuarioTo, mensagem);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Erro ao enviar o prontuário ao médico: " + e.getMessage(), Toast.LENGTH_LONG).show();
+        }
     }
 
     private void adicionarMedico(Medico medico){

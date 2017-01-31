@@ -62,6 +62,13 @@ public class ProntuarioParaEnvio {
         return gson.fromJson(jsonObject, ProntuarioParaEnvio.class);
     }
 
+    public void limparUsuario(){
+        this.usuario.setId(null);
+        this.usuario.setSenha(null);
+        this.usuario.setEmail(null);
+        this.usuario.setNome(null);
+    }
+
     public class MedicamentoParaEnvio{
         private Medicamento medicamento;
         private String doses;

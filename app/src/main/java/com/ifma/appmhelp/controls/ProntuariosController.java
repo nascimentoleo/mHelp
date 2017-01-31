@@ -27,6 +27,9 @@ public class ProntuariosController extends BaseController {
 
         ProntuarioParaEnvio prontuarioParaEnvio = new ProntuarioParaEnvio(UsuarioLogado.getInstance().getUsuario(), prontuario);
 
+        //Limpo as informações desnecessárias do usuario antes de enviar
+        prontuarioParaEnvio.limparUsuario();
+
         //Carrego os medicamentos
         List<ProntuarioMedicamento> medicamentos = new ProntuarioMedicamentoDao(ctx).getMedicamentos(prontuario);
         for (ProntuarioMedicamento prontuarioMedicamento : medicamentos){

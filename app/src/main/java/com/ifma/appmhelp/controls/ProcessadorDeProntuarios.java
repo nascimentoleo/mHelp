@@ -6,12 +6,14 @@ import com.ifma.appmhelp.daos.PacienteDao;
 import com.ifma.appmhelp.daos.ProntuarioCidDao;
 import com.ifma.appmhelp.daos.ProntuarioDao;
 import com.ifma.appmhelp.daos.ProntuarioMedicamentoDao;
+import com.ifma.appmhelp.daos.UsuarioDao;
 import com.ifma.appmhelp.models.Cid;
 import com.ifma.appmhelp.models.Mensagem;
 import com.ifma.appmhelp.models.Paciente;
 import com.ifma.appmhelp.models.ProntuarioCid;
 import com.ifma.appmhelp.models.ProntuarioMedicamento;
 import com.ifma.appmhelp.models.ProntuarioParaEnvio;
+import com.ifma.appmhelp.models.Usuario;
 import com.ifma.appmhelp.models.UsuarioLogado;
 
 import java.sql.SQLException;
@@ -30,10 +32,13 @@ public class ProcessadorDeProntuarios implements ProcessadorDeMensagens {
         Paciente paciente;
         if (UsuarioLogado.getInstance().getModelo().getClass() == Paciente.class)
             paciente = (Paciente) UsuarioLogado.getInstance().getModelo();
-        else
-            paciente = new PacienteDao(ctx).getPacienteByUsuario(prontuarioParaEnvio.getUsuario());
+        else {
+            Usuario usuario = new UsuarioDao(ctx).getUsuarioByLogin(prontuarioParaEnvio.getUsuario().getLogin());
+            paciente = new PacienteDao(ctx).getPacienteByUsuario(usuario);
 
-        this.atualizarProntuario(ctx, prontuarioParaEnvio, paciente);
+        }
+        if (paciente != null)
+            this.atualizarProntuario(ctx, prontuarioParaEnvio, paciente);
     }
 
     private void atualizarProntuario(Context ctx, ProntuarioParaEnvio prontuarioParaEnvio, Paciente paciente) throws SQLException {
