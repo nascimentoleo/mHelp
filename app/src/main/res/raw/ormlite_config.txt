@@ -1,5 +1,5 @@
 #
-# generated on 2017/02/24 09:14:23
+# generated on 2017/02/24 09:38:48
 #
 # --table-start--
 dataClass=com.ifma.appmhelp.models.Usuario
@@ -73,6 +73,10 @@ fieldName=prontuario
 foreign=true
 foreignAutoRefresh=true
 maxForeignAutoRefreshLevel=2
+# --field-end--
+# --field-start--
+fieldName=ocorrencias
+foreignCollection=true
 # --field-end--
 # --table-fields-end--
 # --table-end--
