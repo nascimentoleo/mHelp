@@ -87,5 +87,7 @@
     <string name="medicamento_not_found_name">Não existem medicamentos cadastrados para esse paciente</string>
     <string name="conexao_xmpp_notification_title">Você está conectado
     </string>
+    <string name="ocorrencia_name">Ocorrência</string>
+    <string name="ultima_mensagem_name">Última Mensagem</string>
 
 </resources>

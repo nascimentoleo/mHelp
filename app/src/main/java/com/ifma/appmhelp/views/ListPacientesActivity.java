@@ -48,10 +48,7 @@ public class ListPacientesActivity extends AppCompatActivity implements ListPaci
     private void inicializaAdapter(){
         ArrayList<Paciente> listaDePacientes = (ArrayList<Paciente>) this.carregaPacientes();
         if(listaDePacientes != null){
-            //if (!getSupportFragmentManager().beginTransaction().isEmpty())
-                getSupportFragmentManager().beginTransaction().replace(R.id.container_list_pacientes,ListPacientesFragment.newInstance(listaDePacientes)).commit();
-            //else
-            //     getSupportFragmentManager().beginTransaction().add(R.id.container_list_pacientes,ListPacientesFragment.newInstance(listaDePacientes)).commit();
+                 getSupportFragmentManager().beginTransaction().replace(R.id.container_list_pacientes,ListPacientesFragment.newInstance(listaDePacientes)).commit();
         }else {
             Toast.makeText(this, "Este médico não possui pacientes adicionados", Toast.LENGTH_SHORT).show();
             finish();

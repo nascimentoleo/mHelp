@@ -1,8 +1,6 @@
 package com.ifma.appmhelp.models;
 
-import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 
 import java.util.Date;
@@ -19,24 +17,22 @@ public class Ocorrencia implements IModel {
     @DatabaseField(canBeNull = false)
     private String titulo;
     @DatabaseField
-    private Date data;
-    @ForeignCollectionField
-    private ForeignCollection<Mensagem> mensagens;
+    private Date dataUltimaMensagem;
     @DatabaseField(foreign = true, foreignAutoRefresh = true, canBeNull = false)
     private Paciente paciente;
+    private Mensagem ultimaMensagem;
 
     Ocorrencia(){
 
     }
 
-    public Ocorrencia(String titulo, Date data, Paciente paciente) {
+    public Ocorrencia(String titulo, Paciente paciente) {
         this.titulo = titulo;
-        this.data = data;
         this.paciente = paciente;
     }
 
-    public ForeignCollection<Mensagem> getMensagens() {
-        return mensagens;
+    public Ocorrencia(Paciente paciente) {
+        this.paciente = paciente;
     }
 
     @Override
@@ -47,5 +43,29 @@ public class Ocorrencia implements IModel {
     @Override
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Paciente getPaciente() {
+        return paciente;
+    }
+
+    public String getTitulo() {
+        return titulo;
+    }
+
+    public Date getDataUltimaMensagem() {
+        return dataUltimaMensagem;
+    }
+
+    public void setDataUltimaMensagem(Date dataUltimaMensagem) {
+        this.dataUltimaMensagem = dataUltimaMensagem;
+    }
+
+    public Mensagem getUltimaMensagem() {
+        return ultimaMensagem;
+    }
+
+    public void setUltimaMensagem(Mensagem ultimaMensagem) {
+        this.ultimaMensagem = ultimaMensagem;
     }
 }

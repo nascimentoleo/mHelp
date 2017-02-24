@@ -17,12 +17,19 @@ import android.widget.Toast;
 
 import com.ifma.appmhelp.R;
 import com.ifma.appmhelp.controls.Login;
+import com.ifma.appmhelp.daos.OcorrenciaDao;
 import com.ifma.appmhelp.enums.GenericBundleKeys;
+import com.ifma.appmhelp.models.Ocorrencia;
 import com.ifma.appmhelp.models.Paciente;
 import com.ifma.appmhelp.models.UsuarioLogado;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
 public class PacienteActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener,
+        ListOcorrenciasFragment.OnOcorrenciaSelectedListener {
 
     private Paciente paciente;
 
@@ -52,6 +59,26 @@ public class PacienteActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         paciente = (Paciente) UsuarioLogado.getInstance().getModelo();
+        this.inicializaAdapter();
+    }
+
+    private void inicializaAdapter(){
+        ArrayList<Ocorrencia> listaDeOcorrencias = (ArrayList<Ocorrencia>) this.carregaOcorrencias();
+
+        if(listaDeOcorrencias != null)
+            getSupportFragmentManager().beginTransaction().replace(R.id.container_list_ocorrencias_paciente,ListOcorrenciasFragment.newInstance(listaDeOcorrencias)).commit();
+
+    }
+
+    private List<Ocorrencia> carregaOcorrencias() {
+        try {
+            return new OcorrenciaDao(this).getOcorrenciasByPaciente(paciente);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Erro ao carregar ocorrências: " + e.getMessage(),Toast.LENGTH_SHORT).show();
+        }
+
+        return null;
     }
 
     @Override
@@ -127,4 +154,12 @@ public class PacienteActivity extends AppCompatActivity
         return true;
     }
 
+    @Override
+    public void OnOcorrenciaSelected(Ocorrencia ocorrencia) {
+        this.abrirOcorrencia(ocorrencia);
+    }
+
+    private void abrirOcorrencia(Ocorrencia ocorrencia){
+
+    }
 }

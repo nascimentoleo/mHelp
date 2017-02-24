@@ -68,6 +68,12 @@ public class ListPacientesFragment extends Fragment implements PacientesAdapter.
     }
 
     @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
+
+    @Override
     public void onItemClick(Paciente item) {
         mListener.onPatientSelected(item);
     }

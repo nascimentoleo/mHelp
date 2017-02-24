@@ -6,9 +6,11 @@ import com.ifma.appmhelp.controls.BaseController;
 import com.ifma.appmhelp.db.DbSqlHelper;
 import com.ifma.appmhelp.models.IModel;
 import com.ifma.appmhelp.models.Mensagem;
+import com.ifma.appmhelp.models.Ocorrencia;
 import com.j256.ormlite.dao.Dao;
 
 import java.sql.SQLException;
+import java.util.List;
 
 /**
  * Created by leo on 2/24/17.
@@ -36,6 +38,12 @@ public class MensagemDao extends BaseController implements IDao {
     @Override
     public void carregaId(IModel objeto) throws SQLException {
 
+    }
+
+    public List<Mensagem> getMensagensByOcorrencia(Ocorrencia ocorrencia) throws SQLException {
+        Dao<Mensagem, Long> dao = DbSqlHelper.getHelper(ctx).getDao(Mensagem.class);
+        Mensagem mensagem = new Mensagem(ocorrencia);
+        return dao.queryForMatching(mensagem);
     }
 
 }

@@ -19,17 +19,29 @@ import android.widget.Toast;
 
 import com.ifma.appmhelp.R;
 import com.ifma.appmhelp.controls.Login;
+import com.ifma.appmhelp.daos.MedicoPacienteDao;
+import com.ifma.appmhelp.daos.OcorrenciaDao;
+import com.ifma.appmhelp.models.Medico;
+import com.ifma.appmhelp.models.Ocorrencia;
+import com.ifma.appmhelp.models.Paciente;
+import com.ifma.appmhelp.models.UsuarioLogado;
 
 import org.jivesoftware.smack.chat.Chat;
 import org.jivesoftware.smack.chat.ChatManager;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
 public class MedicoActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener,
+        ListOcorrenciasFragment.OnOcorrenciaSelectedListener  {
 
     private TextView txtMsg;
     private EditText edMensagem;
     private Chat chat;
     private ChatManager chatManager;
+    private Medico medico;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,13 +67,36 @@ public class MedicoActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        registrarComponentes();
+        medico = (Medico) UsuarioLogado.getInstance().getModelo();
+        inicializaAdapter();
     }
 
-    private void registrarComponentes() {
-        txtMsg = (TextView) findViewById(R.id.txtMsg);
-        edMensagem = (EditText) findViewById(R.id.edMensagem);
 
+    private void inicializaAdapter(){
+        ArrayList<Ocorrencia> listaDeOcorrencias = (ArrayList<Ocorrencia>) this.carregaOcorrencias();
+
+        if(listaDeOcorrencias != null)
+            getSupportFragmentManager().beginTransaction().replace(R.id.container_list_ocorrencias_medico,ListOcorrenciasFragment.newInstance(listaDeOcorrencias)).commit();
+
+    }
+
+    private List<Ocorrencia> carregaOcorrencias() {
+        List<Ocorrencia> ocorrencias = new ArrayList<>();
+        try {
+            List<Paciente> pacientes = new MedicoPacienteDao(this).getPacientesByMedico(this.medico);
+            if (pacientes != null){
+                OcorrenciaDao ocorrenciaDao = new OcorrenciaDao(this);
+                for (Paciente paciente : pacientes){
+                    ocorrencias.addAll(ocorrenciaDao.getOcorrenciasByPaciente(paciente));
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Erro ao carregar ocorrências: " + e.getMessage(),Toast.LENGTH_SHORT).show();
+        }
+
+        return ocorrencias;
     }
 
     @Override
@@ -132,4 +167,12 @@ public class MedicoActivity extends AppCompatActivity
         return true;
     }
 
+    @Override
+    public void OnOcorrenciaSelected(Ocorrencia ocorrencia) {
+        this.abrirOcorrencia(ocorrencia);
+    }
+
+    private void abrirOcorrencia(Ocorrencia ocorrencia){
+
+    }
 }

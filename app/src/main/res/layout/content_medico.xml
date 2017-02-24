@@ -9,24 +9,9 @@
     tools:context=".views.MedicoActivity"
     tools:showIn="@layout/app_bar_medico">
 
-    <EditText
+    <FrameLayout
+        android:id="@+id/container_list_ocorrencias_medico"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/edMensagem"
-        android:layout_gravity="center_horizontal" />
-
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/enviar_msg"
-        android:id="@+id/btnEnviarMsg"
-        android:layout_gravity="center_horizontal"
-        android:onClick="enviarMensagem"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="New Text"
-        android:id="@+id/txtMsg" />
+        android:layout_height="match_parent" />
 
 </LinearLayout>

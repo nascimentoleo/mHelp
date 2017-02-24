@@ -30,6 +30,10 @@ public class Mensagem implements IModel{
         this.tipo = tipo;
     }
 
+    public Mensagem(Ocorrencia ocorrencia) {
+        this.ocorrencia = ocorrencia;
+    }
+
     @Override
     public Long getId() {
         return id;

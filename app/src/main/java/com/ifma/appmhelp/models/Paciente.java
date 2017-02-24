@@ -1,9 +1,7 @@
 package com.ifma.appmhelp.models;
 
 import com.google.gson.Gson;
-import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 
 /**
@@ -22,8 +20,6 @@ public class Paciente implements IModel, Cloneable{
     private Usuario usuario;
     @DatabaseField (foreign = true, foreignAutoRefresh = true)
     private Prontuario prontuario;
-    @ForeignCollectionField
-    private ForeignCollection<Ocorrencia> ocorrencias;
 
     public Paciente() {
     }
@@ -69,14 +65,6 @@ public class Paciente implements IModel, Cloneable{
 
     public Prontuario getProntuario() {
         return prontuario;
-    }
-
-    public ForeignCollection<Ocorrencia> getOcorrencias() {
-        return ocorrencias;
-    }
-
-    public void setOcorrencias(ForeignCollection<Ocorrencia> ocorrencias) {
-        this.ocorrencias = ocorrencias;
     }
 
     public void setProntuario(Prontuario prontuario) {
