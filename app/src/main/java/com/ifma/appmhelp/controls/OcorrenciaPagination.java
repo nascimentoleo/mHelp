@@ -15,15 +15,13 @@ import java.util.List;
 
 public class OcorrenciaPagination implements Serializable {
 
-    private Context ctx;
     private int qtdDeRegistros;
 
-    public OcorrenciaPagination(Context ctx, int qtdDeRegistros) {
+    public OcorrenciaPagination(int qtdDeRegistros) {
         this.qtdDeRegistros = qtdDeRegistros;
-        this.ctx = ctx;
     }
 
-    public List<Ocorrencia> getListaDeOcorrencias(int offset) throws SQLException {
+    public List<Ocorrencia> getListaDeOcorrencias(Context ctx, int offset) throws SQLException {
         List<Ocorrencia> ocorrencias = new OcorrenciaDao(ctx).
                 getOcorrencias(Long.valueOf(offset), Long.valueOf(offset + qtdDeRegistros));
 

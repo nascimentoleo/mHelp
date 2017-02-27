@@ -26,12 +26,12 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <CheckBox
+            <TextView
                 android:text="@string/medico_name"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/chkMedico"
-                />
+                android:id="@+id/txtMedicoOcorrencia"
+                android:textSize="20sp" />
         </LinearLayout>
 
         </RelativeLayout>

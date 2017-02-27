@@ -20,16 +20,18 @@ public class Ocorrencia implements IModel {
     private Date dataUltimaMensagem;
     @DatabaseField(foreign = true, foreignAutoRefresh = true, canBeNull = false)
     private Paciente paciente;
-
+    @DatabaseField(foreign = true, foreignAutoRefresh = true, canBeNull = false)
+    private Medico medico;
     private Mensagem ultimaMensagem;
 
     Ocorrencia(){
 
     }
 
-    public Ocorrencia(String titulo, Paciente paciente) {
+    public Ocorrencia(String titulo, Paciente paciente, Medico medico) {
         this.titulo = titulo;
         this.paciente = paciente;
+        this.medico = medico;
     }
 
     public Ocorrencia(Paciente paciente) {
@@ -66,7 +68,13 @@ public class Ocorrencia implements IModel {
         return ultimaMensagem;
     }
 
+
+
     public void setUltimaMensagem(Mensagem ultimaMensagem) {
         this.ultimaMensagem = ultimaMensagem;
+    }
+
+    public Medico getMedico() {
+        return medico;
     }
 }

@@ -3,11 +3,10 @@ package com.ifma.appmhelp.views;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.ifma.appmhelp.R;
@@ -25,7 +24,7 @@ import java.util.List;
 public class NovaOcorrenciaActivity extends AppCompatActivity {
 
     private Paciente paciente;
-    private RecyclerView rViewMedicos;
+    private Spinner spMedicos;
     private EditText edTitulo;
     private MedicosAdapter medicosAdapter;
 
@@ -46,8 +45,7 @@ public class NovaOcorrenciaActivity extends AppCompatActivity {
 
     private void inicializaComponentes(){
         edTitulo     = (EditText) findViewById(R.id.edTituloOcorrencia);
-        rViewMedicos = (RecyclerView) findViewById(R.id.rViewMedicosOcorrencia);
-        rViewMedicos.setLayoutManager(new LinearLayoutManager(this));
+        spMedicos    = (Spinner) findViewById(R.id.spMedicos);
     }
 
     private List<Medico> carregaMedicos() {
@@ -66,13 +64,19 @@ public class NovaOcorrenciaActivity extends AppCompatActivity {
 
         if(listaDeMedicos != null){
             medicosAdapter = new MedicosAdapter(this,listaDeMedicos);
-            rViewMedicos.setAdapter(medicosAdapter);
+            spMedicos.setAdapter(medicosAdapter);
+        }else{
+            Toast.makeText(this, "Não é possível gerar ocorrências, pois não existem médicos adicionados",Toast.LENGTH_SHORT).show();
+            finish();
         }
+
     }
 
     public void enviarOcorrencia(View v){
         if (ocorrenciaEhValida()){
-            Ocorrencia ocorrencia = new Ocorrencia(edTitulo.getText().toString().trim(), this.paciente);
+            String titulo = edTitulo.getText().toString().trim();
+            Medico medico = (Medico) spMedicos.getSelectedItem();
+            Ocorrencia ocorrencia = new Ocorrencia(titulo, this.paciente, medico);
             Snackbar.make(findViewById(android.R.id.content), "Ocorrência enviada", Snackbar.LENGTH_LONG).show();
             try {
                 new OcorrenciaDao(this).persistir(ocorrencia, false);
@@ -89,10 +93,8 @@ public class NovaOcorrenciaActivity extends AppCompatActivity {
             edTitulo.setFocusable(true);
             return false;
         }
-        if (!medicosAdapter.existemMedicosSelecionados()){
-            Snackbar.make(findViewById(android.R.id.content), "Não existem médicos selecionados", Snackbar.LENGTH_LONG).show();
-            return false;
-        }
+
+
         return true;
     }
 

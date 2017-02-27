@@ -20,7 +20,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 
-public class ListOcorrenciasFragment extends Fragment  implements OcorrenciasAdapter.OnItemClickListener{
+public class ListOcorrenciasFragment extends Fragment implements OcorrenciasAdapter.OnItemClickListener{
 
     private OnOcorrenciaSelectedListener mListener;
     private RecyclerView rViewOcorrencias;
@@ -54,7 +54,7 @@ public class ListOcorrenciasFragment extends Fragment  implements OcorrenciasAda
         });
 
         try {
-            listaDeOcorrencias = ocorrenciaPagination.getListaDeOcorrencias(0);//Pega a partir do primeiro
+            listaDeOcorrencias = ocorrenciaPagination.getListaDeOcorrencias(getContext(), 0);//Pega a partir do primeiro
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -68,7 +68,7 @@ public class ListOcorrenciasFragment extends Fragment  implements OcorrenciasAda
 
     private void loadNextDataFromApi(int totalItemsCount) {
         try {
-            listaDeOcorrencias.addAll(ocorrenciaPagination.getListaDeOcorrencias(totalItemsCount));
+            listaDeOcorrencias.addAll(ocorrenciaPagination.getListaDeOcorrencias(getContext(), totalItemsCount));
         } catch (SQLException e) {
             e.printStackTrace();
             Toast.makeText(getContext(),
