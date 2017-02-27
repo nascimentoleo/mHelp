@@ -7,8 +7,9 @@ import com.ifma.appmhelp.db.DbSqlHelper;
 import com.ifma.appmhelp.models.IModel;
 import com.ifma.appmhelp.models.Mensagem;
 import com.ifma.appmhelp.models.Ocorrencia;
-import com.ifma.appmhelp.models.Paciente;
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.stmt.PreparedQuery;
+import com.j256.ormlite.stmt.QueryBuilder;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -48,9 +49,12 @@ public class OcorrenciaDao extends BaseController implements IDao {
 
     }
 
-    public List<Ocorrencia> getOcorrenciasByPaciente(Paciente paciente) throws SQLException {
+    public List<Ocorrencia> getOcorrencias(Long inicio, Long fim) throws SQLException {
         Dao<Ocorrencia, Long> dao = DbSqlHelper.getHelper(ctx).getDao(Ocorrencia.class);
-        Ocorrencia ocorrencia = new Ocorrencia(paciente);
-        return dao.queryForMatching(ocorrencia);
+        QueryBuilder<Ocorrencia, Long> query = dao.queryBuilder().offset(inicio).limit(fim);
+        query.orderBy("dataUltimaMensagem",false);
+        PreparedQuery<Ocorrencia> prepare = query.prepare();
+        return dao.query(prepare);
     }
+
 }

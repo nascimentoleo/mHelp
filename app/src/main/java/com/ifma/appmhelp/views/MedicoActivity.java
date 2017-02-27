@@ -17,16 +17,10 @@ import android.widget.Toast;
 
 import com.ifma.appmhelp.R;
 import com.ifma.appmhelp.controls.Login;
-import com.ifma.appmhelp.daos.MedicoPacienteDao;
-import com.ifma.appmhelp.daos.OcorrenciaDao;
+import com.ifma.appmhelp.controls.OcorrenciaPagination;
 import com.ifma.appmhelp.models.Medico;
 import com.ifma.appmhelp.models.Ocorrencia;
-import com.ifma.appmhelp.models.Paciente;
 import com.ifma.appmhelp.models.UsuarioLogado;
-
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class MedicoActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -62,32 +56,10 @@ public class MedicoActivity extends AppCompatActivity
         inicializaAdapter();
     }
 
-
     private void inicializaAdapter(){
-        ArrayList<Ocorrencia> listaDeOcorrencias = (ArrayList<Ocorrencia>) this.carregaOcorrencias();
+        OcorrenciaPagination ocorrenciaPagination = new OcorrenciaPagination(this,10);
+        getSupportFragmentManager().beginTransaction().replace(R.id.container_list_ocorrencias_medico,ListOcorrenciasFragment.newInstance(ocorrenciaPagination)).commit();
 
-        if(listaDeOcorrencias != null)
-            getSupportFragmentManager().beginTransaction().replace(R.id.container_list_ocorrencias_medico,ListOcorrenciasFragment.newInstance(listaDeOcorrencias)).commit();
-
-    }
-
-    private List<Ocorrencia> carregaOcorrencias() {
-        List<Ocorrencia> ocorrencias = new ArrayList<>();
-        try {
-            List<Paciente> pacientes = new MedicoPacienteDao(this).getPacientesByMedico(this.medico);
-            if (pacientes != null){
-                OcorrenciaDao ocorrenciaDao = new OcorrenciaDao(this);
-                for (Paciente paciente : pacientes){
-                    ocorrencias.addAll(ocorrenciaDao.getOcorrenciasByPaciente(paciente));
-                }
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-            Toast.makeText(this, "Erro ao carregar ocorrências: " + e.getMessage(),Toast.LENGTH_SHORT).show();
-        }
-
-        return ocorrencias;
     }
 
     @Override

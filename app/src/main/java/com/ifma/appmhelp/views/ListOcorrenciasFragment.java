@@ -8,12 +8,15 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.ifma.appmhelp.R;
 import com.ifma.appmhelp.adapters.OcorrenciasAdapter;
+import com.ifma.appmhelp.controls.OcorrenciaPagination;
+import com.ifma.appmhelp.lib.EndlessRecyclerViewScrollListener;
 import com.ifma.appmhelp.models.Ocorrencia;
 
-import java.util.ArrayList;
+import java.sql.SQLException;
 import java.util.List;
 
 
@@ -21,6 +24,9 @@ public class ListOcorrenciasFragment extends Fragment  implements OcorrenciasAda
 
     private OnOcorrenciaSelectedListener mListener;
     private RecyclerView rViewOcorrencias;
+    private boolean exibeNomePaciente;
+    private List<Ocorrencia> listaDeOcorrencias;
+    private OcorrenciaPagination ocorrenciaPagination;
 
     public ListOcorrenciasFragment() {
         // Required empty public constructor
@@ -33,18 +39,48 @@ public class ListOcorrenciasFragment extends Fragment  implements OcorrenciasAda
     }
 
     private void carregaComponentes(){
+        this.ocorrenciaPagination = (OcorrenciaPagination) getArguments().getSerializable("ocorrencia_pagination");
+
         this.rViewOcorrencias  = (RecyclerView) getView().findViewById(R.id.rViewOcorrencias);
-        this.rViewOcorrencias.setLayoutManager(new LinearLayoutManager(getContext()));
-        List<Ocorrencia> listaDeOcorrencias = (List<Ocorrencia>) getArguments().getSerializable("lista_de_ocorrencias");
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        this.rViewOcorrencias.setLayoutManager(linearLayoutManager);
+
+        this.rViewOcorrencias.addOnScrollListener(new EndlessRecyclerViewScrollListener(linearLayoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                loadNextDataFromApi(totalItemsCount);
+
+            }
+        });
+
+        try {
+            listaDeOcorrencias = ocorrenciaPagination.getListaDeOcorrencias(0);//Pega a partir do primeiro
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            Toast.makeText(getContext(),
+                    "Erro ao carregar ocorrências: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
         OcorrenciasAdapter adapter = new OcorrenciasAdapter(getContext(), listaDeOcorrencias);
         adapter.setOnItemClickListener(this);
         this.rViewOcorrencias.setAdapter(adapter);
     }
 
-    public static ListOcorrenciasFragment newInstance(ArrayList<Ocorrencia> listaDeOcorrencias) {
+    private void loadNextDataFromApi(int totalItemsCount) {
+        try {
+            listaDeOcorrencias.addAll(ocorrenciaPagination.getListaDeOcorrencias(totalItemsCount));
+        } catch (SQLException e) {
+            e.printStackTrace();
+            Toast.makeText(getContext(),
+                    "Erro ao carregar ocorrências: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+         rViewOcorrencias.getAdapter().notifyDataSetChanged();
+    }
+
+    public static ListOcorrenciasFragment newInstance(OcorrenciaPagination ocorrenciaPagination) {
         ListOcorrenciasFragment fragment = new ListOcorrenciasFragment();
         Bundle bundle = new Bundle();
-        bundle.putSerializable("lista_de_ocorrencias", listaDeOcorrencias);
+        bundle.putSerializable("ocorrencia_pagination", ocorrenciaPagination);
         fragment.setArguments(bundle);
         return fragment;
     }

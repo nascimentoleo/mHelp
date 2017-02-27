@@ -17,15 +17,11 @@ import android.widget.Toast;
 
 import com.ifma.appmhelp.R;
 import com.ifma.appmhelp.controls.Login;
-import com.ifma.appmhelp.daos.OcorrenciaDao;
+import com.ifma.appmhelp.controls.OcorrenciaPagination;
 import com.ifma.appmhelp.enums.GenericBundleKeys;
 import com.ifma.appmhelp.models.Ocorrencia;
 import com.ifma.appmhelp.models.Paciente;
 import com.ifma.appmhelp.models.UsuarioLogado;
-
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class PacienteActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -52,7 +48,6 @@ public class PacienteActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -63,22 +58,9 @@ public class PacienteActivity extends AppCompatActivity
     }
 
     private void inicializaAdapter(){
-        ArrayList<Ocorrencia> listaDeOcorrencias = (ArrayList<Ocorrencia>) this.carregaOcorrencias();
+        OcorrenciaPagination ocorrenciaPagination = new OcorrenciaPagination(this,10);
+        getSupportFragmentManager().beginTransaction().replace(R.id.container_list_ocorrencias_paciente,ListOcorrenciasFragment.newInstance(ocorrenciaPagination)).commit();
 
-        if(listaDeOcorrencias != null)
-            getSupportFragmentManager().beginTransaction().replace(R.id.container_list_ocorrencias_paciente,ListOcorrenciasFragment.newInstance(listaDeOcorrencias)).commit();
-
-    }
-
-    private List<Ocorrencia> carregaOcorrencias() {
-        try {
-            return new OcorrenciaDao(this).getOcorrenciasByPaciente(paciente);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            Toast.makeText(this, "Erro ao carregar ocorrências: " + e.getMessage(),Toast.LENGTH_SHORT).show();
-        }
-
-        return null;
     }
 
     @Override
