@@ -49,4 +49,9 @@ public class Medico implements IModel{
         return usuario;
     }
 
+    public void preparaParaEnvio(){
+        this.id = null;
+        this.usuario.preparaParaEnvio();
+    }
+
 }

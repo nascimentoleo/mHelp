@@ -78,4 +78,10 @@ public class Usuario implements IModel, Cloneable{
         return (Usuario) super.clone();
     }
 
+    public void preparaParaEnvio(){
+        this.id    = null;
+        this.senha = null;
+        this.email = null;
+    }
+
 }

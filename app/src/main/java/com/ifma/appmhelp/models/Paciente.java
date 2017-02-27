@@ -82,4 +82,9 @@ public class Paciente implements IModel, Cloneable{
     public Paciente clone() throws CloneNotSupportedException {
         return (Paciente) super.clone();
     }
+
+    public void preparaParaEnvio(){
+        this.id = null;
+        this.usuario.preparaParaEnvio();
+    }
 }

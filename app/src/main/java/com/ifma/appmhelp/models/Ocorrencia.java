@@ -77,11 +77,25 @@ public class Ocorrencia implements IModel {
         return medico;
     }
 
+    public void setMedico(Medico medico) {
+        this.medico = medico;
+    }
+
+    public void setPaciente(Paciente paciente) {
+        this.paciente = paciente;
+    }
+
     public String toJson(){
         return new Gson().toJson(this);
     }
 
     public static Ocorrencia fromJson(String jsonObject){
         return new Gson().fromJson(jsonObject, Ocorrencia.class);
+    }
+
+    public void preparaParaEnvio(){
+        this.id = null;
+        this.paciente.preparaParaEnvio();
+        this.medico.preparaParaEnvio();
     }
 }
