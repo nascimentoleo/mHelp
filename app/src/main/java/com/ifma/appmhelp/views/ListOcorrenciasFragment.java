@@ -24,9 +24,9 @@ public class ListOcorrenciasFragment extends Fragment implements OcorrenciasAdap
 
     private OnOcorrenciaSelectedListener mListener;
     private RecyclerView rViewOcorrencias;
-    private boolean exibeNomePaciente;
     private List<Ocorrencia> listaDeOcorrencias;
     private OcorrenciaPagination ocorrenciaPagination;
+    private boolean usuarioEhMedico;
 
     public ListOcorrenciasFragment() {
         // Required empty public constructor
@@ -36,11 +36,14 @@ public class ListOcorrenciasFragment extends Fragment implements OcorrenciasAdap
     public void onStart() {
         super.onStart();
         this.carregaComponentes();
+        this.inicializaAdapter();
     }
+
+
 
     private void carregaComponentes(){
         this.ocorrenciaPagination = (OcorrenciaPagination) getArguments().getSerializable("ocorrencia_pagination");
-
+        this.usuarioEhMedico = getArguments().getBoolean("usuario_medico");
         this.rViewOcorrencias  = (RecyclerView) getView().findViewById(R.id.rViewOcorrencias);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         this.rViewOcorrencias.setLayoutManager(linearLayoutManager);
@@ -52,16 +55,19 @@ public class ListOcorrenciasFragment extends Fragment implements OcorrenciasAdap
 
             }
         });
+    }
 
+    private void inicializaAdapter() {
         try {
             listaDeOcorrencias = ocorrenciaPagination.getListaDeOcorrencias(getContext(), 0);//Pega a partir do primeiro
-
         } catch (SQLException e) {
             e.printStackTrace();
             Toast.makeText(getContext(),
                     "Erro ao carregar ocorrências: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
+
         OcorrenciasAdapter adapter = new OcorrenciasAdapter(getContext(), listaDeOcorrencias);
+        adapter.setExibeNomePaciente(usuarioEhMedico);
         adapter.setOnItemClickListener(this);
         this.rViewOcorrencias.setAdapter(adapter);
     }
@@ -77,10 +83,11 @@ public class ListOcorrenciasFragment extends Fragment implements OcorrenciasAdap
          rViewOcorrencias.getAdapter().notifyDataSetChanged();
     }
 
-    public static ListOcorrenciasFragment newInstance(OcorrenciaPagination ocorrenciaPagination) {
+    public static ListOcorrenciasFragment newInstance(OcorrenciaPagination ocorrenciaPagination, boolean usuarioEhMedico) {
         ListOcorrenciasFragment fragment = new ListOcorrenciasFragment();
         Bundle bundle = new Bundle();
         bundle.putSerializable("ocorrencia_pagination", ocorrenciaPagination);
+        bundle.putBoolean("usuario_medico", usuarioEhMedico);
         fragment.setArguments(bundle);
         return fragment;
     }

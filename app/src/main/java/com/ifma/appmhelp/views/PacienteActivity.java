@@ -59,7 +59,7 @@ public class PacienteActivity extends AppCompatActivity
 
     private void inicializaAdapter(){
         OcorrenciaPagination ocorrenciaPagination = new OcorrenciaPagination(10);
-        getSupportFragmentManager().beginTransaction().replace(R.id.container_list_ocorrencias_paciente,ListOcorrenciasFragment.newInstance(ocorrenciaPagination)).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.container_list_ocorrencias_paciente,ListOcorrenciasFragment.newInstance(ocorrenciaPagination, false)).commit();
 
     }
 

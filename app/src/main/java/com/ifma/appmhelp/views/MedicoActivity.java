@@ -58,7 +58,7 @@ public class MedicoActivity extends AppCompatActivity
 
     private void inicializaAdapter(){
         OcorrenciaPagination ocorrenciaPagination = new OcorrenciaPagination(10);
-        getSupportFragmentManager().beginTransaction().replace(R.id.container_list_ocorrencias_medico,ListOcorrenciasFragment.newInstance(ocorrenciaPagination)).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.container_list_ocorrencias_medico,ListOcorrenciasFragment.newInstance(ocorrenciaPagination, true)).commit();
 
     }
 

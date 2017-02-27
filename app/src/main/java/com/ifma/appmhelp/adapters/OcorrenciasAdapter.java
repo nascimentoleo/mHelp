@@ -22,14 +22,20 @@ public class OcorrenciasAdapter extends RecyclerView.Adapter<OcorrenciasAdapter.
     private List<Ocorrencia> listaDeOcorrencias;
     private Context ctx;
     private static OnItemClickListener listenerClick;
+    private boolean exibeNomePaciente;
 
     public OcorrenciasAdapter(Context ctx, List<Ocorrencia> listaDeOcorrencias) {
         this.listaDeOcorrencias = listaDeOcorrencias;
         this.ctx = ctx;
+        this.exibeNomePaciente = false; //Por padrao nao exibe
     }
 
     public void setOnItemClickListener(OnItemClickListener listener) {
         this.listenerClick = listener;
+    }
+
+    public void setExibeNomePaciente(boolean exibeNomePaciente) {
+        this.exibeNomePaciente = exibeNomePaciente;
     }
 
     @Override
@@ -42,10 +48,20 @@ public class OcorrenciasAdapter extends RecyclerView.Adapter<OcorrenciasAdapter.
     public void onBindViewHolder(RecycleCidsViewHolder holder, int position) {
         Ocorrencia ocorrencia = listaDeOcorrencias.get(position);
         holder.txtNomePaciente.setText(ocorrencia.getPaciente().getUsuario().getNome());
+
+        if (exibeNomePaciente)
+            holder.txtNomePaciente.setVisibility(View.VISIBLE);
+        else
+            holder.txtNomePaciente.setVisibility(View.INVISIBLE);
+
         holder.txtTituloOcorrencia.setText(ocorrencia.getTitulo());
 
         if (ocorrencia.getDataUltimaMensagem() != null)
             holder.txtDataUltimaMensagem.setText(ocorrencia.getDataUltimaMensagem().toString());
+        else
+            holder.txtDataUltimaMensagem.setVisibility(View.INVISIBLE);
+
+
     //    holder.txtUltimaMensagem.setText(ocorrencia.getUltimaMensagem().getMsg()); Ainda vou ver como farei isso
     }
 

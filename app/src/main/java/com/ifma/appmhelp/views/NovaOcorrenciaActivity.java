@@ -77,9 +77,9 @@ public class NovaOcorrenciaActivity extends AppCompatActivity {
         if (ocorrenciaEhValida()){
             String titulo = edTitulo.getText().toString().trim();
             Medico medico = medicosAdapter.getItem(spMedicos.getSelectedItemPosition());
-            Ocorrencia ocorrencia = new Ocorrencia(titulo, this.paciente, medico);
 
             try {
+                Ocorrencia ocorrencia = new Ocorrencia(titulo, this.paciente.clone(), medico.clone());
                 new OcorrenciaDao(this).persistir(ocorrencia, false);
                 new OcorrenciasController(this).enviarNovaOcorrencia(medico.getUsuario(), ocorrencia);
                 Snackbar.make(findViewById(android.R.id.content), "Ocorrência enviada", Snackbar.LENGTH_LONG).show();

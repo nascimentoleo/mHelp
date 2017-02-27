@@ -32,10 +32,10 @@
                     android:orientation="horizontal">
 
                 <TextView
-                    android:text="@string/paciente_name"
+                    android:text="@string/ocorrencia_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/txtNomePacienteList"
+                    android:id="@+id/txtTituloOcorrenciaList"
                     android:textSize="20sp" />
 
                 <LinearLayout
@@ -58,11 +58,11 @@
             </LinearLayout>
 
                 <TextView
-                    android:text="@string/ocorrencia_name"
+                    android:text="@string/paciente_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/txtTituloOcorrenciaList"
-                    android:textSize="18sp" />
+                    android:id="@+id/txtNomePacienteList"
+                    android:textSize="15sp" />
 
                 <TextView
                     android:text="@string/ultima_mensagem_name"
