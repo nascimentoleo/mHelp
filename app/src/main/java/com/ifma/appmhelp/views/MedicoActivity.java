@@ -13,8 +13,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ifma.appmhelp.R;
@@ -26,9 +24,6 @@ import com.ifma.appmhelp.models.Ocorrencia;
 import com.ifma.appmhelp.models.Paciente;
 import com.ifma.appmhelp.models.UsuarioLogado;
 
-import org.jivesoftware.smack.chat.Chat;
-import org.jivesoftware.smack.chat.ChatManager;
-
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,10 +32,6 @@ public class MedicoActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         ListOcorrenciasFragment.OnOcorrenciaSelectedListener  {
 
-    private TextView txtMsg;
-    private EditText edMensagem;
-    private Chat chat;
-    private ChatManager chatManager;
     private Medico medico;
 
     @Override

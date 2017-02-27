@@ -136,6 +136,10 @@ public class PacienteActivity extends AppCompatActivity
 
 
                 break;
+            case R.id.nav_nova_ocorrencia :
+                intent = new Intent(this, NovaOcorrenciaActivity.class);
+                startActivity(intent);
+                break;
             case R.id.nav_logoff_paciente:
                 try {
                     new Login(this).realizaLogoff();

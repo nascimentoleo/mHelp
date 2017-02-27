@@ -20,6 +20,7 @@ public class Ocorrencia implements IModel {
     private Date dataUltimaMensagem;
     @DatabaseField(foreign = true, foreignAutoRefresh = true, canBeNull = false)
     private Paciente paciente;
+
     private Mensagem ultimaMensagem;
 
     Ocorrencia(){

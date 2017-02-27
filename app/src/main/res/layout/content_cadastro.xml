@@ -24,8 +24,7 @@
             android:hint="@string/nome_name"
             android:inputType="textAutoComplete"
             android:maxLines="1"
-            android:imeOptions="actionNext"
-            android:singleLine="true" />
+            android:imeOptions="actionNext"/>
 
     </android.support.design.widget.TextInputLayout>
 

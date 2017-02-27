@@ -89,5 +89,8 @@
     </string>
     <string name="ocorrencia_name">Ocorrência</string>
     <string name="ultima_mensagem_name">Última Mensagem</string>
+    <string name="title_activity_nova_ocorrencia">Nova Ocorrência</string>
+    <string name="titulo_name">Título</string>
+    <string name="enviar_ocorrencia_name">Enviar Ocorrência</string>
 
 </resources>

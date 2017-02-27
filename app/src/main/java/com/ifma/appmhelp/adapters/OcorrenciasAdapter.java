@@ -23,7 +23,7 @@ public class OcorrenciasAdapter extends RecyclerView.Adapter<OcorrenciasAdapter.
     private Context ctx;
     private static OnItemClickListener listenerClick;
 
-    public OcorrenciasAdapter(List<Ocorrencia> listaDeOcorrencias, Context ctx) {
+    public OcorrenciasAdapter(Context ctx, List<Ocorrencia> listaDeOcorrencias) {
         this.listaDeOcorrencias = listaDeOcorrencias;
         this.ctx = ctx;
     }
@@ -43,7 +43,9 @@ public class OcorrenciasAdapter extends RecyclerView.Adapter<OcorrenciasAdapter.
         Ocorrencia ocorrencia = listaDeOcorrencias.get(position);
         holder.txtNomePaciente.setText(ocorrencia.getPaciente().getUsuario().getNome());
         holder.txtTituloOcorrencia.setText(ocorrencia.getTitulo());
-        holder.txtDataUltimaMensagem.setText(ocorrencia.getDataUltimaMensagem().toString());
+
+        if (ocorrencia.getDataUltimaMensagem() != null)
+            holder.txtDataUltimaMensagem.setText(ocorrencia.getDataUltimaMensagem().toString());
     //    holder.txtUltimaMensagem.setText(ocorrencia.getUltimaMensagem().getMsg()); Ainda vou ver como farei isso
     }
 

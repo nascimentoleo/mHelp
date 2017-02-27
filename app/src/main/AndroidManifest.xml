@@ -118,9 +118,19 @@
 
         <receiver android:name=".services.ReceiverDisconnect">
             <intent-filter>
-                <action android:name="FINALIZAR_SERVICO"/>
+                <action android:name="FINALIZAR_SERVICO" />
             </intent-filter>
         </receiver>
+
+        <activity
+            android:name=".views.NovaOcorrenciaActivity"
+            android:label="@string/title_activity_nova_ocorrencia"
+            android:parentActivityName=".views.PacienteActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.ifma.appmhelp.views.PacienteActivity" />
+        </activity>
     </application>
 
 </manifest>

@@ -59,6 +59,19 @@ public class MedicoPacienteDao extends BaseController implements IDao {
 
     }
 
+    public List<Medico> getMedicosByPaciente(Paciente paciente)throws SQLException{
+        Dao<MedicoPaciente, Long> dao = DbSqlHelper.getHelper(ctx).getDao(MedicoPaciente.class);
+        List<MedicoPaciente> medicoPacienteList = dao.queryForEq("paciente_id", paciente.getId());
+        if (!medicoPacienteList.isEmpty()){
+            List<Medico> medicos = new ArrayList<>();
+            for(MedicoPaciente medicoPaciente : medicoPacienteList){
+                medicos.add(medicoPaciente.getMedico());
+            }
+            return medicos;
+        }
+        return null;
+    }
+
     @Override
     public void remover(IModel objeto, boolean updateChild) throws SQLException {
         MedicoPaciente medicoPaciente = (MedicoPaciente) objeto;
