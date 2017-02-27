@@ -32,13 +32,13 @@ public class MedicosAdapter extends BaseAdapter{
     }
 
     @Override
-    public Object getItem(int position) {
-        return null;
+    public Medico getItem(int position) {
+        return listaDeMedicos.get(position);
     }
 
     @Override
     public long getItemId(int position) {
-        return 0;
+        return position;
     }
 
     @Override

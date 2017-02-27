@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.ifma.appmhelp.R;
 import com.ifma.appmhelp.adapters.MedicosAdapter;
+import com.ifma.appmhelp.controls.OcorrenciasController;
 import com.ifma.appmhelp.daos.MedicoPacienteDao;
 import com.ifma.appmhelp.daos.OcorrenciaDao;
 import com.ifma.appmhelp.models.Medico;
@@ -75,12 +76,14 @@ public class NovaOcorrenciaActivity extends AppCompatActivity {
     public void enviarOcorrencia(View v){
         if (ocorrenciaEhValida()){
             String titulo = edTitulo.getText().toString().trim();
-            Medico medico = (Medico) spMedicos.getSelectedItem();
+            Medico medico = medicosAdapter.getItem(spMedicos.getSelectedItemPosition());
             Ocorrencia ocorrencia = new Ocorrencia(titulo, this.paciente, medico);
-            Snackbar.make(findViewById(android.R.id.content), "Ocorrência enviada", Snackbar.LENGTH_LONG).show();
+
             try {
                 new OcorrenciaDao(this).persistir(ocorrencia, false);
-            } catch (SQLException e) {
+                new OcorrenciasController(this).enviarNovaOcorrencia(medico.getUsuario(), ocorrencia);
+                Snackbar.make(findViewById(android.R.id.content), "Ocorrência enviada", Snackbar.LENGTH_LONG).show();
+            } catch (Exception e) {
                 e.printStackTrace();
                 Toast.makeText(this, "Erro ao cadastrar ocorrência - " + e.getMessage(), Toast.LENGTH_SHORT).show();
             }

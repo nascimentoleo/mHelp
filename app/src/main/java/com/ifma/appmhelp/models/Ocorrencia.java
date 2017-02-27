@@ -1,5 +1,6 @@
 package com.ifma.appmhelp.models;
 
+import com.google.gson.Gson;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
@@ -68,13 +69,19 @@ public class Ocorrencia implements IModel {
         return ultimaMensagem;
     }
 
-
-
     public void setUltimaMensagem(Mensagem ultimaMensagem) {
         this.ultimaMensagem = ultimaMensagem;
     }
 
     public Medico getMedico() {
         return medico;
+    }
+
+    public String toJson(){
+        return new Gson().toJson(this);
+    }
+
+    public static Ocorrencia fromJson(String jsonObject){
+        return new Gson().fromJson(jsonObject, Ocorrencia.class);
     }
 }
