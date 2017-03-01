@@ -6,7 +6,8 @@ package com.ifma.appmhelp.enums;
 
 public enum IntentType {
     SOLICITACAO_ROSTER("SOLICITACAO_ROSTER"),
-    FINALIZAR_SERVICO("FINALIZAR_SERVICO");
+    FINALIZAR_SERVICO("FINALIZAR_SERVICO"),
+    ATUALIZAR_OCORRENCIAS("ATUALIZAR_OCORRENCIAS");
 
     private String value;
 

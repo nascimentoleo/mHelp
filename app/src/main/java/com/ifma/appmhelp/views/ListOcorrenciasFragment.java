@@ -1,8 +1,12 @@
 package com.ifma.appmhelp.views;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,6 +17,8 @@ import android.widget.Toast;
 import com.ifma.appmhelp.R;
 import com.ifma.appmhelp.adapters.OcorrenciasAdapter;
 import com.ifma.appmhelp.controls.OcorrenciaPagination;
+import com.ifma.appmhelp.enums.GenericBundleKeys;
+import com.ifma.appmhelp.enums.IntentType;
 import com.ifma.appmhelp.lib.EndlessRecyclerViewScrollListener;
 import com.ifma.appmhelp.models.Ocorrencia;
 
@@ -28,6 +34,16 @@ public class ListOcorrenciasFragment extends Fragment implements OcorrenciasAdap
     private OcorrenciaPagination ocorrenciaPagination;
     private boolean usuarioEhMedico;
 
+    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Ocorrencia ocorrencia = (Ocorrencia) intent.getSerializableExtra(GenericBundleKeys.OCORRENCIA.toString());
+            listaDeOcorrencias.add(0,ocorrencia);
+            rViewOcorrencias.getAdapter().notifyItemInserted(0);
+            rViewOcorrencias.scrollToPosition(0);
+        }
+    };
+
     public ListOcorrenciasFragment() {
         // Required empty public constructor
     }
@@ -40,8 +56,9 @@ public class ListOcorrenciasFragment extends Fragment implements OcorrenciasAdap
     }
 
 
-
     private void carregaComponentes(){
+        LocalBroadcastManager.getInstance(getContext()).registerReceiver(mReceiver, new IntentFilter(IntentType.ATUALIZAR_OCORRENCIAS.toString()));
+
         this.ocorrenciaPagination = (OcorrenciaPagination) getArguments().getSerializable("ocorrencia_pagination");
         this.usuarioEhMedico = getArguments().getBoolean("usuario_medico");
         this.rViewOcorrencias  = (RecyclerView) getView().findViewById(R.id.rViewOcorrencias);

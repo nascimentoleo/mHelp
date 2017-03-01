@@ -1,7 +1,11 @@
 package com.ifma.appmhelp.controls;
 
 import android.content.Context;
+import android.content.Intent;
+import android.support.v4.content.LocalBroadcastManager;
 
+import com.ifma.appmhelp.enums.GenericBundleKeys;
+import com.ifma.appmhelp.enums.IntentType;
 import com.ifma.appmhelp.models.Mensagem;
 import com.ifma.appmhelp.models.Ocorrencia;
 
@@ -14,7 +18,11 @@ public class ProcessadorDeOcorrencias implements ProcessadorDeMensagens {
     public void processar(Context ctx, Mensagem mensagem) throws Exception {
         Ocorrencia ocorrencia = Ocorrencia.fromJson(mensagem.getMsg());
         new OcorrenciasController(ctx).adicionarOcorrenciaFromPaciente(ocorrencia);
-        //Aqui vai lançar um broadcast para atualizar o adapter das ocorrências
+
+        LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(ctx);
+        Intent it = new Intent(IntentType.ATUALIZAR_OCORRENCIAS.toString());
+        it.putExtra(GenericBundleKeys.OCORRENCIA.toString(),ocorrencia);
+        lbm.sendBroadcast(it);
 
     }
 }
