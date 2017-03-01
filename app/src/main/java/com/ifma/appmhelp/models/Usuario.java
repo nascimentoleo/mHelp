@@ -84,4 +84,12 @@ public class Usuario implements IModel, Cloneable{
         this.email = null;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (o.getClass() != Usuario.class)
+            return false;
+
+        return this.login.equals(((Usuario) o).login);
+
+    }
 }

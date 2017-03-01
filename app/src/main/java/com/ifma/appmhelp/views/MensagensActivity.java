@@ -8,13 +8,19 @@ import android.widget.EditText;
 import android.widget.ListView;
 
 import com.ifma.appmhelp.R;
+import com.ifma.appmhelp.adapters.MensagensAdapter;
 import com.ifma.appmhelp.enums.GenericBundleKeys;
+import com.ifma.appmhelp.models.Mensagem;
 import com.ifma.appmhelp.models.Ocorrencia;
+import com.ifma.appmhelp.models.Usuario;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MensagensActivity extends AppCompatActivity {
 
     private Ocorrencia ocorrencia;
-    private ListView listMensagens;
+    private ListView listViewMensagens;
     private EditText edMensagem;
 
     @Override
@@ -28,11 +34,22 @@ public class MensagensActivity extends AppCompatActivity {
 
         ocorrencia = (Ocorrencia) getIntent().getSerializableExtra(GenericBundleKeys.OCORRENCIA.toString());
         carregaComponentes();
+        inicializaAdapter();
+    }
+
+    private void inicializaAdapter() {
+        List<Mensagem> listaDeMensagens = new ArrayList<>(); //As mensagens virão do banco
+        listaDeMensagens.add(new Mensagem("Eae mano blz", new Usuario("paciente")));
+        listaDeMensagens.add(new Mensagem("Tudo tranquilo", new Usuario("medico")));
+
+        MensagensAdapter adapter = new MensagensAdapter(this, listaDeMensagens);
+        listViewMensagens.setAdapter(adapter);
+
     }
 
     private void carregaComponentes(){
-        listMensagens = (ListView) findViewById(R.id.listMensagens);
-        edMensagem    = (EditText) findViewById(R.id.edMensagem);
+        listViewMensagens = (ListView) findViewById(R.id.listMensagens);
+        edMensagem        = (EditText) findViewById(R.id.edMensagem);
     }
 
     @Override

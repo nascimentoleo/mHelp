@@ -5,6 +5,8 @@ import com.ifma.appmhelp.enums.TipoDeMensagem;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
+import java.sql.Date;
+
 /**
  * Created by leo on 11/3/16.
  */
@@ -18,8 +20,12 @@ public class Mensagem implements IModel{
     private String msg;
     @DatabaseField(canBeNull = false)
     private TipoDeMensagem tipo;
+    @DatabaseField
+    private Date data;
     @DatabaseField(foreign = true, foreignAutoRefresh = true)
     private Ocorrencia ocorrencia;
+    @DatabaseField(foreign = true, foreignAutoRefresh = true)
+    private Usuario usuario;
 
     Mensagem(){
 
@@ -28,6 +34,11 @@ public class Mensagem implements IModel{
     public Mensagem(String msg, TipoDeMensagem tipo) {
         this.msg  = msg;
         this.tipo = tipo;
+    }
+
+    public Mensagem(String msg, Usuario usuario) {
+        this.msg = msg;
+        this.usuario = usuario;
     }
 
     public Mensagem(Ocorrencia ocorrencia) {
@@ -58,6 +69,22 @@ public class Mensagem implements IModel{
 
     public TipoDeMensagem getTipo() {
         return tipo;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public Date getData() {
+        return data;
+    }
+
+    public void setData(Date data) {
+        this.data = data;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 
     public String toJson(){
