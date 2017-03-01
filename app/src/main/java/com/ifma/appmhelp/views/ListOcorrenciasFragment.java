@@ -137,9 +137,16 @@ public class ListOcorrenciasFragment extends Fragment implements OcorrenciasAdap
     @Override
     public void onItemClick(Ocorrencia item) {
         mListener.OnOcorrenciaSelected(item);
+        abrirOcorrencia(item);
     }
 
     public interface OnOcorrenciaSelectedListener {
         void OnOcorrenciaSelected(Ocorrencia ocorrencia);
+    }
+
+    private void abrirOcorrencia(Ocorrencia ocorrencia){
+        Intent intent = new Intent(getContext(), MensagensActivity.class);
+        intent.putExtra(GenericBundleKeys.OCORRENCIA.toString(),ocorrencia);
+        startActivity(intent);
     }
 }
