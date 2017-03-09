@@ -7,15 +7,18 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.ifma.appmhelp.R;
 import com.ifma.appmhelp.adapters.MensagensAdapter;
+import com.ifma.appmhelp.controls.MensagemPagination;
+import com.ifma.appmhelp.controls.Pagination;
 import com.ifma.appmhelp.enums.GenericBundleKeys;
+import com.ifma.appmhelp.lib.EndlessRecyclerViewScrollListener;
 import com.ifma.appmhelp.models.Mensagem;
 import com.ifma.appmhelp.models.Ocorrencia;
-import com.ifma.appmhelp.models.Usuario;
 
-import java.util.ArrayList;
+import java.sql.SQLException;
 import java.util.List;
 
 public class MensagensActivity extends AppCompatActivity {
@@ -24,6 +27,7 @@ public class MensagensActivity extends AppCompatActivity {
     private RecyclerView rViewMensagens;
     private EditText edMensagem;
     private List<Mensagem> listaDeMensagens;
+    private Pagination mensagemPagination;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,40 +44,52 @@ public class MensagensActivity extends AppCompatActivity {
     }
 
     private void inicializaAdapter() {
-       /* try {
-           this.listaDeMensagens = new MensagemDao(this).getMensagensByOcorrencia(ocorrencia);
+        try {
+            this.listaDeMensagens = mensagemPagination.getRegistros(Pagination.FIRST);
             MensagensAdapter adapter = new MensagensAdapter(this, listaDeMensagens);
-            this.listViewMensagens.setAdapter(adapter);
+            this.rViewMensagens.setAdapter(adapter);
 
         } catch (SQLException e) {
             e.printStackTrace();
             Toast.makeText(this, "Não foi possível carregar as mensagens - " + e.getMessage(),Toast.LENGTH_SHORT).show();
-        } */
+        }
 
-        listaDeMensagens = new ArrayList<>(); //As mensagens virão do banco
+       /* listaDeMensagens = new ArrayList<>(); //As mensagens virão do banco
         listaDeMensagens.add(new Mensagem("Eae mano blz", new Usuario("paciente")));
         listaDeMensagens.add(new Mensagem("Tudo tranquilo", new Usuario("medico")));
 
         MensagensAdapter adapter = new MensagensAdapter(this, listaDeMensagens);
-        rViewMensagens.setAdapter(adapter);
+        rViewMensagens.setAdapter(adapter); */
     }
 
     private void carregaComponentes(){
         rViewMensagens = (RecyclerView) findViewById(R.id.rViewMensagens);
-        rViewMensagens.setLayoutManager(new LinearLayoutManager(this));
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        rViewMensagens.setLayoutManager(linearLayoutManager);
+        this.rViewMensagens.addOnScrollListener(new EndlessRecyclerViewScrollListener(linearLayoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                loadNextDataFromApi(totalItemsCount);
+
+            }
+        });
+
         edMensagem        = (EditText) findViewById(R.id.edMensagem);
+
+        mensagemPagination = new MensagemPagination(this,ocorrencia);
+        mensagemPagination.setQtdDeRegistros(50);
 
     }
 
     private void loadNextDataFromApi(int totalItemCount) {
-      /*  try {
-            listaDeMensagens.addAll(ocorrenciaPagination.getListaDeOcorrencias(getContext(), totalItemsCount));
+        try {
+            listaDeMensagens.addAll(mensagemPagination.getRegistros(totalItemCount));
         } catch (SQLException e) {
             e.printStackTrace();
             Toast.makeText(this,
                     "Erro ao carregar ocorrências: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
-        listViewMensagens.getAdapter(). */
+        rViewMensagens.getAdapter().notifyDataSetChanged();
     }
 
     @Override

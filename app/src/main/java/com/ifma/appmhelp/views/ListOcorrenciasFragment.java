@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.ifma.appmhelp.R;
 import com.ifma.appmhelp.adapters.OcorrenciasAdapter;
 import com.ifma.appmhelp.controls.OcorrenciaPagination;
+import com.ifma.appmhelp.controls.Pagination;
 import com.ifma.appmhelp.enums.GenericBundleKeys;
 import com.ifma.appmhelp.enums.IntentType;
 import com.ifma.appmhelp.lib.EndlessRecyclerViewScrollListener;
@@ -72,11 +73,15 @@ public class ListOcorrenciasFragment extends Fragment implements OcorrenciasAdap
 
             }
         });
+
+        this.ocorrenciaPagination = new OcorrenciaPagination(getContext());
+
     }
 
     private void inicializaAdapter() {
         try {
-            listaDeOcorrencias = ocorrenciaPagination.getListaDeOcorrencias(getContext(), 0);//Pega a partir do primeiro
+
+            listaDeOcorrencias = ocorrenciaPagination.getRegistros(Pagination.FIRST);//Pega a partir do primeiro
         } catch (SQLException e) {
             e.printStackTrace();
             Toast.makeText(getContext(),
@@ -91,7 +96,7 @@ public class ListOcorrenciasFragment extends Fragment implements OcorrenciasAdap
 
     private void loadNextDataFromApi(int totalItemsCount) {
         try {
-            listaDeOcorrencias.addAll(ocorrenciaPagination.getListaDeOcorrencias(getContext(), totalItemsCount));
+            listaDeOcorrencias.addAll(ocorrenciaPagination.getRegistros(totalItemsCount));
         } catch (SQLException e) {
             e.printStackTrace();
             Toast.makeText(getContext(),
@@ -100,10 +105,9 @@ public class ListOcorrenciasFragment extends Fragment implements OcorrenciasAdap
          rViewOcorrencias.getAdapter().notifyDataSetChanged();
     }
 
-    public static ListOcorrenciasFragment newInstance(OcorrenciaPagination ocorrenciaPagination, boolean usuarioEhMedico) {
+    public static ListOcorrenciasFragment newInstance(boolean usuarioEhMedico) {
         ListOcorrenciasFragment fragment = new ListOcorrenciasFragment();
         Bundle bundle = new Bundle();
-        bundle.putSerializable("ocorrencia_pagination", ocorrenciaPagination);
         bundle.putBoolean("usuario_medico", usuarioEhMedico);
         fragment.setArguments(bundle);
         return fragment;

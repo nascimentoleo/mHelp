@@ -1,9 +1,9 @@
 package com.ifma.appmhelp.enums;
 
-import com.ifma.appmhelp.controls.ProcessadorDeMensagens;
-import com.ifma.appmhelp.controls.ProcessadorDeOcorrencias;
-import com.ifma.appmhelp.controls.ProcessadorDeProntuarios;
-import com.ifma.appmhelp.controls.ProcessadorDeSolicitacoes;
+import com.ifma.appmhelp.processors.ProcessadorDeMensagens;
+import com.ifma.appmhelp.processors.ProcessadorDeOcorrencias;
+import com.ifma.appmhelp.processors.ProcessadorDeProntuarios;
+import com.ifma.appmhelp.processors.ProcessadorDeSolicitacoes;
 
 /**
  * Created by leo on 12/20/16.

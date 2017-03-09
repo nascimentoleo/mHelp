@@ -3,7 +3,7 @@ package com.ifma.appmhelp.services;
 import android.content.Context;
 import android.widget.Toast;
 
-import com.ifma.appmhelp.controls.ProcessadorDeMensagens;
+import com.ifma.appmhelp.processors.ProcessadorDeMensagens;
 import com.ifma.appmhelp.lib.BlowfishCrypt;
 import com.ifma.appmhelp.models.ConexaoXMPP;
 import com.ifma.appmhelp.models.Mensagem;

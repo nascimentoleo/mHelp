@@ -17,7 +17,6 @@ import android.widget.Toast;
 
 import com.ifma.appmhelp.R;
 import com.ifma.appmhelp.controls.Login;
-import com.ifma.appmhelp.controls.OcorrenciaPagination;
 import com.ifma.appmhelp.models.Medico;
 import com.ifma.appmhelp.models.Ocorrencia;
 import com.ifma.appmhelp.models.UsuarioLogado;
@@ -57,8 +56,7 @@ public class MedicoActivity extends AppCompatActivity
     }
 
     private void inicializaAdapter(){
-        OcorrenciaPagination ocorrenciaPagination = new OcorrenciaPagination(10);
-        getSupportFragmentManager().beginTransaction().replace(R.id.container_list_ocorrencias_medico,ListOcorrenciasFragment.newInstance(ocorrenciaPagination, true)).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.container_list_ocorrencias_medico,ListOcorrenciasFragment.newInstance(true)).commit();
 
     }
 

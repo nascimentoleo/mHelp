@@ -5,7 +5,6 @@ import android.content.Context;
 import com.ifma.appmhelp.daos.OcorrenciaDao;
 import com.ifma.appmhelp.models.Ocorrencia;
 
-import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -13,16 +12,17 @@ import java.util.List;
  * Created by leo on 2/27/17.
  */
 
-public class OcorrenciaPagination implements Serializable {
+public class OcorrenciaPagination extends Pagination<Ocorrencia> {
 
-    private int qtdDeRegistros;
+    private OcorrenciaDao dao;
 
-    public OcorrenciaPagination(int qtdDeRegistros) {
-        this.qtdDeRegistros = qtdDeRegistros;
+    public OcorrenciaPagination(Context ctx) {
+        dao = new OcorrenciaDao(ctx);
     }
 
-    public List<Ocorrencia> getListaDeOcorrencias(Context ctx, int offset) throws SQLException {
-        List<Ocorrencia> ocorrencias = new OcorrenciaDao(ctx).
+    @Override
+    public List<Ocorrencia> getRegistros(int offset) throws SQLException {
+        List<Ocorrencia> ocorrencias = dao.
                 getOcorrencias(Long.valueOf(offset), Long.valueOf(offset + qtdDeRegistros));
 
         return  ocorrencias;

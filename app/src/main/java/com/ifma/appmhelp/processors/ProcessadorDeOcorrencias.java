@@ -1,9 +1,10 @@
-package com.ifma.appmhelp.controls;
+package com.ifma.appmhelp.processors;
 
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 
+import com.ifma.appmhelp.controls.OcorrenciasController;
 import com.ifma.appmhelp.enums.GenericBundleKeys;
 import com.ifma.appmhelp.enums.IntentType;
 import com.ifma.appmhelp.models.Mensagem;
