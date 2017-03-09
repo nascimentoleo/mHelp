@@ -28,7 +28,7 @@ public class OcorrenciasController extends BaseController {
     public void enviarNovaOcorrencia(Usuario usuarioDestino, Ocorrencia ocorrencia) throws Exception {
         ocorrencia.preparaParaEnvio();
         Mensagem mensagem = new Mensagem(ocorrencia.toJson(), TipoDeMensagem.NOVA_OCORRENCIA);
-        MensagemController.enviaMensagem(usuarioDestino, mensagem);
+        new MensagemController(ctx).enviaMensagem(usuarioDestino, mensagem);
     }
 
     public void adicionarOcorrenciaFromPaciente(Ocorrencia ocorrencia) throws SQLException {

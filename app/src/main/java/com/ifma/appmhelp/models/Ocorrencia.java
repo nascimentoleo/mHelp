@@ -98,4 +98,12 @@ public class Ocorrencia implements IModel {
         this.paciente.preparaParaEnvio();
         this.medico.preparaParaEnvio();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o.getClass() != Ocorrencia.class)
+            return false;
+        return this.id.equals(((Ocorrencia) o).id);
+
+    }
 }

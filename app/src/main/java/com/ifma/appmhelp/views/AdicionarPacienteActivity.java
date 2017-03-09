@@ -72,7 +72,7 @@ public class AdicionarPacienteActivity extends AppCompatActivity {
                     this.paciente = new Paciente().fromJson(intentResult.getContents());
                     SolicitacaoRoster solicitacaoRoster = new SolicitacaoRoster(medico.getUsuario().clone(), StatusSolicitacaoRoster.ENVIADA);
                     Mensagem mensagem = new Mensagem(solicitacaoRoster.toJson(), TipoDeMensagem.SOLICITACAO_ROSTER);
-                    MensagemController.enviaMensagem(this.paciente.getUsuario(), mensagem);
+                    new MensagemController(this).enviaMensagem(this.paciente.getUsuario(), mensagem);
                 } catch (Exception e) {
                     e.printStackTrace();
                     Toast.makeText(this, "Erro ao enviar solicitação: " + e.getMessage(), Toast.LENGTH_LONG).show();

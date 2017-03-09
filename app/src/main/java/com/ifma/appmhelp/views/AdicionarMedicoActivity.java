@@ -138,7 +138,7 @@ public class AdicionarMedicoActivity extends AppCompatActivity {
         try {
             SolicitacaoRoster solicitacaoRoster = new SolicitacaoRoster(paciente.getUsuario().clone(), statusResposta);
             Mensagem mensagem = new Mensagem(solicitacaoRoster.toJson(), TipoDeMensagem.SOLICITACAO_ROSTER);
-            MensagemController.enviaMensagem(medico.getUsuario(), mensagem);
+            new MensagemController(this).enviaMensagem(medico.getUsuario(), mensagem);
         } catch (Exception e) {
             e.printStackTrace();
             Toast.makeText(this, "Erro ao enviar confirmação ao médico: " + e.getMessage(), Toast.LENGTH_LONG).show();
@@ -150,7 +150,7 @@ public class AdicionarMedicoActivity extends AppCompatActivity {
         try {
             ProntuarioParaEnvio prontuarioParaEnvio = new ProntuariosController(this).getProntuarioParaEnvio(prontuario);
             Mensagem mensagem = new Mensagem(prontuarioParaEnvio.toJson(), TipoDeMensagem.ATUALIZACAO_PRONTUARIO);
-            MensagemController.enviaMensagem(usuarioTo, mensagem);
+             new MensagemController(this).enviaMensagem(usuarioTo, mensagem);
         } catch (Exception e) {
             e.printStackTrace();
             Toast.makeText(this, "Erro ao enviar o prontuário ao médico: " + e.getMessage(), Toast.LENGTH_LONG).show();

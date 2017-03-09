@@ -151,7 +151,7 @@ public class ListPacientesActivity extends AppCompatActivity implements ListPaci
                 Medico medico = (Medico) UsuarioLogado.getInstance().getModelo();
                 SolicitacaoRoster solicitacaoRoster = new SolicitacaoRoster(medico.getUsuario(), StatusSolicitacaoRoster.REMOVIDA);
                 Mensagem mensagem = new Mensagem(solicitacaoRoster.toJson(), TipoDeMensagem.SOLICITACAO_ROSTER);
-                MensagemController.enviaMensagem(paciente.getUsuario(), mensagem);
+                new MensagemController(this).enviaMensagem(paciente.getUsuario(), mensagem);
 
                 Toast.makeText(this, "Paciente removido !", Toast.LENGTH_SHORT).show();
                 this.inicializaAdapter();

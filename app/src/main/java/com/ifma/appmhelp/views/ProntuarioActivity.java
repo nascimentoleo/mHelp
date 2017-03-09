@@ -176,7 +176,7 @@ public class ProntuarioActivity extends AppCompatActivity {
         try {
             ProntuarioParaEnvio prontuarioParaEnvio = controller.getProntuarioParaEnvio(this.prontuario);
             Mensagem mensagem = new Mensagem(prontuarioParaEnvio.toJson(), TipoDeMensagem.ATUALIZACAO_PRONTUARIO);
-            MensagemController.enviaMensagem(this.paciente.getUsuario(), mensagem);
+            new MensagemController(this).enviaMensagem(this.paciente.getUsuario(), mensagem);
             Toast.makeText(this, "Prontuário enviado" , Toast.LENGTH_SHORT).show();
 
         } catch (Exception e) {
