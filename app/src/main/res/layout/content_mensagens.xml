@@ -30,8 +30,9 @@
             app:srcCompat="@drawable/ic_send"
             android:background="@null"/>
 
-        <ListView
-            android:id="@+id/listMensagens"
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rViewMensagens"
+            android:scrollbars="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_alignParentLeft="false"
@@ -40,7 +41,9 @@
             android:layout_above="@+id/edMensagem"
             android:listSelector="@android:color/transparent"
             android:transcriptMode="alwaysScroll"
-            android:divider="@null" />
+            android:divider="@null">
+
+        </android.support.v7.widget.RecyclerView>
 
     </RelativeLayout>
 

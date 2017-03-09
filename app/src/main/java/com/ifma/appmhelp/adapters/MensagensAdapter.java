@@ -1,11 +1,11 @@
 package com.ifma.appmhelp.adapters;
 
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -22,7 +22,7 @@ import java.util.List;
  * Created by leo on 1/3/17.
  */
 
-public class MensagensAdapter extends BaseAdapter{
+public class MensagensAdapter extends RecyclerView.Adapter<MensagensAdapter.RecycleMensagemViewHolder>{
 
     private Context ctx;
     private List<Mensagem> listaDeMensagens;
@@ -33,27 +33,14 @@ public class MensagensAdapter extends BaseAdapter{
     }
 
     @Override
-    public int getCount() {
-        return listaDeMensagens.size();
+    public RecycleMensagemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View itemLista = LayoutInflater.from(ctx).inflate(R.layout.item_list_mensagens, null);
+        return new RecycleMensagemViewHolder(itemLista);
     }
 
     @Override
-    public Mensagem getItem(int position) {
-        return listaDeMensagens.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
-
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public void onBindViewHolder(RecycleMensagemViewHolder holder, int position) {
         Mensagem mensagem = this.listaDeMensagens.get(position);
-
-        View itemLista = LayoutInflater.from(ctx).inflate(
-                R.layout.item_list_mensagens, null);
-        MensagemViewHolder holder = createViewHolder(itemLista);
 
         if (mensagem.getUsuario().equals(UsuarioLogado.getInstance().getUsuario()))
             adicionarMensagemDireita(holder, mensagem);
@@ -68,12 +55,21 @@ public class MensagensAdapter extends BaseAdapter{
             holder.txtInfo.setText(sdf.format(mensagem.getData()));
         else
             holder.txtInfo.setText(sdf.format(new Date()));
+     }
 
-        return itemLista;
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public int getItemCount() {
+        return listaDeMensagens.size();
     }
 
 
-    private void adicionarMensagemEsquerda(MensagemViewHolder holder, Mensagem mensagem){
+    private void adicionarMensagemEsquerda(RecycleMensagemViewHolder holder, Mensagem mensagem){
         holder.contentWithBG.setBackgroundResource(R.drawable.msg_in);
 
         LinearLayout.LayoutParams layoutParams =
@@ -95,7 +91,7 @@ public class MensagensAdapter extends BaseAdapter{
         holder.txtInfo.setLayoutParams(layoutParams);
     }
 
-    private void adicionarMensagemDireita(MensagemViewHolder holder, Mensagem mensagem){
+    private void adicionarMensagemDireita(RecycleMensagemViewHolder holder, Mensagem mensagem){
         holder.contentWithBG.setBackgroundResource(R.drawable.msg_out);
 
         LinearLayout.LayoutParams layoutParams =
@@ -121,20 +117,21 @@ public class MensagensAdapter extends BaseAdapter{
     }
 
 
-    private MensagemViewHolder createViewHolder(View v) {
-        MensagemViewHolder holder = new MensagemViewHolder();
-        holder.txtMessage = (TextView) v.findViewById(R.id.txtMessage);
-        holder.content = (LinearLayout) v.findViewById(R.id.content);
-        holder.contentWithBG = (LinearLayout) v.findViewById(R.id.contentWithBackground);
-        holder.txtInfo = (TextView) v.findViewById(R.id.txtInfo);
-        return holder;
-    }
+    public static class RecycleMensagemViewHolder extends RecyclerView.ViewHolder  {
 
-    private static class MensagemViewHolder {
         public TextView txtMessage;
         public TextView txtInfo;
         public LinearLayout content;
         public LinearLayout contentWithBG;
+
+        public RecycleMensagemViewHolder(View itemView) {
+            super(itemView);
+
+            txtMessage = (TextView) itemView.findViewById(R.id.txtMessage);
+            content = (LinearLayout) itemView.findViewById(R.id.content);
+            contentWithBG = (LinearLayout) itemView.findViewById(R.id.contentWithBackground);
+            txtInfo = (TextView) itemView.findViewById(R.id.txtInfo);
+        }
     }
 
 

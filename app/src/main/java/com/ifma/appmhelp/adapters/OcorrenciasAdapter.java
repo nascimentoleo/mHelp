@@ -17,7 +17,7 @@ import java.util.List;
  * Created by leo on 2/24/17.
  */
 
-public class OcorrenciasAdapter extends RecyclerView.Adapter<OcorrenciasAdapter.RecycleCidsViewHolder> {
+public class OcorrenciasAdapter extends RecyclerView.Adapter<OcorrenciasAdapter.RecycleOcorrenciasViewHolder> {
 
     private List<Ocorrencia> listaDeOcorrencias;
     private Context ctx;
@@ -39,13 +39,13 @@ public class OcorrenciasAdapter extends RecyclerView.Adapter<OcorrenciasAdapter.
     }
 
     @Override
-    public RecycleCidsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecycleOcorrenciasViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemLista = LayoutInflater.from(ctx).inflate(R.layout.item_list_ocorrencias, null);
-        return new RecycleCidsViewHolder(itemLista);
+        return new RecycleOcorrenciasViewHolder(itemLista);
     }
 
     @Override
-    public void onBindViewHolder(RecycleCidsViewHolder holder, int position) {
+    public void onBindViewHolder(RecycleOcorrenciasViewHolder holder, int position) {
         Ocorrencia ocorrencia = listaDeOcorrencias.get(position);
         holder.txtNomePaciente.setText(ocorrencia.getPaciente().getUsuario().getNome());
 
@@ -70,7 +70,7 @@ public class OcorrenciasAdapter extends RecyclerView.Adapter<OcorrenciasAdapter.
         return listaDeOcorrencias.size();
     }
 
-    public class RecycleCidsViewHolder extends RecyclerView.ViewHolder {
+    public class RecycleOcorrenciasViewHolder extends RecyclerView.ViewHolder {
 
         private TextView txtNomePaciente;
         private TextView txtTituloOcorrencia;
@@ -78,7 +78,7 @@ public class OcorrenciasAdapter extends RecyclerView.Adapter<OcorrenciasAdapter.
         private TextView txtUltimaMensagem;
         private CardView cardViewOcorrencia;
 
-        public RecycleCidsViewHolder(View itemView) {
+        public RecycleOcorrenciasViewHolder(View itemView) {
             super(itemView);
 
             txtNomePaciente       = (TextView) itemView.findViewById(R.id.txtNomePacienteList);

@@ -8,6 +8,8 @@ import com.ifma.appmhelp.models.IModel;
 import com.ifma.appmhelp.models.Mensagem;
 import com.ifma.appmhelp.models.Ocorrencia;
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.stmt.PreparedQuery;
+import com.j256.ormlite.stmt.QueryBuilder;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -44,6 +46,14 @@ public class MensagemDao extends BaseController implements IDao {
         Dao<Mensagem, Long> dao = DbSqlHelper.getHelper(ctx).getDao(Mensagem.class);
         Mensagem mensagem = new Mensagem(ocorrencia);
         return dao.queryForMatching(mensagem);
+    }
+
+    public List<Mensagem> getMensagensByOcorrencia(Long inicio, Long fim, Ocorrencia ocorrencia) throws SQLException {
+        Dao<Mensagem, Long> dao = DbSqlHelper.getHelper(ctx).getDao(Mensagem.class);
+        QueryBuilder<Mensagem, Long> query = dao.queryBuilder().offset(inicio).limit(fim);
+        query.orderBy("data",false).where().eq("ocorrencia_id", ocorrencia.getId());
+        PreparedQuery<Mensagem> prepare = query.prepare();
+        return dao.query(prepare);
     }
 
 }
