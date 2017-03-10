@@ -52,14 +52,6 @@ public class ListOcorrenciasFragment extends Fragment implements OcorrenciasAdap
         // Required empty public constructor
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        this.carregaComponentes();
-        this.inicializaAdapter();
-    }
-
-
     private void carregaComponentes(){
         LocalBroadcastManager.getInstance(getContext()).registerReceiver(mReceiver, new IntentFilter(IntentType.ATUALIZAR_OCORRENCIAS.toString()));
 
@@ -79,6 +71,13 @@ public class ListOcorrenciasFragment extends Fragment implements OcorrenciasAdap
 
         this.ocorrenciaPagination = new OcorrenciaPagination(getContext());
 
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        this.carregaComponentes();
+        this.inicializaAdapter();
     }
 
     private void inicializaAdapter() {
@@ -120,6 +119,7 @@ public class ListOcorrenciasFragment extends Fragment implements OcorrenciasAdap
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_list_ocorrencias, container, false);
     }

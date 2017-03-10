@@ -13,7 +13,7 @@ import com.ifma.appmhelp.models.Ocorrencia;
 /**
  * Created by leo on 2/27/17.
  */
-public class ProcessadorDeOcorrencias implements ProcessadorDeMensagens {
+public class ProcessadorDeOcorrencias implements ProcessadorDeStanzas {
 
     @Override
     public void processar(Context ctx, Mensagem mensagem) throws Exception {

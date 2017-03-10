@@ -20,7 +20,7 @@ import com.ifma.appmhelp.models.Usuario;
  * Created by leo on 12/20/16.
  */
 
-public class ProcessadorDeSolicitacoes implements ProcessadorDeMensagens {
+public class ProcessadorDeSolicitacoes implements ProcessadorDeStanzas {
 
     @Override
     public void processar(Context ctx, Mensagem mensagem) throws Exception {

@@ -28,6 +28,7 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
             app:srcCompat="@drawable/ic_send"
+            android:onClick="enviarMensagem"
             android:background="@null"/>
 
         <android.support.v7.widget.RecyclerView

@@ -5,7 +5,6 @@ import android.content.Context;
 import com.ifma.appmhelp.controls.BaseController;
 import com.ifma.appmhelp.db.DbSqlHelper;
 import com.ifma.appmhelp.models.Cid;
-import com.ifma.appmhelp.models.IModel;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.PreparedQuery;
 import com.j256.ormlite.stmt.QueryBuilder;
@@ -17,7 +16,7 @@ import java.util.List;
  * Created by leo on 12/23/16.
  */
 
-public class CidDao extends BaseController implements IDao {
+public class CidDao extends BaseController implements IDao<Cid> {
 
 
     public CidDao(Context ctx) {
@@ -25,17 +24,17 @@ public class CidDao extends BaseController implements IDao {
     }
 
     @Override
-    public boolean persistir(IModel objeto, boolean updateChild) throws SQLException {
+    public boolean persistir(Cid objeto, boolean updateChild) throws SQLException {
         return false;
     }
 
     @Override
-    public void remover(IModel objeto, boolean updateChild) throws SQLException {
+    public void remover(Cid objeto, boolean updateChild) throws SQLException {
 
     }
 
     @Override
-    public void carregaId(IModel objeto) throws SQLException {
+    public void carregaId(Cid objeto) throws SQLException {
 
     }
 

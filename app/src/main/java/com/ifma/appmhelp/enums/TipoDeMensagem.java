@@ -1,6 +1,7 @@
 package com.ifma.appmhelp.enums;
 
 import com.ifma.appmhelp.processors.ProcessadorDeMensagens;
+import com.ifma.appmhelp.processors.ProcessadorDeStanzas;
 import com.ifma.appmhelp.processors.ProcessadorDeOcorrencias;
 import com.ifma.appmhelp.processors.ProcessadorDeProntuarios;
 import com.ifma.appmhelp.processors.ProcessadorDeSolicitacoes;
@@ -12,15 +13,16 @@ import com.ifma.appmhelp.processors.ProcessadorDeSolicitacoes;
 public enum TipoDeMensagem {
     SOLICITACAO_ROSTER(new ProcessadorDeSolicitacoes()),
     ATUALIZACAO_PRONTUARIO(new ProcessadorDeProntuarios()),
-    NOVA_OCORRENCIA(new ProcessadorDeOcorrencias());
+    NOVA_OCORRENCIA(new ProcessadorDeOcorrencias()),
+    NOVA_MENSAGEM(new ProcessadorDeMensagens());
 
-    private ProcessadorDeMensagens processador;
+    private ProcessadorDeStanzas processador;
 
-    TipoDeMensagem(ProcessadorDeMensagens processador) {
+    TipoDeMensagem(ProcessadorDeStanzas processador) {
         this.processador = processador;
     }
 
-    public ProcessadorDeMensagens getProcessador() {
+    public ProcessadorDeStanzas getProcessador() {
         return processador;
     }
 }

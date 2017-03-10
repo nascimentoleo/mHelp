@@ -3,10 +3,10 @@ package com.ifma.appmhelp.services;
 import android.content.Context;
 import android.widget.Toast;
 
-import com.ifma.appmhelp.processors.ProcessadorDeMensagens;
 import com.ifma.appmhelp.lib.BlowfishCrypt;
 import com.ifma.appmhelp.models.ConexaoXMPP;
 import com.ifma.appmhelp.models.Mensagem;
+import com.ifma.appmhelp.processors.ProcessadorDeStanzas;
 
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.StanzaListener;
@@ -46,8 +46,10 @@ public class StanzaXMPPListener implements StanzaListener{
     private void processarMensagem(Message message) throws Exception {
         String jsonCriptografado = message.getBody().toString();
         Mensagem mensagem = Mensagem.fromJson(BlowfishCrypt.decrypt(jsonCriptografado));
-        ProcessadorDeMensagens processador = mensagem.getTipo().getProcessador();
+
+        ProcessadorDeStanzas processador = mensagem.getTipo().getProcessador();
         processador.processar(ctx,mensagem);
+
     }
 
     private void processarPresenca(Presence presence){

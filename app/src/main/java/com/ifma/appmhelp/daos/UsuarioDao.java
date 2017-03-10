@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * Created by leo on 11/28/16.
  */
-public class UsuarioDao extends BaseController implements IDao {
+public class UsuarioDao extends BaseController implements IDao<Usuario> {
 
     public UsuarioDao(Context ctx) {
         super(ctx);
@@ -29,21 +29,21 @@ public class UsuarioDao extends BaseController implements IDao {
     }
 
     @Override
-    public boolean persistir(IModel objeto, boolean updateChild) throws SQLException {
+    public boolean persistir(Usuario objeto, boolean updateChild) throws SQLException {
         Dao<Usuario, Long> dao = DbSqlHelper.getHelper(ctx).getDao(Usuario.class);
-        dao.createOrUpdate((Usuario) objeto);
+        dao.createOrUpdate(objeto);
         return true;
     }
 
     @Override
-    public void remover(IModel objeto, boolean updateChild) throws SQLException {
+    public void remover(Usuario objeto, boolean updateChild) throws SQLException {
 
     }
 
     @Override
-    public void carregaId(IModel objeto) throws SQLException {
+    public void carregaId(Usuario objeto) throws SQLException {
         Dao<Usuario, Long> dao = DbSqlHelper.getHelper(ctx).getDao(Usuario.class);
-        List<Usuario> usuarios = dao.queryForMatching((Usuario) objeto);
+        List<Usuario> usuarios = dao.queryForMatching(objeto);
         if(!usuarios.isEmpty())
             objeto.setId(usuarios.get(0).getId());
     }

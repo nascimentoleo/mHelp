@@ -4,7 +4,6 @@ import android.content.Context;
 
 import com.ifma.appmhelp.controls.BaseController;
 import com.ifma.appmhelp.db.DbSqlHelper;
-import com.ifma.appmhelp.models.IModel;
 import com.ifma.appmhelp.models.Prontuario;
 import com.ifma.appmhelp.models.ProntuarioCid;
 import com.j256.ormlite.dao.Dao;
@@ -16,23 +15,23 @@ import java.util.List;
  * Created by leo on 12/23/16.
  */
 
-public class ProntuarioCidDao extends BaseController implements IDao {
+public class ProntuarioCidDao extends BaseController implements IDao<ProntuarioCid> {
 
     public ProntuarioCidDao(Context ctx) {
         super(ctx);
     }
 
     @Override
-    public boolean persistir(IModel objeto, boolean updateChild) throws SQLException {
+    public boolean persistir(ProntuarioCid objeto, boolean updateChild) throws SQLException {
         Dao<ProntuarioCid,Long> dao = DbSqlHelper.getHelper(ctx).getDao(ProntuarioCid.class);
-        dao.createOrUpdate((ProntuarioCid) objeto);
+        dao.createOrUpdate(objeto);
         return true;
     }
 
     @Override
-    public void remover(IModel objeto, boolean updateChild) throws SQLException {
+    public void remover(ProntuarioCid objeto, boolean updateChild) throws SQLException {
         Dao<ProntuarioCid, Long> dao = DbSqlHelper.getHelper(ctx).getDao(ProntuarioCid.class);
-        dao.delete((ProntuarioCid) objeto);
+        dao.delete(objeto);
     }
 
     public void removerTodos(Prontuario prontuario) throws SQLException {
@@ -49,9 +48,9 @@ public class ProntuarioCidDao extends BaseController implements IDao {
     }
 
     @Override
-    public void carregaId(IModel objeto) throws SQLException {
+    public void carregaId(ProntuarioCid objeto) throws SQLException {
         Dao<ProntuarioCid, Long> dao = DbSqlHelper.getHelper(ctx).getDao(ProntuarioCid.class);
-        List<ProntuarioCid> prontuarioCids = dao.queryForMatching((ProntuarioCid) objeto);
+        List<ProntuarioCid> prontuarioCids = dao.queryForMatching(objeto);
         if(!prontuarioCids.isEmpty())
             objeto.setId(prontuarioCids.get(0).getId());
 

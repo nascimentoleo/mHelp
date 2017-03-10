@@ -22,7 +22,7 @@ import java.sql.SQLException;
  * Created by leo on 1/11/17.
  */
 
-public class ProcessadorDeProntuarios implements ProcessadorDeMensagens {
+public class ProcessadorDeProntuarios implements ProcessadorDeStanzas {
 
     @Override
     public void processar(Context ctx, Mensagem mensagem) throws Exception {

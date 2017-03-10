@@ -5,7 +5,7 @@ import com.ifma.appmhelp.enums.TipoDeMensagem;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
-import java.sql.Date;
+import java.util.Date;
 
 /**
  * Created by leo on 11/3/16.
@@ -93,6 +93,14 @@ public class Mensagem implements IModel{
 
     public static Mensagem fromJson(String jsonObject){
         return new Gson().fromJson(jsonObject, Mensagem.class);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o.getClass() != Mensagem.class)
+            return false;
+        return this.id.equals(((Mensagem) o).id);
+
     }
 
 

@@ -4,7 +4,6 @@ import android.content.Context;
 
 import com.ifma.appmhelp.controls.BaseController;
 import com.ifma.appmhelp.db.DbSqlHelper;
-import com.ifma.appmhelp.models.IModel;
 import com.ifma.appmhelp.models.Prontuario;
 import com.ifma.appmhelp.models.ProntuarioMedicamento;
 import com.j256.ormlite.dao.Dao;
@@ -16,7 +15,7 @@ import java.util.List;
  * Created by leo on 12/23/16.
  */
 
-public class ProntuarioMedicamentoDao extends BaseController implements IDao {
+public class ProntuarioMedicamentoDao extends BaseController implements IDao<ProntuarioMedicamento> {
 
 
     public ProntuarioMedicamentoDao(Context ctx) {
@@ -24,16 +23,16 @@ public class ProntuarioMedicamentoDao extends BaseController implements IDao {
     }
 
     @Override
-    public boolean persistir(IModel objeto, boolean updateChild) throws SQLException {
+    public boolean persistir(ProntuarioMedicamento objeto, boolean updateChild) throws SQLException {
         Dao<ProntuarioMedicamento,Long> dao = DbSqlHelper.getHelper(ctx).getDao(ProntuarioMedicamento.class);
-        dao.createOrUpdate((ProntuarioMedicamento) objeto);
+        dao.createOrUpdate(objeto);
         return true;
     }
 
     @Override
-    public void remover(IModel objeto, boolean updateChild) throws SQLException {
+    public void remover(ProntuarioMedicamento objeto, boolean updateChild) throws SQLException {
         Dao<ProntuarioMedicamento, Long> dao = DbSqlHelper.getHelper(ctx).getDao(ProntuarioMedicamento.class);
-        dao.delete((ProntuarioMedicamento) objeto);
+        dao.delete(objeto);
     }
 
     public void removerTodos(Prontuario prontuario) throws SQLException {
@@ -50,9 +49,9 @@ public class ProntuarioMedicamentoDao extends BaseController implements IDao {
     }
 
     @Override
-    public void carregaId(IModel objeto) throws SQLException {
+    public void carregaId(ProntuarioMedicamento objeto) throws SQLException {
         Dao<ProntuarioMedicamento, Long> dao = DbSqlHelper.getHelper(ctx).getDao(ProntuarioMedicamento.class);
-        List<ProntuarioMedicamento> prontuarioMedicamentos = dao.queryForMatching((ProntuarioMedicamento) objeto);
+        List<ProntuarioMedicamento> prontuarioMedicamentos = dao.queryForMatching(objeto);
         if(!prontuarioMedicamentos.isEmpty())
             objeto.setId(prontuarioMedicamentos.get(0).getId());
 

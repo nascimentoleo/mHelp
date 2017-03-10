@@ -1,19 +1,17 @@
 package com.ifma.appmhelp.daos;
 
-import com.ifma.appmhelp.models.IModel;
-
 import java.sql.SQLException;
 
 /**
  * Created by leo on 11/30/16.
  */
-public interface IDao {
+public interface IDao<T> {
 
-    boolean persistir(IModel objeto, boolean updateChild) throws SQLException;
+    boolean persistir(T objeto, boolean updateChild) throws SQLException;
 
-    public void remover(IModel objeto, boolean updateChild) throws SQLException;
+    public void remover(T objeto, boolean updateChild) throws SQLException;
 
-    void carregaId(IModel objeto) throws SQLException;
+    void carregaId(T objeto) throws SQLException;
 
     String getMsgErro();
 }

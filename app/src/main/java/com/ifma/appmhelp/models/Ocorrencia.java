@@ -11,7 +11,7 @@ import java.util.Date;
  */
 
 @DatabaseTable(tableName = "ocorrencias")
-public class Ocorrencia implements IModel {
+public class Ocorrencia implements IModel, Cloneable {
 
     @DatabaseField(generatedId = true)
     private Long id;
@@ -105,5 +105,10 @@ public class Ocorrencia implements IModel {
             return false;
         return this.id.equals(((Ocorrencia) o).id);
 
+    }
+
+    @Override
+    public Ocorrencia clone() throws CloneNotSupportedException {
+        return (Ocorrencia) super.clone();
     }
 }

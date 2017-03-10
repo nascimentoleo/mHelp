@@ -4,7 +4,6 @@ import android.content.Context;
 
 import com.ifma.appmhelp.controls.BaseController;
 import com.ifma.appmhelp.db.DbSqlHelper;
-import com.ifma.appmhelp.models.IModel;
 import com.ifma.appmhelp.models.Medico;
 import com.ifma.appmhelp.models.MedicoPaciente;
 import com.ifma.appmhelp.models.Paciente;
@@ -18,29 +17,28 @@ import java.util.List;
  * Created by leo on 12/20/16.
  */
 
-public class MedicoPacienteDao extends BaseController implements IDao {
+public class MedicoPacienteDao extends BaseController implements IDao<MedicoPaciente> {
 
     public MedicoPacienteDao(Context ctx) {
         super(ctx);
     }
 
     @Override
-    public boolean persistir(IModel objeto, boolean updateChild) throws SQLException {
-        MedicoPaciente medicoPaciente = (MedicoPaciente) objeto;
+    public boolean persistir(MedicoPaciente objeto, boolean updateChild) throws SQLException {
         if (updateChild){
-           new MedicoDao(ctx).persistir(medicoPaciente.getMedico(),updateChild);
-           new PacienteDao(ctx).persistir(medicoPaciente.getPaciente(),updateChild);
+           new MedicoDao(ctx).persistir(objeto.getMedico(),updateChild);
+           new PacienteDao(ctx).persistir(objeto.getPaciente(),updateChild);
         }
 
         Dao<MedicoPaciente, Long> dao = DbSqlHelper.getHelper(ctx).getDao(MedicoPaciente.class);
-        dao.createOrUpdate(medicoPaciente);
+        dao.createOrUpdate(objeto);
         return true;
     }
 
     @Override
-    public void carregaId(IModel objeto) throws SQLException {
+    public void carregaId(MedicoPaciente objeto) throws SQLException {
         Dao<MedicoPaciente, Long> dao = DbSqlHelper.getHelper(ctx).getDao(MedicoPaciente.class);
-        List<MedicoPaciente> medicoPacientes = dao.queryForMatching((MedicoPaciente) objeto);
+        List<MedicoPaciente> medicoPacientes = dao.queryForMatching(objeto);
         if(!medicoPacientes.isEmpty())
             objeto.setId(medicoPacientes.get(0).getId());
     }
@@ -73,16 +71,14 @@ public class MedicoPacienteDao extends BaseController implements IDao {
     }
 
     @Override
-    public void remover(IModel objeto, boolean updateChild) throws SQLException {
-        MedicoPaciente medicoPaciente = (MedicoPaciente) objeto;
-
+    public void remover(MedicoPaciente objeto, boolean updateChild) throws SQLException {
         if (updateChild){
-            new MedicoDao(ctx).remover(medicoPaciente.getMedico(),updateChild);
-            new PacienteDao(ctx).remover(medicoPaciente.getPaciente(),updateChild);
+            new MedicoDao(ctx).remover(objeto.getMedico(),updateChild);
+            new PacienteDao(ctx).remover(objeto.getPaciente(),updateChild);
         }
 
         Dao<MedicoPaciente, Long> dao = DbSqlHelper.getHelper(ctx).getDao(MedicoPaciente.class);
-        dao.delete(medicoPaciente);
+        dao.delete(objeto);
     }
 
 }

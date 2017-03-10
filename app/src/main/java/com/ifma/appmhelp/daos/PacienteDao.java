@@ -4,7 +4,6 @@ import android.content.Context;
 
 import com.ifma.appmhelp.controls.BaseController;
 import com.ifma.appmhelp.db.DbSqlHelper;
-import com.ifma.appmhelp.models.IModel;
 import com.ifma.appmhelp.models.Paciente;
 import com.ifma.appmhelp.models.Usuario;
 import com.j256.ormlite.dao.Dao;
@@ -15,7 +14,7 @@ import java.util.List;
 /**
  * Created by leo on 11/29/16.
  */
-public class PacienteDao extends BaseController implements IDao {
+public class PacienteDao extends BaseController implements IDao<Paciente> {
 
     public PacienteDao(Context ctx) {
         super(ctx);
@@ -31,30 +30,28 @@ public class PacienteDao extends BaseController implements IDao {
     }
 
     @Override
-    public boolean persistir(IModel objeto, boolean updateChild) throws SQLException {
-        Paciente paciente = (Paciente) objeto;
+    public boolean persistir(Paciente objeto, boolean updateChild) throws SQLException {
         if (updateChild) {
-            new UsuarioDao(ctx).persistir(paciente.getUsuario(), updateChild);
-            new ProntuarioDao(ctx).persistir(paciente.getProntuario(), updateChild);
+            new UsuarioDao(ctx).persistir(objeto.getUsuario(), updateChild);
+            new ProntuarioDao(ctx).persistir(objeto.getProntuario(), updateChild);
         }
         Dao<Paciente,Long> pacienteDao = DbSqlHelper.getHelper(ctx).getDao(Paciente.class);
-        pacienteDao.createOrUpdate(paciente);
+        pacienteDao.createOrUpdate(objeto);
         return true;
     }
 
     @Override
-    public void remover(IModel objeto, boolean updateChild) throws SQLException {
-        Paciente paciente = (Paciente) objeto;
+    public void remover(Paciente objeto, boolean updateChild) throws SQLException {
         if (updateChild) {
-            new UsuarioDao(ctx).remover(paciente.getUsuario(), updateChild);
-            new ProntuarioDao(ctx).remover(paciente.getProntuario(), updateChild);
+            new UsuarioDao(ctx).remover(objeto.getUsuario(), updateChild);
+            new ProntuarioDao(ctx).remover(objeto.getProntuario(), updateChild);
         }
         Dao<Paciente,Long> pacienteDao = DbSqlHelper.getHelper(ctx).getDao(Paciente.class);
-        pacienteDao.delete(paciente);
+        pacienteDao.delete(objeto);
     }
 
     @Override
-    public void carregaId(IModel objeto) throws SQLException {
+    public void carregaId(Paciente objeto) throws SQLException {
 
     }
 

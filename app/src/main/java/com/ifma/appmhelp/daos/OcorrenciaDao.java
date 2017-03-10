@@ -4,7 +4,6 @@ import android.content.Context;
 
 import com.ifma.appmhelp.controls.BaseController;
 import com.ifma.appmhelp.db.DbSqlHelper;
-import com.ifma.appmhelp.models.IModel;
 import com.ifma.appmhelp.models.Mensagem;
 import com.ifma.appmhelp.models.Ocorrencia;
 import com.j256.ormlite.dao.Dao;
@@ -18,35 +17,37 @@ import java.util.List;
  * Created by leo on 2/24/17.
  */
 
-public class OcorrenciaDao extends BaseController implements IDao {
+public class OcorrenciaDao extends BaseController implements IDao<Ocorrencia> {
 
     public OcorrenciaDao(Context ctx) {
         super(ctx);
     }
 
     @Override
-    public boolean persistir(IModel objeto, boolean updateChild) throws SQLException {
+    public boolean persistir(Ocorrencia objeto, boolean updateChild) throws SQLException {
         Dao<Ocorrencia, Long> dao = DbSqlHelper.getHelper(ctx).getDao(Ocorrencia.class);
-        dao.createOrUpdate((Ocorrencia) objeto);
+        dao.createOrUpdate(objeto);
         return true;
     }
 
     @Override
-    public void remover(IModel objeto, boolean updateChild) throws SQLException {
-        Ocorrencia ocorrencia = (Ocorrencia) objeto;
+    public void remover(Ocorrencia objeto, boolean updateChild) throws SQLException {
         if (updateChild){
-            List<Mensagem> mensagens = new MensagemDao(ctx).getMensagensByOcorrencia(ocorrencia);
+            List<Mensagem> mensagens = new MensagemDao(ctx).getMensagensByOcorrencia(objeto);
             for (Mensagem mensagem : mensagens)
                 new MensagemDao(ctx).remover(mensagem, updateChild);
         }
 
         Dao<Ocorrencia,Long> dao = DbSqlHelper.getHelper(ctx).getDao(Ocorrencia.class);
-        dao.delete(ocorrencia);
+        dao.delete(objeto);
     }
 
     @Override
-    public void carregaId(IModel objeto) throws SQLException {
-
+    public void carregaId(Ocorrencia objeto) throws SQLException {
+        Dao<Ocorrencia, Long> dao = DbSqlHelper.getHelper(ctx).getDao(Ocorrencia.class);
+        List<Ocorrencia> ocorrencias = dao.queryForMatching(objeto);
+        if(!ocorrencias.isEmpty())
+            objeto.setId(ocorrencias.get(0).getId());
     }
 
     public List<Ocorrencia> getOcorrencias(Long inicio, Long fim) throws SQLException {
