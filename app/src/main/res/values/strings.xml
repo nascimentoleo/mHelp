@@ -93,5 +93,6 @@
     <string name="titulo_name">Título</string>
     <string name="enviar_ocorrencia_name">Enviar Ocorrência</string>
     <string name="title_activity_mensagens">Mensagens</string>
-
+    <string name="offline_name">Offline</string>
+    <string name="online_name">Online</string>
 </resources>

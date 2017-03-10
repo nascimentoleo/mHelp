@@ -29,6 +29,7 @@ public class RosterXMPPController{
         Presence presence = new Presence(type);
         presence.setTo(jId);
         ConexaoXMPP.getInstance().getConexao().sendStanza(presence);
+
     }
 
     public void addRoster(Usuario usuario) throws SmackException.NotLoggedInException, XMPPException.XMPPErrorException, SmackException.NotConnectedException, SmackException.NoResponseException {
@@ -43,5 +44,17 @@ public class RosterXMPPController{
         if (entry != null)
             this.roster.removeEntry(entry);
     }
+
+    public boolean rosterIsOnline(Usuario usuario) throws SmackException.NotConnectedException {
+       // this.setPresence();
+        Presence presence = this.roster.getPresence(usuario.getLogin());
+        return presence.getType() == Presence.Type.available;
+    }
+
+   /* public void setPresence(){
+        this.roster.getEntries();
+    } */
+
+
 
 }

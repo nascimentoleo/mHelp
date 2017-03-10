@@ -96,6 +96,7 @@
         <activity
             android:name=".views.ProntuarioActivity"
             android:label="@string/title_activity_prontuario"
+            android:windowSoftInputMode="stateHidden|adjustResize"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".views.CidActivity"
@@ -126,6 +127,7 @@
             android:name=".views.NovaOcorrenciaActivity"
             android:label="@string/title_activity_nova_ocorrencia"
             android:parentActivityName=".views.PacienteActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -133,8 +135,11 @@
         </activity>
         <activity
             android:name=".views.MensagensActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize"
             android:label="@string/title_activity_mensagens"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar">
+
+        </activity>
     </application>
 
 </manifest>

@@ -6,6 +6,7 @@
         <item name="colorPrimary">@color/darker_gray</item>
         <item name="colorPrimaryDark">@color/primary_text_dark</item>
         <item name="colorAccent">@color/holo_red_light</item>
+        <item name="windowActionBar">false</item>
     </style>
 
     <style name="AppTheme.NoActionBar">

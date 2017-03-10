@@ -13,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ifma.appmhelp.R;
@@ -20,6 +21,7 @@ import com.ifma.appmhelp.adapters.MensagensAdapter;
 import com.ifma.appmhelp.controls.MensagemController;
 import com.ifma.appmhelp.controls.MensagemPagination;
 import com.ifma.appmhelp.controls.Pagination;
+import com.ifma.appmhelp.controls.RosterXMPPController;
 import com.ifma.appmhelp.enums.GenericBundleKeys;
 import com.ifma.appmhelp.enums.IntentType;
 import com.ifma.appmhelp.enums.TipoDeMensagem;
@@ -28,6 +30,8 @@ import com.ifma.appmhelp.models.Mensagem;
 import com.ifma.appmhelp.models.Ocorrencia;
 import com.ifma.appmhelp.models.Usuario;
 import com.ifma.appmhelp.models.UsuarioLogado;
+
+import org.jivesoftware.smack.SmackException;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -60,33 +64,48 @@ public class MensagensActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         ocorrencia = (Ocorrencia) getIntent().getSerializableExtra(GenericBundleKeys.OCORRENCIA.toString());
+        personalizarToolbar(toolbar);
         carregaComponentes();
         inicializaAdapter();
     }
+
+    private void personalizarToolbar(Toolbar toolbar){
+        TextView title = (TextView) toolbar.findViewById(R.id.toolbar_title);
+        title.setText(ocorrencia.getTitulo());
+
+        TextView subtitle      = (TextView) toolbar.findViewById(R.id.toolbar_subtitle);
+        Usuario usuarioDestino = this.getUsuarioDestino(ocorrencia);
+        subtitle.setText(usuarioDestino.getNome());
+
+        try {
+            if (new RosterXMPPController().rosterIsOnline(usuarioDestino))
+                subtitle.append(" - " + getString(R.string.online_name));
+            else
+                subtitle.append(" - " + getString(R.string.offline_name));
+        } catch (SmackException.NotConnectedException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
 
     private void inicializaAdapter() {
         try {
             this.listaDeMensagens = mensagemPagination.getRegistros(Pagination.FIRST);
             MensagensAdapter adapter = new MensagensAdapter(this, listaDeMensagens);
             this.rViewMensagens.setAdapter(adapter);
-
+            this.rViewMensagens.getLayoutManager().scrollToPosition(0);
         } catch (SQLException e) {
             e.printStackTrace();
             Toast.makeText(this, "Não foi possível carregar as mensagens - " + e.getMessage(),Toast.LENGTH_SHORT).show();
         }
-
-       /* listaDeMensagens = new ArrayList<>(); //As mensagens virão do banco
-        listaDeMensagens.add(new Mensagem("Eae mano blz", new Usuario("paciente")));
-        listaDeMensagens.add(new Mensagem("Tudo tranquilo", new Usuario("medico")));
-
-        MensagensAdapter adapter = new MensagensAdapter(this, listaDeMensagens);
-        rViewMensagens.setAdapter(adapter); */
     }
 
     private void atualizarAdapter(Mensagem mensagem){
-        listaDeMensagens.add(mensagem);
-        rViewMensagens.getAdapter().notifyItemInserted(listaDeMensagens.size());
-        rViewMensagens.scrollToPosition(listaDeMensagens.size());
+        listaDeMensagens.add(0,mensagem);
+        rViewMensagens.getAdapter().notifyItemInserted(0);
+        this.rViewMensagens.smoothScrollToPosition(0);
     }
 
     private void carregaComponentes(){
@@ -94,6 +113,7 @@ public class MensagensActivity extends AppCompatActivity {
 
         rViewMensagens = (RecyclerView) findViewById(R.id.rViewMensagens);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setReverseLayout(true);
         rViewMensagens.setLayoutManager(linearLayoutManager);
         this.rViewMensagens.addOnScrollListener(new EndlessRecyclerViewScrollListener(linearLayoutManager) {
             @Override
@@ -106,7 +126,7 @@ public class MensagensActivity extends AppCompatActivity {
         edMensagem        = (EditText) findViewById(R.id.edMensagem);
 
         mensagemPagination = new MensagemPagination(this,ocorrencia);
-        mensagemPagination.setQtdDeRegistros(50);
+        mensagemPagination.setQtdDeRegistros(200);
 
     }
 
@@ -143,6 +163,7 @@ public class MensagensActivity extends AppCompatActivity {
                 controller.salvarMensagem(mensagem);
 
                 edMensagem.getText().clear();
+               // KeyboardLib.fecharTeclado(this);
                 this.atualizarAdapter(mensagem);
 
                 controller.enviaMensagem(this.getUsuarioDestino(mensagem.getOcorrencia()), mensagem);
