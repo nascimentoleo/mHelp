@@ -1,6 +1,7 @@
 package com.ifma.appmhelp.models;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.ifma.appmhelp.enums.TipoDeMensagem;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
@@ -88,11 +89,15 @@ public class Mensagem implements IModel{
     }
 
     public String toJson(){
-        return new Gson().toJson(this);
+        Gson gson = new GsonBuilder()
+                .setDateFormat("dd/MM/yyyy HH:mm:ss").create();
+        return gson.toJson(this);
     }
 
     public static Mensagem fromJson(String jsonObject){
-        return new Gson().fromJson(jsonObject, Mensagem.class);
+        Gson gson = new GsonBuilder()
+                .setDateFormat("dd/MM/yyyy HH:mm:ss").create();
+        return gson.fromJson(jsonObject, Mensagem.class);
     }
 
     @Override
@@ -101,6 +106,15 @@ public class Mensagem implements IModel{
             return false;
         return this.id.equals(((Mensagem) o).id);
 
+    }
+
+    public void preparaParaEnvio(){
+        this.id = null;
+
+        if (this.ocorrencia != null)
+            this.ocorrencia.preparaParaEnvio();
+        if (this.usuario != null)
+            this.usuario.preparaParaEnvio();
     }
 
 

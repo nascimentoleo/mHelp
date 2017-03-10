@@ -20,7 +20,6 @@ import com.ifma.appmhelp.adapters.MensagensAdapter;
 import com.ifma.appmhelp.controls.MensagemController;
 import com.ifma.appmhelp.controls.MensagemPagination;
 import com.ifma.appmhelp.controls.Pagination;
-import com.ifma.appmhelp.daos.MensagemDao;
 import com.ifma.appmhelp.enums.GenericBundleKeys;
 import com.ifma.appmhelp.enums.IntentType;
 import com.ifma.appmhelp.enums.TipoDeMensagem;
@@ -85,9 +84,9 @@ public class MensagensActivity extends AppCompatActivity {
     }
 
     private void atualizarAdapter(Mensagem mensagem){
-        listaDeMensagens.add(0, mensagem);
-        rViewMensagens.getAdapter().notifyItemInserted(0);
-        rViewMensagens.scrollToPosition(0);
+        listaDeMensagens.add(mensagem);
+        rViewMensagens.getAdapter().notifyItemInserted(listaDeMensagens.size());
+        rViewMensagens.scrollToPosition(listaDeMensagens.size());
     }
 
     private void carregaComponentes(){
@@ -140,14 +139,13 @@ public class MensagensActivity extends AppCompatActivity {
                 mensagem.setOcorrencia(this.ocorrencia.clone());
                 mensagem.setUsuario(UsuarioLogado.getInstance().getUsuario().clone());
 
-                new MensagemDao(this).persistir(mensagem, false);
-                mensagem.getOcorrencia().preparaParaEnvio();
-                mensagem.getUsuario().preparaParaEnvio();
-
-                new MensagemController(this).enviaMensagem(this.getUsuarioDestino(mensagem.getOcorrencia()), mensagem);
+                MensagemController controller = new MensagemController(this);
+                controller.salvarMensagem(mensagem);
 
                 edMensagem.getText().clear();
                 this.atualizarAdapter(mensagem);
+
+                controller.enviaMensagem(this.getUsuarioDestino(mensagem.getOcorrencia()), mensagem);
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -166,8 +164,8 @@ public class MensagensActivity extends AppCompatActivity {
 
     private Usuario getUsuarioDestino(Ocorrencia ocorrencia){
         if (UsuarioLogado.getInstance().getUsuario().equals(ocorrencia.getMedico().getUsuario()))
-            return ocorrencia.getMedico().getUsuario();
-        return ocorrencia.getPaciente().getUsuario();
+            return ocorrencia.getPaciente().getUsuario();
+        return ocorrencia.getMedico().getUsuario();
     }
 
 }
