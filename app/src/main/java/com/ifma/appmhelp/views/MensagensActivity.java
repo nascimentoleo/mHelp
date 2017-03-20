@@ -78,7 +78,7 @@ public class MensagensActivity extends AppCompatActivity {
         subtitle.setText(usuarioDestino.getNome());
 
         try {
-            if (new RosterXMPPController().rosterIsOnline(usuarioDestino))
+            if (RosterXMPPController.getInstance().rosterIsOnline(usuarioDestino))
                 subtitle.append(" - " + getString(R.string.online_name));
             else
                 subtitle.append(" - " + getString(R.string.offline_name));

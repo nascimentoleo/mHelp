@@ -4,6 +4,7 @@ import com.ifma.appmhelp.lib.JidTranslator;
 import com.ifma.appmhelp.models.ConexaoXMPP;
 import com.ifma.appmhelp.models.Usuario;
 
+import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.Presence;
@@ -17,20 +18,24 @@ import org.jivesoftware.smack.roster.RosterEntry;
 
 public class RosterXMPPController{
 
+    private static RosterXMPPController instance = null;
     private Roster roster;
 
+    public synchronized static RosterXMPPController getInstance() {
+        if(instance ==null)
+            instance = new RosterXMPPController();
+        return instance;
+    }
+
     public RosterXMPPController() {
-        this.roster = Roster.getInstanceFor(ConexaoXMPP.getInstance().getConexao());
-        this.roster.setSubscriptionMode(Roster.SubscriptionMode.manual);
-    }
-
-    public void sendPresence(Usuario usuario, Presence.Type type) throws SmackException.NotConnectedException {
-        String jId = JidTranslator.getjId(ConexaoXMPP.getInstance().getConexao(),usuario.getLogin());
-        Presence presence = new Presence(type);
-        presence.setTo(jId);
-        ConexaoXMPP.getInstance().getConexao().sendStanza(presence);
 
     }
+
+    public void init(AbstractXMPPConnection conexao){
+        this.roster = Roster.getInstanceFor(conexao);
+        this.roster.setSubscriptionMode(Roster.SubscriptionMode.accept_all);
+    }
+
 
     public void addRoster(Usuario usuario) throws SmackException.NotLoggedInException, XMPPException.XMPPErrorException, SmackException.NotConnectedException, SmackException.NoResponseException {
         String jId = JidTranslator.getjId(ConexaoXMPP.getInstance().getConexao(),usuario.getLogin());
@@ -46,15 +51,8 @@ public class RosterXMPPController{
     }
 
     public boolean rosterIsOnline(Usuario usuario) throws SmackException.NotConnectedException {
-       // this.setPresence();
-        Presence presence = this.roster.getPresence(usuario.getLogin());
+        Presence presence = this.roster.getPresence(JidTranslator.getjId(ConexaoXMPP.getInstance().getConexao(), usuario.getLogin()));
         return presence.getType() == Presence.Type.available;
     }
-
-   /* public void setPresence(){
-        this.roster.getEntries();
-    } */
-
-
 
 }

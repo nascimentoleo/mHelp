@@ -123,13 +123,12 @@ public class SolicitacoesController {
     }
 
     private static boolean removerRoster(Usuario usuario) throws Exception {
-        new RosterXMPPController().removeRoster(usuario);
+        RosterXMPPController.getInstance().removeRoster(usuario);
         return true;
     }
 
     private static boolean adicionarRoster(Usuario usuario) throws SmackException.NotLoggedInException, XMPPException.XMPPErrorException, SmackException.NotConnectedException, SmackException.NoResponseException {
-        RosterXMPPController roster = new RosterXMPPController();
-        roster.addRoster(usuario);
+        RosterXMPPController.getInstance().addRoster(usuario);
         return true;
     }
 

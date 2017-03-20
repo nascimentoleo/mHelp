@@ -2,6 +2,7 @@ package com.ifma.appmhelp.factories;
 
 import android.content.Context;
 
+import com.ifma.appmhelp.controls.RosterXMPPController;
 import com.ifma.appmhelp.services.ConexaoXMPPListener;
 import com.ifma.appmhelp.services.PingListener;
 import com.ifma.appmhelp.services.StanzaXMPPListener;
@@ -46,6 +47,9 @@ public class FactoryConexaoXMPP {
         //Registra o ping para habilitar reconexão
         PingManager.getInstanceFor(xmpptcpConnection).setPingInterval(30);
         PingManager.getInstanceFor(xmpptcpConnection).registerPingFailedListener(new PingListener(ctx));
+
+        RosterXMPPController.getInstance().init(xmpptcpConnection);
+
         return xmpptcpConnection.connect();
     }
 }
