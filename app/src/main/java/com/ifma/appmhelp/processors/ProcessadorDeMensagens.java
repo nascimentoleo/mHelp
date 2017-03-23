@@ -23,5 +23,10 @@ public class ProcessadorDeMensagens implements ProcessadorDeStanzas {
         Intent it = new Intent(IntentType.ATUALIZAR_MENSAGENS.toString());
         it.putExtra(GenericBundleKeys.MENSAGEM.toString(), mensagem);
         lbm.sendBroadcast(it);
+
+        Intent itn = new Intent(IntentType.NOTIFICAR_MENSAGEM.toString());
+        itn.putExtra(GenericBundleKeys.MENSAGEM.toString(), mensagem);
+        lbm.sendBroadcast(itn);
+
     }
 }

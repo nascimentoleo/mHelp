@@ -42,6 +42,7 @@ public class ServiceNotification {
                 .setStyle(new NotificationCompat.BigTextStyle()
                         .bigText(msg))
                 .addAction(R.drawable.ic_cancel, "Fechar", deletePedingIntent)
+                .setPriority(Notification.PRIORITY_MIN)
                 .setContentIntent(pendingIntent).build();
     }
 }

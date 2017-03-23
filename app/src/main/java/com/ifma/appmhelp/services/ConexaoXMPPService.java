@@ -22,6 +22,7 @@ import org.jivesoftware.smack.AbstractXMPPConnection;
 public class ConexaoXMPPService extends Service {
 
     private ConectarXMPPTask conectarTask;
+    private NotificationListener notificationListener;
     private AbstractXMPPConnection conexao;
     private final IBinder mBinder = new LocalBinder();
     private boolean reconectando;
@@ -120,6 +121,8 @@ public class ConexaoXMPPService extends Service {
     private void initNotification(String msg, String ticker){
         Notification notification = ServiceNotification.createNotification(this, msg, ticker);
         startForeground(ServiceNotification.ID_NOTIFICATION,notification);
+
+        this.notificationListener = new NotificationListener(this);
 
     }
 
