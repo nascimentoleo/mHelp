@@ -55,7 +55,7 @@ public class ListOcorrenciasFragment extends Fragment implements OcorrenciasAdap
     private void carregaComponentes(){
         LocalBroadcastManager.getInstance(getContext()).registerReceiver(mReceiver, new IntentFilter(IntentType.ATUALIZAR_OCORRENCIAS.toString()));
 
-        this.ocorrenciaPagination = (OcorrenciaPagination) getArguments().getSerializable("ocorrencia_pagination");
+        //this.ocorrenciaPagination = (OcorrenciaPagination) getArguments().getSerializable("ocorrencia_pagination");
         this.usuarioEhMedico = getArguments().getBoolean("usuario_medico");
         this.rViewOcorrencias  = (RecyclerView) getView().findViewById(R.id.rViewOcorrencias);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());

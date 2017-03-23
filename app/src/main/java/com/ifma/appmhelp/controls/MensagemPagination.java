@@ -25,8 +25,6 @@ public class MensagemPagination extends Pagination<Mensagem> {
 
     @Override
     public List<Mensagem> getRegistros(int offset) throws SQLException {
-        List<Mensagem> mensagens = dao.
-                getMensagensByOcorrencia(Long.valueOf(offset), Long.valueOf(offset + qtdDeRegistros), ocorrencia);
-        return  mensagens;
+        return  dao.getMensagensByOcorrencia(Long.valueOf(offset), Long.valueOf(offset + qtdDeRegistros), ocorrencia);
     }
 }

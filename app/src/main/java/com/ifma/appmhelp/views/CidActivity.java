@@ -18,7 +18,8 @@ import android.widget.Toast;
 
 import com.ifma.appmhelp.R;
 import com.ifma.appmhelp.adapters.CidsAdapter;
-import com.ifma.appmhelp.daos.CidDao;
+import com.ifma.appmhelp.controls.CidPagination;
+import com.ifma.appmhelp.controls.Pagination;
 import com.ifma.appmhelp.daos.ProntuarioCidDao;
 import com.ifma.appmhelp.enums.GenericBundleKeys;
 import com.ifma.appmhelp.lib.EndlessRecyclerViewScrollListener;
@@ -41,7 +42,7 @@ public class CidActivity extends AppCompatActivity {
     private EditText edCidCodigo;
     private EditText edCidDescricao;
     private TextView txtCidNotFound;
-    private int qtdRegistros = 10; //Quantidade de registros por refresh do adapter
+    private CidPagination pagination;
     private ArrayList<Cid> cidsDisponiveis;
     private ArrayList<Cid> cidsCadastrados;
     private boolean modificouProntuario;
@@ -61,7 +62,7 @@ public class CidActivity extends AppCompatActivity {
 
         this.carregaComponentes();
         this.carregarCidsDoProntuario();
-        this.atualizaAdapter(0, qtdRegistros);
+        this.atualizaAdapter(Pagination.FIRST);
     }
 
     @Override
@@ -108,6 +109,7 @@ public class CidActivity extends AppCompatActivity {
     }
 
     private void carregaComponentes(){
+
         this.edCidCodigo = (EditText) findViewById(R.id.edCidCodigo);
         this.edCidDescricao = (EditText) findViewById(R.id.edCidDescricao);
         this.txtCidNotFound = (TextView) findViewById(R.id.txtCidNotFound);
@@ -163,22 +165,21 @@ public class CidActivity extends AppCompatActivity {
             }
         });
         modificouProntuario = false;
+        this.pagination = new CidPagination(this);
      }
 
-    private void atualizaAdapter(int inicio, int fim){
+    private void atualizaAdapter(int offset){
         try {
-            List<Cid> listCids = null;
-            CidDao dao = new CidDao(this);
+            List<Cid> listCids;
 
-            if(!edCidDescricao.getText().toString().isEmpty()) {
-                listCids = dao.getCidsByField(Long.valueOf(inicio), Long.valueOf(fim),
-                        "descricao", edCidDescricao.getText().toString().trim());
-            }
-            else if(!edCidCodigo.getText().toString().isEmpty()){
-                listCids = dao.getCidsByField(Long.valueOf(inicio), Long.valueOf(fim),
-                        "codigo", edCidCodigo.getText().toString().trim());
-            }else
-                listCids = dao.getCids(Long.valueOf(inicio),Long.valueOf(fim));
+            if(!edCidDescricao.getText().toString().isEmpty())
+                listCids = pagination.getRegistros(offset, "descricao", edCidDescricao.getText().toString().trim());
+
+            else if(!edCidCodigo.getText().toString().isEmpty())
+                listCids = pagination.getRegistros(offset,"codigo", edCidCodigo.getText().toString().trim());
+
+            else
+                listCids = pagination.getRegistros(offset);
 
             cidsDisponiveis.addAll(listCids);
             //Excluo os cids já cadastrados da lista de cids disponíveis
@@ -196,7 +197,7 @@ public class CidActivity extends AppCompatActivity {
     }
 
     public void loadNextDataFromApi(int offset) {
-        atualizaAdapter(offset, offset + qtdRegistros);
+        atualizaAdapter(offset);
     }
 
     class OnEditorActionListener implements EditText.OnEditorActionListener{
@@ -207,7 +208,7 @@ public class CidActivity extends AppCompatActivity {
                 actionId == EditorInfo.IME_ACTION_GO     || actionId == EditorInfo.IME_ACTION_NEXT ||
                 event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
                     cidsDisponiveis.clear();
-                    atualizaAdapter(0,qtdRegistros);
+                    atualizaAdapter(Pagination.FIRST);
                     return true;
             }
             return false;

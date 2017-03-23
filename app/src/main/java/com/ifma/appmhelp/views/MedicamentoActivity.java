@@ -22,7 +22,8 @@ import android.widget.Toast;
 import com.ifma.appmhelp.R;
 import com.ifma.appmhelp.adapters.MedicamentosAdapter;
 import com.ifma.appmhelp.adapters.ProntuarioMedicamentosAdapter;
-import com.ifma.appmhelp.daos.MedicamentoDao;
+import com.ifma.appmhelp.controls.MedicamentoPagination;
+import com.ifma.appmhelp.controls.Pagination;
 import com.ifma.appmhelp.daos.ProntuarioMedicamentoDao;
 import com.ifma.appmhelp.enums.GenericBundleKeys;
 import com.ifma.appmhelp.lib.EndlessRecyclerViewScrollListener;
@@ -46,10 +47,9 @@ public class MedicamentoActivity extends AppCompatActivity {
     private EditText edNomeMedicamento;
     private ArrayList<Medicamento> medicamentosDisponiveis;
     private ArrayList<ProntuarioMedicamento> prontuarioMedicamentosCadastrados;
-    private int qtdRegistros = 3; //Quantidade de registros por refresh do adapter
     private boolean modificouProntuario;
     private boolean permiteEditar;
-
+    private MedicamentoPagination pagination;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,7 +63,7 @@ public class MedicamentoActivity extends AppCompatActivity {
 
         this.carregaComponentes();
         this.carregarMedicamentosDoProntuario();
-        this.atualizaAdapter(0, qtdRegistros);
+        this.atualizaAdapter(Pagination.FIRST);
     }
 
 
@@ -135,22 +135,22 @@ public class MedicamentoActivity extends AppCompatActivity {
         rViewMedicamentosCadastrados.setAdapter(prontuarioMedicamentosAdapter);
 
         modificouProntuario = false;
+        pagination = new MedicamentoPagination(this);
     }
 
     private void loadNextDataFromApi(int offset) {
-        atualizaAdapter(offset, qtdRegistros);
+        atualizaAdapter(offset);
     }
 
-    private void atualizaAdapter(int inicio, int fim) {
+    private void atualizaAdapter(int offset) {
         try {
-            List<Medicamento> listMedicamentos = null;
-            MedicamentoDao dao = new MedicamentoDao(this);
+            List<Medicamento> listMedicamentos;
 
-            if(!edNomeMedicamento.getText().toString().isEmpty()) {
-                listMedicamentos = dao.getMedicamentosByField(Long.valueOf(inicio), Long.valueOf(fim),
+            if(!edNomeMedicamento.getText().toString().isEmpty())
+                listMedicamentos = pagination.getRegistros(offset,
                         "nome", edNomeMedicamento.getText().toString().trim());
-            }else
-                listMedicamentos = dao.getMedicamentos(Long.valueOf(inicio),Long.valueOf(fim));
+            else
+                listMedicamentos  = pagination.getRegistros(offset);
 
             medicamentosDisponiveis.addAll(listMedicamentos);
             for (ProntuarioMedicamento prontuarioMedicamento : prontuarioMedicamentosCadastrados){
@@ -184,7 +184,7 @@ public class MedicamentoActivity extends AppCompatActivity {
                     actionId == EditorInfo.IME_ACTION_GO     || actionId == EditorInfo.IME_ACTION_NEXT ||
                     event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
                 medicamentosDisponiveis.clear();
-                atualizaAdapter(0,qtdRegistros);
+                atualizaAdapter(Pagination.FIRST);
                 return true;
             }
             return false;

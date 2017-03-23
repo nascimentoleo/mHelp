@@ -22,9 +22,6 @@ public class OcorrenciaPagination extends Pagination<Ocorrencia> {
 
     @Override
     public List<Ocorrencia> getRegistros(int offset) throws SQLException {
-        List<Ocorrencia> ocorrencias = dao.
-                getOcorrencias(Long.valueOf(offset), Long.valueOf(offset + qtdDeRegistros));
-
-        return  ocorrencias;
+        return dao.getOcorrencias(Long.valueOf(offset), Long.valueOf(offset + qtdDeRegistros));
     }
 }
