@@ -5,11 +5,9 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 
@@ -21,7 +19,7 @@ public class MensagemNotification {
 
     private static final String NOTIFICATION_TAG = "Message";
 
-    public static void notify(final Context context, String ticker, String title, String text, String bigText, int number) {
+    public static void notify(final Context context, String ticker, String title, String text, String bigText, PendingIntent intent) {
         Resources res = context.getResources();
         Bitmap icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_notification);
         icon = ImageLib.getCircleBitmap(icon);
@@ -35,16 +33,11 @@ public class MensagemNotification {
                 .setLargeIcon(icon)
                 .setTicker(ticker)
                 .setNumber(1)
-                .setContentIntent(
-                        PendingIntent.getActivity(
-                                context,
-                                0,
-                                new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.google.com")),
-                                PendingIntent.FLAG_UPDATE_CURRENT))
+                .setContentIntent(intent)
                 .setStyle(new NotificationCompat.BigTextStyle()
-                        .bigText(bigText)
-                        .setBigContentTitle(title)
-                        .setSummaryText(text))
+                .bigText(bigText)
+                .setBigContentTitle(title)
+                .setSummaryText(text))
                 .setAutoCancel(true);
         notify(context, builder.build());
     }

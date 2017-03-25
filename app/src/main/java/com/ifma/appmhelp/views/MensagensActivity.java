@@ -38,20 +38,19 @@ import java.util.List;
 
 public class MensagensActivity extends AppCompatActivity {
 
-    private Ocorrencia ocorrencia;
+    private static Ocorrencia ocorrencia;
     private RecyclerView rViewMensagens;
     private EditText edMensagem;
     private List<Mensagem> listaDeMensagens;
     private Pagination mensagemPagination;
-
+    private static boolean active = false;
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             Mensagem mensagem = (Mensagem) intent.getSerializableExtra(GenericBundleKeys.MENSAGEM.toString());
-            if (!listaDeMensagens.contains(mensagem)){
-                atualizarAdapter(mensagem);
-            }
-
+            if (ocorrencia.equals(mensagem.getOcorrencia()))
+                if (!listaDeMensagens.contains(mensagem))
+                    atualizarAdapter(mensagem);
         }
     };
 
@@ -67,6 +66,31 @@ public class MensagensActivity extends AppCompatActivity {
         personalizarToolbar(toolbar);
         carregaComponentes();
         inicializaAdapter();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        active = true;
+        Intent it = new Intent(IntentType.LIMPAR_MENSAGEM.toString());
+        it.putExtra(GenericBundleKeys.OCORRENCIA.toString(), ocorrencia);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(it);
+
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        active = false;
+//        ocorrencia = null; dando problema
+    }
+
+    public static boolean isActive() {
+        return active;
+    }
+
+    public static Ocorrencia getOcorrencia() {
+        return ocorrencia;
     }
 
     private void personalizarToolbar(Toolbar toolbar){

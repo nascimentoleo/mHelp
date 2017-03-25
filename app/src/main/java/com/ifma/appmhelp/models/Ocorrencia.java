@@ -101,6 +101,8 @@ public class Ocorrencia implements IModel, Cloneable {
 
     @Override
     public boolean equals(Object o) {
+        if (o == null)
+            return false;
         if (o.getClass() != Ocorrencia.class)
             return false;
         return this.id.equals(((Ocorrencia) o).id);
