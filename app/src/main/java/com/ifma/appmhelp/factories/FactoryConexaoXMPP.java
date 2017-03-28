@@ -1,6 +1,7 @@
 package com.ifma.appmhelp.factories;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.ifma.appmhelp.controls.RosterXMPPController;
 import com.ifma.appmhelp.services.ConexaoXMPPListener;
@@ -15,8 +16,13 @@ import org.jivesoftware.smack.filter.StanzaFilter;
 import org.jivesoftware.smack.packet.Stanza;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
+import org.jivesoftware.smackx.filetransfer.FileTransferListener;
+import org.jivesoftware.smackx.filetransfer.FileTransferManager;
+import org.jivesoftware.smackx.filetransfer.FileTransferRequest;
+import org.jivesoftware.smackx.filetransfer.IncomingFileTransfer;
 import org.jivesoftware.smackx.ping.PingManager;
 
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -49,6 +55,33 @@ public class FactoryConexaoXMPP {
         PingManager.getInstanceFor(xmpptcpConnection).registerPingFailedListener(new PingListener(ctx));
 
         RosterXMPPController.getInstance().init(xmpptcpConnection);
+
+
+        // Create the file transfer manager
+        final FileTransferManager manager = FileTransferManager.getInstanceFor(xmpptcpConnection);
+        // Create the listener
+        manager.addFileTransferListener(new FileTransferListener() {
+            public void fileTransferRequest(FileTransferRequest request) {
+                // Check to see if the request should be accepted
+                //if(shouldAccept(request)) {
+                    // Accept it
+                    IncomingFileTransfer transfer = request.accept();
+                try {
+                    transfer.recieveFile(new File("shakespeare_complete_works.txt"));
+                    Log.d("TRANSFER", "Recebeu");
+                } catch (SmackException e) {
+                    e.printStackTrace();
+                    Log.d("TRANSFER", e.getMessage());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    Log.d("TRANSFER", e.getMessage());
+                }
+                /*} else {
+                    // Reject it
+                    request.reject();
+                } */
+            }
+        });
 
         return xmpptcpConnection.connect();
     }
