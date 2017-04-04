@@ -1,11 +1,9 @@
 package com.ifma.appmhelp.services;
 
 import android.content.Context;
-import android.net.Uri;
 import android.util.Log;
 
 import com.ifma.appmhelp.lib.ClientHTTP;
-import com.ifma.appmhelp.lib.FileLib;
 
 import java.io.File;
 
@@ -25,17 +23,16 @@ import retrofit2.Retrofit;
 
 public class FileTransfer {
 
-    public static void uploadFile(Context ctx, Uri fileUri) {
+    public static void uploadFile(Context ctx, String path) {
         // create upload service client
         OkHttpClient client = ClientHTTP.getHTTPClient();
         Retrofit retrofit = new Retrofit.Builder()
                 //.client(client)
-                .baseUrl("http://10.0.2.2:8080/")
+                .baseUrl("http://192.168.0.8:8080/")
                 .build();
 
         FileUploadService service = retrofit.create(FileUploadService.class);
-
-        File file = new File(FileLib.getPath(ctx,fileUri));
+        File file = new File(path);
 
         // create RequestBody instance from file
         RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), file);

@@ -8,6 +8,12 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.os.Environment;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 /**
  * Created by leo on 1/18/17.
@@ -37,4 +43,18 @@ public class ImageLib {
 
         return output;
     }
+
+    public static String saveImageBitmap(Bitmap bitmap) throws IOException {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        //bitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
+        File destination = new File(Environment.getExternalStorageDirectory(),
+                System.currentTimeMillis() + ".jpg");
+        FileOutputStream fo;
+        destination.createNewFile();
+        fo = new FileOutputStream(destination);
+        fo.write(bytes.toByteArray());
+        fo.close();
+        return destination.getPath();
+    }
+
 }

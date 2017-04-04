@@ -10,11 +10,11 @@ public enum IntentType {
     ATUALIZAR_OCORRENCIAS("ATUALIZAR_OCORRENCIAS"),
     ATUALIZAR_MENSAGENS("ATUALIZAR_MENSAGENS"),
     NOTIFICAR_MENSAGEM("NOTIFICAR_MENSAGEM"),
-    LIMPAR_MENSAGEM("LIMPAR_MENSAGEM");
+    LIMPAR_MENSAGEM("LIMPAR_MENSAGEM"),;
 
     private String value;
 
-    private IntentType(String value) {
+    IntentType(String value) {
         this.value = value;
     }
 

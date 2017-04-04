@@ -33,15 +33,8 @@ dependencies {
     //compile 'org.igniterealtime.smack:smack-android-extensions:4.2.0-beta1'
     //compile 'org.igniterealtime.smack:smack-tcp:4.2.0-beta2'
     compile group: 'org.mindrot', name: 'jbcrypt', version: '0.3m'
-
-    // Set this dependency to use JUnit 4 rules
-    // Set this dependency to build and run Espresso tests
-    // Set this dependency to build and run UI Automator tests
-    //androidTestCompile 'com.android.support.test.uiautomator:uiautomator-v18:2.1.2'
     compile 'com.android.support:appcompat-v7:23.4.0'
     compile 'com.android.support:design:23.4.0'
-    compile 'org.igniterealtime.smack:smack-android-extensions:4.1.0'
-    compile 'org.igniterealtime.smack:smack-tcp:4.1.0'
     compile 'com.j256.ormlite:ormlite-core:5.0'
     compile 'com.j256.ormlite:ormlite-android:5.0'
     compile 'com.clough.android.androiddbviewer:androiddbviewer:1.0.0'
@@ -58,6 +51,8 @@ dependencies {
     androidTestCompile 'com.android.support.test:rules:0.5'
     androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2'
     compile 'com.squareup.retrofit2:retrofit:2.2.0'
+    compile "org.igniterealtime.smack:smack-android-extensions:4.1.0"
+    compile "org.igniterealtime.smack:smack-tcp:4.1.0"
 }
 
 

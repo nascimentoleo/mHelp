@@ -1,15 +1,24 @@
 package com.ifma.appmhelp.views;
 
+import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.content.PermissionChecker;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -22,17 +31,23 @@ import com.ifma.appmhelp.controls.MensagemController;
 import com.ifma.appmhelp.controls.MensagemPagination;
 import com.ifma.appmhelp.controls.Pagination;
 import com.ifma.appmhelp.controls.RosterXMPPController;
+import com.ifma.appmhelp.enums.CameraIntent;
 import com.ifma.appmhelp.enums.GenericBundleKeys;
 import com.ifma.appmhelp.enums.IntentType;
+import com.ifma.appmhelp.enums.RequestType;
 import com.ifma.appmhelp.enums.TipoDeMensagem;
 import com.ifma.appmhelp.lib.EndlessRecyclerViewScrollListener;
+import com.ifma.appmhelp.lib.FileLib;
+import com.ifma.appmhelp.lib.ImageLib;
 import com.ifma.appmhelp.models.Mensagem;
 import com.ifma.appmhelp.models.Ocorrencia;
 import com.ifma.appmhelp.models.Usuario;
 import com.ifma.appmhelp.models.UsuarioLogado;
+import com.ifma.appmhelp.services.FileTransfer;
 
 import org.jivesoftware.smack.SmackException;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -89,15 +104,22 @@ public class MensagensActivity extends AppCompatActivity {
         return active;
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.mensagem, menu);
+        return true;
+    }
+
     public static Ocorrencia getOcorrencia() {
         return ocorrencia;
     }
 
-    private void personalizarToolbar(Toolbar toolbar){
+    private void personalizarToolbar(Toolbar toolbar) {
         TextView title = (TextView) toolbar.findViewById(R.id.toolbar_title);
         title.setText(ocorrencia.getTitulo());
 
-        TextView subtitle      = (TextView) toolbar.findViewById(R.id.toolbar_subtitle);
+        TextView subtitle = (TextView) toolbar.findViewById(R.id.toolbar_subtitle);
         Usuario usuarioDestino = this.getUsuarioDestino(ocorrencia);
         subtitle.setText(usuarioDestino.getNome());
 
@@ -122,17 +144,17 @@ public class MensagensActivity extends AppCompatActivity {
             this.rViewMensagens.getLayoutManager().scrollToPosition(0);
         } catch (SQLException e) {
             e.printStackTrace();
-            Toast.makeText(this, "Não foi possível carregar as mensagens - " + e.getMessage(),Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Não foi possível carregar as mensagens - " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 
-    private void atualizarAdapter(Mensagem mensagem){
-        listaDeMensagens.add(0,mensagem);
+    private void atualizarAdapter(Mensagem mensagem) {
+        listaDeMensagens.add(0, mensagem);
         rViewMensagens.getAdapter().notifyItemInserted(0);
         this.rViewMensagens.smoothScrollToPosition(0);
     }
 
-    private void carregaComponentes(){
+    private void carregaComponentes() {
         LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, new IntentFilter(IntentType.ATUALIZAR_MENSAGENS.toString()));
 
         rViewMensagens = (RecyclerView) findViewById(R.id.rViewMensagens);
@@ -147,9 +169,9 @@ public class MensagensActivity extends AppCompatActivity {
             }
         });
 
-        edMensagem        = (EditText) findViewById(R.id.edMensagem);
+        edMensagem = (EditText) findViewById(R.id.edMensagem);
 
-        mensagemPagination = new MensagemPagination(this,ocorrencia);
+        mensagemPagination = new MensagemPagination(this, ocorrencia);
         mensagemPagination.setQtdDeRegistros(200);
 
     }
@@ -171,13 +193,15 @@ public class MensagensActivity extends AppCompatActivity {
             case android.R.id.home:
                 finish();
                 return true;
+            case R.id.action_EnviarImagem:
+                selecionarImagem();
         }
         return false;
 
     }
 
-    public void enviarMensagem(View v){
-        if (this.mensagemEhValida()){
+    public void enviarMensagem(View v) {
+        if (this.mensagemEhValida()) {
             try {
                 Mensagem mensagem = new Mensagem(edMensagem.getText().toString().trim(), TipoDeMensagem.NOVA_MENSAGEM);
                 mensagem.setOcorrencia(this.ocorrencia.clone());
@@ -187,7 +211,7 @@ public class MensagensActivity extends AppCompatActivity {
                 controller.salvarMensagem(mensagem);
 
                 edMensagem.getText().clear();
-               // KeyboardLib.fecharTeclado(this);
+                // KeyboardLib.fecharTeclado(this);
                 this.atualizarAdapter(mensagem);
 
                 controller.enviaMensagem(this.getUsuarioDestino(mensagem.getOcorrencia()), mensagem);
@@ -203,14 +227,87 @@ public class MensagensActivity extends AppCompatActivity {
     }
 
 
-    private boolean mensagemEhValida(){
+    private boolean mensagemEhValida() {
         return !edMensagem.getText().toString().trim().isEmpty();
     }
 
-    private Usuario getUsuarioDestino(Ocorrencia ocorrencia){
+    private Usuario getUsuarioDestino(Ocorrencia ocorrencia) {
         if (UsuarioLogado.getInstance().getUsuario().equals(ocorrencia.getMedico().getUsuario()))
             return ocorrencia.getPaciente().getUsuario();
         return ocorrencia.getMedico().getUsuario();
     }
+
+    private void selecionarImagem() {
+        final CharSequence[] items = {CameraIntent.CAMERA.toString(),
+                CameraIntent.GALERIA.toString(),
+                CameraIntent.CANCELAR.toString()};
+        AlertDialog.Builder builder = new AlertDialog.Builder(MensagensActivity.this);
+        builder.setTitle("Enviar Imagem");
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int item) {
+                if (items[item].equals(CameraIntent.CANCELAR.toString()))
+                    dialog.dismiss();
+                else{
+                    if (items[item].equals(CameraIntent.GALERIA.toString()))
+                        createImageIntent(CameraIntent.GALERIA);
+                    else
+                        createImageIntent(CameraIntent.CAMERA);
+
+                }
+            }
+        });
+        builder.show();
+    }
+
+    private void createImageIntent(CameraIntent cameraIntent) {
+        Intent intent;
+        if (cameraIntent == CameraIntent.CAMERA) {
+            int permissionCheck = ContextCompat.checkSelfPermission(this,
+                    Manifest.permission.CAMERA);
+
+            if(permissionCheck == PermissionChecker.PERMISSION_GRANTED){
+                intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(intent, RequestType.ABRIR_CAMERA.getValue());
+            }
+
+        } else {
+            int permissionCheck = ContextCompat.checkSelfPermission(this,
+                    Manifest.permission.READ_EXTERNAL_STORAGE);
+
+            if(permissionCheck == PermissionChecker.PERMISSION_GRANTED) {
+                intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(intent, "Selecione uma imagem"), RequestType.ABRIR_GALERIA.getValue());
+            }
+        }
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK){
+            String path = null;
+            if (requestCode == RequestType.ABRIR_GALERIA.getValue())
+                path = FileLib.getPath(this,data.getData());
+            else {
+                Bitmap photo = (Bitmap) data.getExtras().get("data");
+                try {
+                    path = ImageLib.saveImageBitmap(photo);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    Toast.makeText(this,"Erro ao salvar imagem",Toast.LENGTH_SHORT).show();
+                }
+            }
+            if (path != null)
+                FileTransfer.uploadFile(this, path);
+            else
+                Toast.makeText(this,"Não foi encontrado caminho da imagem",Toast.LENGTH_SHORT).show();
+
+        }
+
+    }
+
 
 }

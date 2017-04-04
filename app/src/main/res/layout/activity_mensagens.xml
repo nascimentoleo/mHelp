@@ -30,7 +30,7 @@
                     android:layout_height="fill_parent"
                     android:layout_marginRight="?attr/actionBarSize"
                     android:layout_gravity="left"
-                    android:gravity="top"
+                    android:gravity="center_vertical"
                     android:text="@string/title_activity_mensagens"
                     android:textColor="@android:color/white"
                     style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title.Inverse"
@@ -44,11 +44,12 @@
                     android:layout_marginRight="?attr/actionBarSize"
                     android:layout_gravity="left"
                     android:gravity="bottom"
-                    android:textSize="7pt"
+                    android:textSize="5pt"
                     android:text="@string/offline_name"
                     android:textColor="@android:color/white"
                     style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title.Inverse"
                     />
+
 
             </FrameLayout>
 

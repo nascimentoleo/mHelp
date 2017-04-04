@@ -1,7 +1,6 @@
 package com.ifma.appmhelp.views;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -23,7 +22,6 @@ import com.ifma.appmhelp.enums.GenericBundleKeys;
 import com.ifma.appmhelp.models.Ocorrencia;
 import com.ifma.appmhelp.models.Paciente;
 import com.ifma.appmhelp.models.UsuarioLogado;
-import com.ifma.appmhelp.services.FileTransfer;
 
 public class PacienteActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -91,10 +89,6 @@ public class PacienteActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            Intent intent = new Intent();
-            intent.setType("image/*");
-            intent.setAction(Intent.ACTION_GET_CONTENT);
-            startActivityForResult(Intent.createChooser(intent, "Selecione uma imagem"), 1234);
             return true;
         }
 
@@ -148,19 +142,6 @@ public class PacienteActivity extends AppCompatActivity
 
     @Override
     public void OnOcorrenciaSelected(Ocorrencia ocorrencia) {
-        this.abrirOcorrencia(ocorrencia);
-    }
 
-    private void abrirOcorrencia(Ocorrencia ocorrencia){
-
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode == 1234 && resultCode == RESULT_OK) {
-            //imagem veio da galeria
-            Uri uriImagemGaleria = data.getData();
-            FileTransfer.uploadFile(this, uriImagemGaleria);
-        }
     }
 }
