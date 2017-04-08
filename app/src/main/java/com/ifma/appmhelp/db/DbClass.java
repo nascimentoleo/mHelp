@@ -1,15 +1,16 @@
 package com.ifma.appmhelp.db;
 
+import com.ifma.appmhelp.models.Anexo;
 import com.ifma.appmhelp.models.Cid;
 import com.ifma.appmhelp.models.Medicamento;
-import com.ifma.appmhelp.models.Mensagem;
-import com.ifma.appmhelp.models.Ocorrencia;
-import com.ifma.appmhelp.models.ProntuarioMedicamento;
 import com.ifma.appmhelp.models.Medico;
 import com.ifma.appmhelp.models.MedicoPaciente;
+import com.ifma.appmhelp.models.Mensagem;
+import com.ifma.appmhelp.models.Ocorrencia;
 import com.ifma.appmhelp.models.Paciente;
 import com.ifma.appmhelp.models.Prontuario;
 import com.ifma.appmhelp.models.ProntuarioCid;
+import com.ifma.appmhelp.models.ProntuarioMedicamento;
 import com.ifma.appmhelp.models.Usuario;
 
 /**
@@ -28,7 +29,8 @@ public class DbClass {
             Cid.class,
             ProntuarioMedicamento.class,
             Ocorrencia.class,
-            Mensagem.class};
+            Mensagem.class,
+            Anexo.class};
 
 
     public static Class<?>[] getClasses() {

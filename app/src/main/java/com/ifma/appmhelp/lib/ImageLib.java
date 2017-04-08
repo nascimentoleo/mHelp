@@ -46,7 +46,7 @@ public class ImageLib {
 
     public static String saveImageBitmap(Bitmap bitmap) throws IOException {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        //bitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
         File destination = new File(Environment.getExternalStorageDirectory(),
                 System.currentTimeMillis() + ".jpg");
         FileOutputStream fo;
@@ -56,5 +56,6 @@ public class ImageLib {
         fo.close();
         return destination.getPath();
     }
+
 
 }

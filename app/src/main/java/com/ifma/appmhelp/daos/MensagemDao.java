@@ -25,6 +25,9 @@ public class MensagemDao extends BaseController implements IDao<Mensagem> {
 
     @Override
     public boolean persistir(Mensagem objeto, boolean updateChild) throws SQLException {
+        if (updateChild)
+            new AnexoDao(ctx).persistir(objeto.getAnexo(), updateChild);
+
         Dao<Mensagem, Long> dao = DbSqlHelper.getHelper(ctx).getDao(Mensagem.class);
         dao.createOrUpdate(objeto);
         return true;
@@ -32,6 +35,9 @@ public class MensagemDao extends BaseController implements IDao<Mensagem> {
 
     @Override
     public void remover(Mensagem objeto, boolean updateChild) throws SQLException {
+        if (updateChild)
+            new AnexoDao(ctx).remover(objeto.getAnexo(), updateChild);
+
         Dao<Mensagem,Long> dao = DbSqlHelper.getHelper(ctx).getDao(Mensagem.class);
         dao.delete(objeto);
     }

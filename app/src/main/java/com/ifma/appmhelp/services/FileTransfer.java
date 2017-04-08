@@ -28,7 +28,7 @@ public class FileTransfer {
         OkHttpClient client = ClientHTTP.getHTTPClient();
         Retrofit retrofit = new Retrofit.Builder()
                 //.client(client)
-                .baseUrl("http://192.168.0.8:8080/")
+                .baseUrl("http://192.168.0.8:8000/")
                 .build();
 
         FileUploadService service = retrofit.create(FileUploadService.class);

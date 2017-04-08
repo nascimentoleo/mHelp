@@ -27,6 +27,8 @@ public class Mensagem implements IModel{
     private Ocorrencia ocorrencia;
     @DatabaseField(foreign = true, foreignAutoRefresh = true)
     private Usuario usuario;
+    @DatabaseField(foreign = true, foreignAutoRefresh = true)
+    private Anexo anexo;
 
     Mensagem(){
 
@@ -86,6 +88,14 @@ public class Mensagem implements IModel{
 
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
+    }
+
+    public Anexo getAnexo() {
+        return anexo;
+    }
+
+    public void setAnexo(Anexo anexo) {
+        this.anexo = anexo;
     }
 
     public String toJson(){

@@ -50,7 +50,7 @@ public class MensagemController extends BaseController{
             if (mensagem.getOcorrencia().getId() == null)
                 new OcorrenciaDao(ctx).carregaId(mensagem.getOcorrencia());
 
-        new MensagemDao(ctx).persistir(mensagem, false);
+        new MensagemDao(ctx).persistir(mensagem, true);
     }
 
 }

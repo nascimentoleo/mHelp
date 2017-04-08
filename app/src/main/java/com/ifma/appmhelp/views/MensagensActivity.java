@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.content.ContextCompat;
@@ -35,10 +36,12 @@ import com.ifma.appmhelp.enums.CameraIntent;
 import com.ifma.appmhelp.enums.GenericBundleKeys;
 import com.ifma.appmhelp.enums.IntentType;
 import com.ifma.appmhelp.enums.RequestType;
+import com.ifma.appmhelp.enums.TipoAnexo;
 import com.ifma.appmhelp.enums.TipoDeMensagem;
 import com.ifma.appmhelp.lib.EndlessRecyclerViewScrollListener;
 import com.ifma.appmhelp.lib.FileLib;
 import com.ifma.appmhelp.lib.ImageLib;
+import com.ifma.appmhelp.models.Anexo;
 import com.ifma.appmhelp.models.Mensagem;
 import com.ifma.appmhelp.models.Ocorrencia;
 import com.ifma.appmhelp.models.Usuario;
@@ -202,28 +205,30 @@ public class MensagensActivity extends AppCompatActivity {
 
     public void enviarMensagem(View v) {
         if (this.mensagemEhValida()) {
-            try {
-                Mensagem mensagem = new Mensagem(edMensagem.getText().toString().trim(), TipoDeMensagem.NOVA_MENSAGEM);
-                mensagem.setOcorrencia(this.ocorrencia.clone());
-                mensagem.setUsuario(UsuarioLogado.getInstance().getUsuario().clone());
-
-                MensagemController controller = new MensagemController(this);
-                controller.salvarMensagem(mensagem);
-
-                edMensagem.getText().clear();
-                // KeyboardLib.fecharTeclado(this);
-                this.atualizarAdapter(mensagem);
-
-                controller.enviaMensagem(this.getUsuarioDestino(mensagem.getOcorrencia()), mensagem);
-
-            } catch (Exception e) {
-                e.printStackTrace();
-                Toast.makeText(this,
-                        "Erro ao enviar mensagem: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-
+            Mensagem mensagem = new Mensagem(edMensagem.getText().toString().trim(), TipoDeMensagem.NOVA_MENSAGEM);
+            this.enviarMensagem(mensagem);
         }
 
+    }
+
+    private void enviarMensagem(Mensagem mensagem){
+        try {
+            mensagem.setOcorrencia(this.ocorrencia.clone());
+            mensagem.setUsuario(UsuarioLogado.getInstance().getUsuario().clone());
+
+            MensagemController controller = new MensagemController(this);
+            controller.salvarMensagem(mensagem);
+
+            edMensagem.getText().clear();
+            this.atualizarAdapter(mensagem);
+
+            controller.enviaMensagem(this.getUsuarioDestino(mensagem.getOcorrencia()), mensagem);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(this,
+                "Erro ao enviar mensagem: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
     }
 
 
@@ -289,8 +294,17 @@ public class MensagensActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK){
             String path = null;
-            if (requestCode == RequestType.ABRIR_GALERIA.getValue())
-                path = FileLib.getPath(this,data.getData());
+            if (requestCode == RequestType.ABRIR_GALERIA.getValue()) {
+                path = FileLib.getPath(this, data.getData());
+                Bitmap myBitmap = BitmapFactory.decodeFile(path);
+
+                try {
+                    path = ImageLib.saveImageBitmap(myBitmap);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
             else {
                 Bitmap photo = (Bitmap) data.getExtras().get("data");
                 try {
@@ -300,9 +314,15 @@ public class MensagensActivity extends AppCompatActivity {
                     Toast.makeText(this,"Erro ao salvar imagem",Toast.LENGTH_SHORT).show();
                 }
             }
-            if (path != null)
+
+
+            if (path != null) {
                 FileTransfer.uploadFile(this, path);
-            else
+                Mensagem mensagem = new Mensagem("Imagem", TipoDeMensagem.NOVA_MENSAGEM);
+                mensagem.setAnexo(new Anexo(path, TipoAnexo.IMAGEM));
+                this.enviarMensagem(mensagem);
+
+            }else
                 Toast.makeText(this,"Não foi encontrado caminho da imagem",Toast.LENGTH_SHORT).show();
 
         }
