@@ -2,12 +2,12 @@ package com.ifma.appmhelp.views;
 
 import android.Manifest;
 import android.content.BroadcastReceiver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.content.ContextCompat;
@@ -28,6 +28,7 @@ import android.widget.Toast;
 
 import com.ifma.appmhelp.R;
 import com.ifma.appmhelp.adapters.MensagensAdapter;
+import com.ifma.appmhelp.controls.AnexoController;
 import com.ifma.appmhelp.controls.MensagemController;
 import com.ifma.appmhelp.controls.MensagemPagination;
 import com.ifma.appmhelp.controls.Pagination;
@@ -39,18 +40,14 @@ import com.ifma.appmhelp.enums.RequestType;
 import com.ifma.appmhelp.enums.TipoAnexo;
 import com.ifma.appmhelp.enums.TipoDeMensagem;
 import com.ifma.appmhelp.lib.EndlessRecyclerViewScrollListener;
-import com.ifma.appmhelp.lib.FileLib;
-import com.ifma.appmhelp.lib.ImageLib;
 import com.ifma.appmhelp.models.Anexo;
 import com.ifma.appmhelp.models.Mensagem;
 import com.ifma.appmhelp.models.Ocorrencia;
 import com.ifma.appmhelp.models.Usuario;
 import com.ifma.appmhelp.models.UsuarioLogado;
-import com.ifma.appmhelp.services.FileTransfer;
 
 import org.jivesoftware.smack.SmackException;
 
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -62,6 +59,7 @@ public class MensagensActivity extends AppCompatActivity {
     private List<Mensagem> listaDeMensagens;
     private Pagination mensagemPagination;
     private static boolean active = false;
+    private Uri imageUri;
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -272,7 +270,18 @@ public class MensagensActivity extends AppCompatActivity {
                     Manifest.permission.CAMERA);
 
             if(permissionCheck == PermissionChecker.PERMISSION_GRANTED){
+                //imageUri = Uri.fromFile(new AnexoController(this).getDiretorioParaCamera());
+
+                ContentValues values = new ContentValues();
+                values.put(MediaStore.Images.Media.TITLE, "IMG_" + System.currentTimeMillis());
+                values.put(MediaStore.Images.Media.DESCRIPTION, "From mHelp");
+
+                imageUri = getContentResolver().insert(
+                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+
                 intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+
                 startActivityForResult(intent, RequestType.ABRIR_CAMERA.getValue());
             }
 
@@ -292,40 +301,27 @@ public class MensagensActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK){
-            String path = null;
-            if (requestCode == RequestType.ABRIR_GALERIA.getValue()) {
-                path = FileLib.getPath(this, data.getData());
-                Bitmap myBitmap = BitmapFactory.decodeFile(path);
+        if (resultCode == RESULT_OK) {
+            AnexoController anexoController = new AnexoController(this);
+            String nomeArquivo;
+            try {
 
-                try {
-                    path = ImageLib.saveImageBitmap(myBitmap);
-                } catch (IOException e) {
-                    e.printStackTrace();
+                if (requestCode == RequestType.ABRIR_GALERIA.getValue())
+                    nomeArquivo = anexoController.enviarArquivo(data.getData());
+                else {
+                    nomeArquivo = anexoController.enviarArquivo(imageUri);
+
                 }
-
-            }
-            else {
-                Bitmap photo = (Bitmap) data.getExtras().get("data");
-                try {
-                    path = ImageLib.saveImageBitmap(photo);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    Toast.makeText(this,"Erro ao salvar imagem",Toast.LENGTH_SHORT).show();
-                }
-            }
-
-
-            if (path != null) {
-                FileTransfer.uploadFile(this, path);
                 Mensagem mensagem = new Mensagem("Imagem", TipoDeMensagem.NOVA_MENSAGEM);
-                mensagem.setAnexo(new Anexo(path, TipoAnexo.IMAGEM));
+                mensagem.setAnexo(new Anexo(nomeArquivo, TipoAnexo.IMAGEM));
                 this.enviarMensagem(mensagem);
 
-            }else
-                Toast.makeText(this,"Não foi encontrado caminho da imagem",Toast.LENGTH_SHORT).show();
-
+            } catch (Exception e) {
+                e.printStackTrace();
+                Toast.makeText(this,"Erro ao enviar imagem " + e.getMessage(),Toast.LENGTH_SHORT).show();
+            }
         }
+
 
     }
 

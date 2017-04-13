@@ -8,7 +8,6 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.os.Environment;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -44,18 +43,18 @@ public class ImageLib {
         return output;
     }
 
-    public static String saveImageBitmap(Bitmap bitmap) throws IOException {
+    public static File saveImageBitmap(Bitmap bitmap, String path) throws IOException {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
-        File destination = new File(Environment.getExternalStorageDirectory(),
-                System.currentTimeMillis() + ".jpg");
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        File destination = new File(path,
+                Hash.getHash()  + ".jpg");
         FileOutputStream fo;
         destination.createNewFile();
         fo = new FileOutputStream(destination);
         fo.write(bytes.toByteArray());
         fo.close();
-        return destination.getPath();
-    }
 
+        return destination;
+    }
 
 }

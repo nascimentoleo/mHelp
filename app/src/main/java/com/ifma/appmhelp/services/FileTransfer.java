@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.ifma.appmhelp.lib.ClientHTTP;
+import com.ifma.appmhelp.models.Host;
 
 import java.io.File;
 
@@ -28,19 +29,16 @@ public class FileTransfer {
         OkHttpClient client = ClientHTTP.getHTTPClient();
         Retrofit retrofit = new Retrofit.Builder()
                 //.client(client)
-                .baseUrl("http://192.168.0.8:8000/")
+                .baseUrl("http://" + new Host().getEndereco() + ":8000/")
                 .build();
 
         FileUploadService service = retrofit.create(FileUploadService.class);
         File file = new File(path);
 
-        // create RequestBody instance from file
         RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), file);
 
-        // MultipartBody.Part is used to send also the actual file name
         MultipartBody.Part body = MultipartBody.Part.createFormData("file", file.getName(), requestFile);
 
-        // finally, execute the request
         Call<ResponseBody> call = service.upload(body);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
