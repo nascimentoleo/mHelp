@@ -18,16 +18,18 @@ import java.io.IOException;
 
 public class AnexoController extends BaseController{
 
-    private String path;
+    private String pathUpload;
+    private String pathDownload;
 
     public AnexoController(Context ctx) {
         super(ctx);
-        path = ctx.getFilesDir().getPath();
+        pathUpload   = ctx.getFilesDir().getPath();
+        pathDownload = "/download/";
 
     }
 
     public String enviarArquivoDaCamera(Bitmap bitmap) throws IOException {
-        File file = ImageLib.saveImageBitmap(bitmap, this.path);
+        File file = ImageLib.saveImageBitmap(bitmap, this.pathUpload);
         FileTransfer.uploadFile(ctx, file.getPath());
 
         return file.getName();
@@ -37,7 +39,7 @@ public class AnexoController extends BaseController{
         String pathFile = FileLib.getPath(ctx, data);
         Bitmap myBitmap = BitmapFactory.decodeFile(pathFile);
 
-        File file = ImageLib.saveImageBitmap(myBitmap, this.path);
+        File file = ImageLib.saveImageBitmap(myBitmap, this.pathUpload);
 
         FileTransfer.uploadFile(ctx, file.getPath());
 
@@ -45,17 +47,34 @@ public class AnexoController extends BaseController{
     }
 
     public File carregaAnexo(String nome){
-        File anexo = new File(this.path + "/" + nome);
+        File anexo = this.getFile(nome);
 
-        if(anexo.exists())
+        if (anexo != null)
             return anexo;
+
         return this.baixarAnexo(nome);
 
     }
 
-    private File baixarAnexo(String nome){
-        return null;
+    private File baixarAnexo(String nome) {
+        String url         = this.pathDownload + nome;
+        String storagePath = this.pathUpload + "/" + nome;
+
+        FileTransfer.downloadFile(ctx, url, storagePath);
+
+        return getFile(nome);
     }
+
+    private File getFile(String nome){
+        File file = new File(this.pathUpload + "/" + nome);
+
+        if(file.exists())
+            return file;
+
+        return null;
+
+    }
+
 
     /*public void exibirAnexoNaGaleria(File file){
         ContentValues values = new ContentValues();

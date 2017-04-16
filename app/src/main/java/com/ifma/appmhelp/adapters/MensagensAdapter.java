@@ -64,6 +64,8 @@ public class MensagensAdapter extends RecyclerView.Adapter<MensagensAdapter.Recy
 
         if (mensagem.getAnexo() != null)
             this.adicionaAnexo(holder,mensagem.getAnexo());
+        else
+            holder.imgAnexo.setImageBitmap(null);
 
      }
 
@@ -137,8 +139,6 @@ public class MensagensAdapter extends RecyclerView.Adapter<MensagensAdapter.Recy
             holder.imgAnexo.setImageBitmap(bitmap);
         }else
             holder.imgAnexo.setImageBitmap(null);
-
-
     }
 
     public static class RecycleMensagemViewHolder extends RecyclerView.ViewHolder  {

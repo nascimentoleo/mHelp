@@ -22,8 +22,8 @@
                 android:id="@+id/imgAnexo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingTop="3pt"
-                android:paddingLeft="3pt"
+                android:paddingTop="5pt"
+                android:paddingLeft="5pt"
                 android:paddingRight="5pt"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
@@ -45,7 +45,6 @@
                 <TextView
                     android:id="@+id/txtMessage"
                     android:layout_width="wrap_content"
-                    android:paddingTop="2pt"
                     android:layout_height="wrap_content"
                     android:textColor="@android:color/black"
                     android:maxWidth="240dp"
