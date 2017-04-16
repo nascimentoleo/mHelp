@@ -128,7 +128,6 @@ public class FileLib {
     public static boolean writeResponseBodyToDisk(ResponseBody body, String path) {
         try {
             File futureStudioIconFile = new File(path);
-
             InputStream inputStream = null;
             OutputStream outputStream = null;
 

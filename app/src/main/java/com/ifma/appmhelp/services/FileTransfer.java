@@ -45,12 +45,12 @@ public class FileTransfer {
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Log.e("Upload error:", t.getMessage());
+                Log.e("Upload", t.getMessage());
             }
         });
     }
 
-    public static void downloadFile(Context ctx, final String url, final String storagePath){
+    public static void downloadFile(final Context ctx, final String url, final String storagePath){
         FileService downloadService = FileTransfer.createService();
 
         Call<ResponseBody> call = downloadService.download(url);
@@ -59,13 +59,17 @@ public class FileTransfer {
             @Override
             public void onResponse(Call<ResponseBody> call, final Response<ResponseBody> response) {
                 if (response.isSuccessful()){
-                    Log.d("Download", "Conectado ao servidor");
                     new AsyncTask<Void, Void, Void>() {
                         @Override
                         protected Void doInBackground(Void... voids) {
-                            boolean writtenToDisk = FileLib.writeResponseBodyToDisk(response.body(), storagePath);
+                            boolean salvou = FileLib.writeResponseBodyToDisk(response.body(), storagePath);
 
-                            Log.d("Download", "file download was a success? " + writtenToDisk);
+                            if (salvou) {
+                                FileTransfer.deleteFile(ctx, storagePath);
+                                Log.d("Download", "Arquivo salvo");
+                            }else
+                                Log.d("Download", "Arquivo não salvo");
+
                             return null;
                         }
                     }.execute();
@@ -77,10 +81,34 @@ public class FileTransfer {
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Log.e("Download", "Error ao conectar ao servidor");
+                Log.e("Download", t.getMessage());
             }
         });
     }
+
+    private static void deleteFile(Context ctx, String path) {
+
+        FileService service = FileTransfer.createService();
+        File file = new File(path);
+
+        if (file.exists()){
+            Call<ResponseBody> call = service.delete(file.getName());
+            call.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call,
+                                       Response<ResponseBody> response) {
+                    Log.v("Delete", "Arquivo Deletado");
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    Log.e("Delete", t.getMessage());
+                }
+            });
+        }
+
+    }
+
 
     private static FileService createService(){
         OkHttpClient client = ClientHTTP.getHTTPClient();

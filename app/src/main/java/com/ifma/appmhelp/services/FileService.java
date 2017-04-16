@@ -7,6 +7,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
+import retrofit2.http.Path;
 import retrofit2.http.Streaming;
 import retrofit2.http.Url;
 
@@ -26,5 +27,7 @@ public interface FileService {
     @GET
     Call<ResponseBody> download(@Url String fileUrl);
 
+    @GET("delete/{filename}")
+    Call<ResponseBody> delete(@Path("filename") String fileName);
 
 }
