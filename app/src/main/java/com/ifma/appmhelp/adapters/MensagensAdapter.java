@@ -1,19 +1,25 @@
 package com.ifma.appmhelp.adapters;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.ifma.appmhelp.R;
+import com.ifma.appmhelp.controls.AnexoController;
+import com.ifma.appmhelp.models.Anexo;
 import com.ifma.appmhelp.models.Mensagem;
 import com.ifma.appmhelp.models.UsuarioLogado;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -55,6 +61,10 @@ public class MensagensAdapter extends RecyclerView.Adapter<MensagensAdapter.Recy
             holder.txtInfo.setText(sdf.format(mensagem.getData()));
         else
             holder.txtInfo.setText(sdf.format(new Date()));
+
+        if (mensagem.getAnexo() != null)
+            this.adicionaAnexo(holder,mensagem.getAnexo());
+
      }
 
 
@@ -116,21 +126,37 @@ public class MensagensAdapter extends RecyclerView.Adapter<MensagensAdapter.Recy
 
     }
 
+    private void adicionaAnexo(RecycleMensagemViewHolder holder, Anexo anexo){
+        File file = new AnexoController(ctx).carregaAnexo(anexo.getPath());
+
+        if (file != null){
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inSampleSize = 3; //Reduz o tamanho da imagem em 1/3
+            Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath(),options);
+
+            holder.imgAnexo.setImageBitmap(bitmap);
+        }else
+            holder.imgAnexo.setImageBitmap(null);
+
+
+    }
 
     public static class RecycleMensagemViewHolder extends RecyclerView.ViewHolder  {
 
-        public TextView txtMessage;
-        public TextView txtInfo;
-        public LinearLayout content;
-        public LinearLayout contentWithBG;
+        private TextView txtMessage;
+        private TextView txtInfo;
+        private LinearLayout content;
+        private LinearLayout contentWithBG;
+        private ImageView imgAnexo;
 
         public RecycleMensagemViewHolder(View itemView) {
             super(itemView);
 
-            txtMessage = (TextView) itemView.findViewById(R.id.txtMessage);
-            content = (LinearLayout) itemView.findViewById(R.id.content);
+            txtMessage    = (TextView) itemView.findViewById(R.id.txtMessage);
+            content       = (LinearLayout) itemView.findViewById(R.id.content);
             contentWithBG = (LinearLayout) itemView.findViewById(R.id.contentWithBackground);
-            txtInfo = (TextView) itemView.findViewById(R.id.txtInfo);
+            txtInfo       = (TextView) itemView.findViewById(R.id.txtInfo);
+            imgAnexo      = (ImageView) itemView.findViewById(R.id.imgAnexo);
         }
     }
 

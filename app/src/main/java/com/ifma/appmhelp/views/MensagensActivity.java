@@ -270,7 +270,6 @@ public class MensagensActivity extends AppCompatActivity {
                     Manifest.permission.CAMERA);
 
             if(permissionCheck == PermissionChecker.PERMISSION_GRANTED){
-                //imageUri = Uri.fromFile(new AnexoController(this).getDiretorioParaCamera());
 
                 ContentValues values = new ContentValues();
                 values.put(MediaStore.Images.Media.TITLE, "IMG_" + System.currentTimeMillis());
@@ -312,7 +311,8 @@ public class MensagensActivity extends AppCompatActivity {
                     nomeArquivo = anexoController.enviarArquivo(imageUri);
 
                 }
-                Mensagem mensagem = new Mensagem("Imagem", TipoDeMensagem.NOVA_MENSAGEM);
+                Mensagem mensagem = new Mensagem();
+                mensagem.setTipo(TipoDeMensagem.NOVA_MENSAGEM);
                 mensagem.setAnexo(new Anexo(nomeArquivo, TipoAnexo.IMAGEM));
                 this.enviarMensagem(mensagem);
 

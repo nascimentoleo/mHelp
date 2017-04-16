@@ -17,7 +17,7 @@ public class Mensagem implements IModel{
 
     @DatabaseField(generatedId = true)
     private Long id;
-    @DatabaseField(canBeNull = false)
+    @DatabaseField
     private String msg;
     @DatabaseField(canBeNull = false)
     private TipoDeMensagem tipo;
@@ -30,7 +30,7 @@ public class Mensagem implements IModel{
     @DatabaseField(foreign = true, foreignAutoRefresh = true)
     private Anexo anexo;
 
-    Mensagem(){
+    public Mensagem(){
 
     }
 
@@ -38,6 +38,7 @@ public class Mensagem implements IModel{
         this.msg  = msg;
         this.tipo = tipo;
     }
+
 
     public Mensagem(String msg, Usuario usuario) {
         this.msg = msg;
@@ -96,6 +97,10 @@ public class Mensagem implements IModel{
 
     public void setAnexo(Anexo anexo) {
         this.anexo = anexo;
+    }
+
+    public void setTipo(TipoDeMensagem tipo) {
+        this.tipo = tipo;
     }
 
     public String toJson(){

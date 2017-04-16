@@ -44,6 +44,19 @@ public class AnexoController extends BaseController{
         return file.getName();
     }
 
+    public File carregaAnexo(String nome){
+        File anexo = new File(this.path + "/" + nome);
+
+        if(anexo.exists())
+            return anexo;
+        return this.baixarAnexo(nome);
+
+    }
+
+    private File baixarAnexo(String nome){
+        return null;
+    }
+
     /*public void exibirAnexoNaGaleria(File file){
         ContentValues values = new ContentValues();
         values.put(MediaStore.Images.Media.TITLE, "IMG_" + System.currentTimeMillis ());
