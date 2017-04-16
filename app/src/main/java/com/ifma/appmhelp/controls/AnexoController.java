@@ -28,13 +28,6 @@ public class AnexoController extends BaseController{
 
     }
 
-    public String enviarArquivoDaCamera(Bitmap bitmap) throws IOException {
-        File file = ImageLib.saveImageBitmap(bitmap, this.pathUpload);
-        FileTransfer.uploadFile(ctx, file.getPath());
-
-        return file.getName();
-    }
-
     public String enviarArquivo(Uri data) throws IOException {
         String pathFile = FileLib.getPath(ctx, data);
         Bitmap myBitmap = BitmapFactory.decodeFile(pathFile);
@@ -74,7 +67,6 @@ public class AnexoController extends BaseController{
         return null;
 
     }
-
 
     /*public void exibirAnexoNaGaleria(File file){
         ContentValues values = new ContentValues();

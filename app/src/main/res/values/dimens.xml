@@ -7,6 +7,6 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="text_margin">16dp</dimen>
-    <dimen name="maxImgHeight">160pt</dimen>
+    <dimen name="maxImgHeight">100pt</dimen>
     <dimen name="maxImgWidth">100pt</dimen>
 </resources>

@@ -60,15 +60,25 @@ public class MensagensActivity extends AppCompatActivity {
     private Pagination mensagemPagination;
     private static boolean active = false;
     private Uri imageUri;
-    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+
+    private BroadcastReceiver mReceiverMensagem = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             Mensagem mensagem = (Mensagem) intent.getSerializableExtra(GenericBundleKeys.MENSAGEM.toString());
-            if (ocorrencia.equals(mensagem.getOcorrencia()))
-                if (!listaDeMensagens.contains(mensagem))
-                    atualizarAdapter(mensagem);
+
+            //Atualiza uma mensagem específica
+            if (mensagem != null){
+                if (ocorrencia.equals(mensagem.getOcorrencia()))
+                    if (!listaDeMensagens.contains(mensagem))
+                        atualizarAdapter(mensagem);
+
+            //Atualiza todas as mensagems
+            }else
+                 atualizarAdapter();
+
         }
     };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -155,8 +165,12 @@ public class MensagensActivity extends AppCompatActivity {
         this.rViewMensagens.smoothScrollToPosition(0);
     }
 
+    private void atualizarAdapter(){
+        rViewMensagens.getAdapter().notifyDataSetChanged();
+    }
+
     private void carregaComponentes() {
-        LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, new IntentFilter(IntentType.ATUALIZAR_MENSAGENS.toString()));
+        LocalBroadcastManager.getInstance(this).registerReceiver(mReceiverMensagem, new IntentFilter(IntentType.ATUALIZAR_MENSAGENS.toString()));
 
         rViewMensagens = (RecyclerView) findViewById(R.id.rViewMensagens);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
@@ -221,6 +235,7 @@ public class MensagensActivity extends AppCompatActivity {
             this.atualizarAdapter(mensagem);
 
             controller.enviaMensagem(this.getUsuarioDestino(mensagem.getOcorrencia()), mensagem);
+
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -299,31 +314,28 @@ public class MensagensActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(final int requestCode, int resultCode, final Intent data) {
         if (resultCode == RESULT_OK) {
-            AnexoController anexoController = new AnexoController(this);
             String nomeArquivo;
             try {
+                AnexoController anexoController = new AnexoController(MensagensActivity.this);
 
                 if (requestCode == RequestType.ABRIR_GALERIA.getValue())
                     nomeArquivo = anexoController.enviarArquivo(data.getData());
-                else {
+                else
                     nomeArquivo = anexoController.enviarArquivo(imageUri);
 
-                }
+
                 Mensagem mensagem = new Mensagem();
                 mensagem.setTipo(TipoDeMensagem.NOVA_MENSAGEM);
                 mensagem.setAnexo(new Anexo(nomeArquivo, TipoAnexo.IMAGEM));
-                this.enviarMensagem(mensagem);
+                enviarMensagem(mensagem);
 
             } catch (Exception e) {
                 e.printStackTrace();
-                Toast.makeText(this,"Erro ao enviar imagem " + e.getMessage(),Toast.LENGTH_SHORT).show();
+                Toast.makeText(MensagensActivity.this, "Erro ao enviar imagem " + e.getMessage(), Toast.LENGTH_SHORT).show();
             }
+
         }
-
-
     }
-
-
 }

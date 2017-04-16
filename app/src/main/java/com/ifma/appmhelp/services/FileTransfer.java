@@ -1,11 +1,9 @@
 package com.ifma.appmhelp.services;
 
 import android.content.Context;
-import android.os.AsyncTask;
 import android.util.Log;
 
 import com.ifma.appmhelp.lib.ClientHTTP;
-import com.ifma.appmhelp.lib.FileLib;
 import com.ifma.appmhelp.models.Host;
 
 import java.io.File;
@@ -26,7 +24,7 @@ import retrofit2.Retrofit;
 
 public class FileTransfer {
 
-    public static void uploadFile(Context ctx, String path) {
+    public static void uploadFile(final Context ctx, String path) {
 
         FileService service = FileTransfer.createService();
         File file = new File(path);
@@ -36,10 +34,10 @@ public class FileTransfer {
         MultipartBody.Part body = MultipartBody.Part.createFormData("file", file.getName(), requestFile);
 
         Call<ResponseBody> call = service.upload(body);
+
         call.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<ResponseBody> call,
-                                   Response<ResponseBody> response) {
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 Log.v("Upload", "Arquivo Enviado");
             }
 
@@ -59,26 +57,31 @@ public class FileTransfer {
             @Override
             public void onResponse(Call<ResponseBody> call, final Response<ResponseBody> response) {
                 if (response.isSuccessful()){
-                    new AsyncTask<Void, Void, Void>() {
-                        @Override
-                        protected Void doInBackground(Void... voids) {
-                            boolean salvou = FileLib.writeResponseBodyToDisk(response.body(), storagePath);
 
-                            if (salvou) {
-                                FileTransfer.deleteFile(ctx, storagePath);
-                                Log.d("Download", "Arquivo salvo");
-                            }else
-                                Log.d("Download", "Arquivo não salvo");
-
-                            return null;
-                        }
-                    }.execute();
+                    DownloadAnexoTask task = new DownloadAnexoTask(ctx, storagePath);
+                    task.execute(response.body());
 
                 } else {
                     Log.d("Download", "Conexão ao servidor falhou");
+
+                    new Thread(){
+                        @Override
+                        public void run(){
+                            try {
+                                synchronized(this){
+                                    wait(10000);
+                                    Log.d("Download", "Nova tentativa de download");
+                                    downloadFile(ctx, url, storagePath);
+                                }
+                            }
+                            catch(InterruptedException ex){
+                            }
+
+                        }
+                    }.start();
+
                 }
             }
-
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 Log.e("Download", t.getMessage());
@@ -86,7 +89,7 @@ public class FileTransfer {
         });
     }
 
-    private static void deleteFile(Context ctx, String path) {
+    public static void deleteFile(Context ctx, String path) {
 
         FileService service = FileTransfer.createService();
         File file = new File(path);

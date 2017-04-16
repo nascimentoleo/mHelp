@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -49,9 +50,9 @@ public class MensagensAdapter extends RecyclerView.Adapter<MensagensAdapter.Recy
         Mensagem mensagem = this.listaDeMensagens.get(position);
 
         if (mensagem.getUsuario().equals(UsuarioLogado.getInstance().getUsuario()))
-            adicionarMensagemDireita(holder, mensagem);
+            posicionarMensagemDireita(holder);
         else
-            adicionarMensagemEsquerda(holder, mensagem);
+            posicionarMensagemEsquerda(holder);
 
         holder.txtMessage.setText(mensagem.getMsg());
 
@@ -62,10 +63,11 @@ public class MensagensAdapter extends RecyclerView.Adapter<MensagensAdapter.Recy
         else
             holder.txtInfo.setText(sdf.format(new Date()));
 
-        if (mensagem.getAnexo() != null)
-            this.adicionaAnexo(holder,mensagem.getAnexo());
-        else
-            holder.imgAnexo.setImageBitmap(null);
+        if (mensagem.getAnexo() != null){
+            this.adicionaAnexo(holder, mensagem.getAnexo());
+
+        }else
+            holder.imgAnexo.setVisibility(View.GONE);
 
      }
 
@@ -81,7 +83,7 @@ public class MensagensAdapter extends RecyclerView.Adapter<MensagensAdapter.Recy
     }
 
 
-    private void adicionarMensagemEsquerda(RecycleMensagemViewHolder holder, Mensagem mensagem){
+    private void posicionarMensagemEsquerda(RecycleMensagemViewHolder holder){
         holder.contentWithBG.setBackgroundResource(R.drawable.msg_in);
 
         LinearLayout.LayoutParams layoutParams =
@@ -103,7 +105,7 @@ public class MensagensAdapter extends RecyclerView.Adapter<MensagensAdapter.Recy
         holder.txtInfo.setLayoutParams(layoutParams);
     }
 
-    private void adicionarMensagemDireita(RecycleMensagemViewHolder holder, Mensagem mensagem){
+    private void posicionarMensagemDireita(RecycleMensagemViewHolder holder){
         holder.contentWithBG.setBackgroundResource(R.drawable.msg_out);
 
         LinearLayout.LayoutParams layoutParams =
@@ -129,16 +131,20 @@ public class MensagensAdapter extends RecyclerView.Adapter<MensagensAdapter.Recy
     }
 
     private void adicionaAnexo(RecycleMensagemViewHolder holder, Anexo anexo){
+
+        //holder.progressAnexo.setVisibility(View.VISIBLE);
+
         File file = new AnexoController(ctx).carregaAnexo(anexo.getPath());
 
         if (file != null){
             BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inSampleSize = 3; //Reduz o tamanho da imagem em 1/3
+            options.inSampleSize = 7; //Reduz a resolução da imagem
             Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath(),options);
 
             holder.imgAnexo.setImageBitmap(bitmap);
+            holder.imgAnexo.setVisibility(View.VISIBLE);
         }else
-            holder.imgAnexo.setImageBitmap(null);
+            holder.imgAnexo.setVisibility(View.GONE);
     }
 
     public static class RecycleMensagemViewHolder extends RecyclerView.ViewHolder  {
@@ -148,6 +154,7 @@ public class MensagensAdapter extends RecyclerView.Adapter<MensagensAdapter.Recy
         private LinearLayout content;
         private LinearLayout contentWithBG;
         private ImageView imgAnexo;
+        private ProgressBar progressAnexo;
 
         public RecycleMensagemViewHolder(View itemView) {
             super(itemView);
@@ -157,6 +164,7 @@ public class MensagensAdapter extends RecyclerView.Adapter<MensagensAdapter.Recy
             contentWithBG = (LinearLayout) itemView.findViewById(R.id.contentWithBackground);
             txtInfo       = (TextView) itemView.findViewById(R.id.txtInfo);
             imgAnexo      = (ImageView) itemView.findViewById(R.id.imgAnexo);
+            progressAnexo = (ProgressBar) itemView.findViewById(R.id.pbAnexo);
         }
     }
 
