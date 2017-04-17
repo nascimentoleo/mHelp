@@ -33,10 +33,15 @@ public class MensagensAdapter extends RecyclerView.Adapter<MensagensAdapter.Recy
 
     private Context ctx;
     private List<Mensagem> listaDeMensagens;
+    private OnItemClickListener listener;
 
     public MensagensAdapter(Context ctx, List<Mensagem> listaDeMensagens) {
         this.listaDeMensagens = listaDeMensagens;
         this.ctx = ctx;
+    }
+
+    public void setOnItemLongClickListener(OnItemClickListener listener) {
+        this.listener = listener;
     }
 
     @Override
@@ -132,8 +137,6 @@ public class MensagensAdapter extends RecyclerView.Adapter<MensagensAdapter.Recy
 
     private void adicionaAnexo(RecycleMensagemViewHolder holder, Anexo anexo){
 
-        //holder.progressAnexo.setVisibility(View.VISIBLE);
-
         File file = new AnexoController(ctx).carregaAnexo(anexo.getPath());
 
         if (file != null){
@@ -147,7 +150,7 @@ public class MensagensAdapter extends RecyclerView.Adapter<MensagensAdapter.Recy
             holder.imgAnexo.setVisibility(View.GONE);
     }
 
-    public static class RecycleMensagemViewHolder extends RecyclerView.ViewHolder  {
+    public class RecycleMensagemViewHolder extends RecyclerView.ViewHolder  {
 
         private TextView txtMessage;
         private TextView txtInfo;
@@ -155,6 +158,7 @@ public class MensagensAdapter extends RecyclerView.Adapter<MensagensAdapter.Recy
         private LinearLayout contentWithBG;
         private ImageView imgAnexo;
         private ProgressBar progressAnexo;
+        private LinearLayout layout;
 
         public RecycleMensagemViewHolder(View itemView) {
             super(itemView);
@@ -165,7 +169,20 @@ public class MensagensAdapter extends RecyclerView.Adapter<MensagensAdapter.Recy
             txtInfo       = (TextView) itemView.findViewById(R.id.txtInfo);
             imgAnexo      = (ImageView) itemView.findViewById(R.id.imgAnexo);
             progressAnexo = (ProgressBar) itemView.findViewById(R.id.pbAnexo);
+            layout        = (LinearLayout) itemView.findViewById(R.id.contentWithBackground);
+
+            layout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (listener != null)
+                        listener.onItemClick(listaDeMensagens.get(getLayoutPosition()));
+                 }
+            });
         }
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(Mensagem item);
     }
 
 

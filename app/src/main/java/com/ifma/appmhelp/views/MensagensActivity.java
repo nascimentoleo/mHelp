@@ -79,7 +79,6 @@ public class MensagensActivity extends AppCompatActivity {
         }
     };
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -146,13 +145,13 @@ public class MensagensActivity extends AppCompatActivity {
 
     }
 
-
     private void inicializaAdapter() {
         try {
             this.listaDeMensagens = mensagemPagination.getRegistros(Pagination.FIRST);
             MensagensAdapter adapter = new MensagensAdapter(this, listaDeMensagens);
             this.rViewMensagens.setAdapter(adapter);
             this.rViewMensagens.getLayoutManager().scrollToPosition(0);
+            adapter.setOnItemLongClickListener(new AbrirAnexo());
         } catch (SQLException e) {
             e.printStackTrace();
             Toast.makeText(this, "Não foi possível carregar as mensagens - " + e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -183,6 +182,7 @@ public class MensagensActivity extends AppCompatActivity {
 
             }
         });
+
 
         edMensagem = (EditText) findViewById(R.id.edMensagem);
 
@@ -336,6 +336,18 @@ public class MensagensActivity extends AppCompatActivity {
                 Toast.makeText(MensagensActivity.this, "Erro ao enviar imagem " + e.getMessage(), Toast.LENGTH_SHORT).show();
             }
 
+        }
+    }
+
+    private class AbrirAnexo implements MensagensAdapter.OnItemClickListener{
+
+        @Override
+        public void onItemClick(Mensagem item) {
+            if (item.getAnexo() != null){
+                Intent intent = new Intent(MensagensActivity.this, AnexoActivity.class);
+                intent.putExtra(GenericBundleKeys.ANEXO.toString(),item.getAnexo());
+                startActivity(intent);
+            }
         }
     }
 }

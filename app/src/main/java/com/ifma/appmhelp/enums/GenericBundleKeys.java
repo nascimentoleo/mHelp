@@ -10,11 +10,12 @@ public enum GenericBundleKeys {
     MODIFICOU_PRONTUARIO("MODIFICOU_PRONTUARIO"),
     PRONTUARIO("PRONTUARIO"),
     EDITAR_PRONTUARIO("EDITAR_PRONTUARIO"),
-    MENSAGEM("MENSAGEM");
+    MENSAGEM("MENSAGEM"),
+    ANEXO("ANEXO");
 
     private final String value;
 
-    private GenericBundleKeys(String value) {
+    GenericBundleKeys(String value) {
         this.value = value;
     }
 
