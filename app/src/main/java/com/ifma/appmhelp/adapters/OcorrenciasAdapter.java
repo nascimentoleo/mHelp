@@ -61,11 +61,16 @@ public class OcorrenciasAdapter extends RecyclerView.Adapter<OcorrenciasAdapter.
         holder.txtTituloOcorrencia.setText(ocorrencia.getTitulo());
 
         if (ocorrencia.getDataUltimaMensagem() != null) {
-            SimpleDateFormat df = new SimpleDateFormat("HH:mm");
-            holder.txtDataUltimaMensagem.setText(df.format(ocorrencia.getDataUltimaMensagem()));
-        }else
-            holder.txtDataUltimaMensagem.setVisibility(View.INVISIBLE);
+            SimpleDateFormat dfHora = new SimpleDateFormat("HH:mm");
+            SimpleDateFormat dfData = new SimpleDateFormat("dd/MM/yyyy");
 
+            holder.txtDataUltimaMensagem.setText(dfData.format(ocorrencia.getDataUltimaMensagem()));
+            holder.txtHoraUltimaMensagem.setText(dfHora.format(ocorrencia.getDataUltimaMensagem()));
+        }else {
+            holder.txtDataUltimaMensagem.setVisibility(View.INVISIBLE);
+            holder.txtHoraUltimaMensagem.setVisibility(View.INVISIBLE);
+
+        }
         Mensagem mensagem = this.carregaUltimaMensagem(ocorrencia);
 
         if (mensagem != null){
@@ -100,6 +105,7 @@ public class OcorrenciasAdapter extends RecyclerView.Adapter<OcorrenciasAdapter.
         private TextView txtNomePaciente;
         private TextView txtTituloOcorrencia;
         private TextView txtDataUltimaMensagem;
+        private TextView txtHoraUltimaMensagem;
         private TextView txtUltimaMensagem;
         private CardView cardViewOcorrencia;
 
@@ -109,6 +115,7 @@ public class OcorrenciasAdapter extends RecyclerView.Adapter<OcorrenciasAdapter.
             txtNomePaciente       = (TextView) itemView.findViewById(R.id.txtNomePacienteList);
             txtTituloOcorrencia   = (TextView) itemView.findViewById(R.id.txtTituloOcorrenciaList);
             txtDataUltimaMensagem = (TextView) itemView.findViewById(R.id.txtDataUltimaMensagemList);
+            txtHoraUltimaMensagem = (TextView) itemView.findViewById(R.id.txtHoraUltimaMensagemList);
             txtUltimaMensagem     = (TextView) itemView.findViewById(R.id.txtUltimaMensagemList);
             cardViewOcorrencia    = (CardView) itemView.findViewById(R.id.cardViewOcorrencia);
 

@@ -189,6 +189,8 @@ public class MensagensActivity extends AppCompatActivity {
         mensagemPagination = new MensagemPagination(this, ocorrencia);
         mensagemPagination.setQtdDeRegistros(200);
 
+        findViewById(R.id.toolbar_title).setSelected(true);
+
     }
 
     private void loadNextDataFromApi(int totalItemCount) {

@@ -6,6 +6,7 @@ import com.ifma.appmhelp.controls.BaseController;
 import com.ifma.appmhelp.db.DbSqlHelper;
 import com.ifma.appmhelp.models.Mensagem;
 import com.ifma.appmhelp.models.Ocorrencia;
+import com.ifma.appmhelp.models.Paciente;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.PreparedQuery;
 import com.j256.ormlite.stmt.QueryBuilder;
@@ -60,18 +61,18 @@ public class OcorrenciaDao extends BaseController implements IDao<Ocorrencia> {
         return dao.query(prepare);
     }
 
-
     public boolean atualizarDataUltimaMensagem(Ocorrencia objeto) throws SQLException {
-
         Dao<Ocorrencia, Long> dao = DbSqlHelper.getHelper(ctx).getDao(Ocorrencia.class);
-
         UpdateBuilder<Ocorrencia, Long> updateBuilder = dao.updateBuilder();
         updateBuilder.updateColumnValue("dataUltimaMensagem", objeto.getDataUltimaMensagem());
-
         updateBuilder.where().idEq(objeto.getId());
-
         updateBuilder.update();
-
         return true;
     }
+
+    public void removerOcorrenciasByPaciente(Paciente paciente){
+
+    }
+
+
 }

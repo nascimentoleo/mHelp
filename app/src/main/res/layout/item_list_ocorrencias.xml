@@ -33,23 +33,36 @@
 
                 <TextView
                     android:text="@string/ocorrencia_name"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight=".75"
                     android:layout_height="wrap_content"
                     android:id="@+id/txtTituloOcorrenciaList"
-                    android:textSize="20sp" />
-
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:textSize="20sp"
+                    />
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_weight=".25"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
+                    android:orientation="vertical"
                     android:gravity="right">
-                        <TextView
-                            android:text="Data"
+                    <TextView
+                        android:text="Data"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginTop="2pt"
+                        android:id="@+id/txtDataUltimaMensagemList"
+                        android:textSize="12sp" />
+
+                    <TextView
+                            android:text="Hora"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:layout_alignParentRight="true"
                             android:layout_marginTop="2pt"
-                            android:id="@+id/txtDataUltimaMensagemList"
+                            android:id="@+id/txtHoraUltimaMensagemList"
                             android:textSize="12sp" />
                 </LinearLayout>
 

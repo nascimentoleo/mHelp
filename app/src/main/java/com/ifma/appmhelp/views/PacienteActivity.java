@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -17,7 +16,6 @@ import android.widget.Toast;
 
 import com.ifma.appmhelp.R;
 import com.ifma.appmhelp.controls.Login;
-import com.ifma.appmhelp.controls.OcorrenciaPagination;
 import com.ifma.appmhelp.enums.GenericBundleKeys;
 import com.ifma.appmhelp.models.Ocorrencia;
 import com.ifma.appmhelp.models.Paciente;
@@ -36,15 +34,6 @@ public class PacienteActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -55,10 +44,20 @@ public class PacienteActivity extends AppCompatActivity
 
         paciente = (Paciente) UsuarioLogado.getInstance().getModelo();
         this.inicializaAdapter();
+        this.carregaComponentes();
+    }
+
+    private void carregaComponentes() {
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+               novaOcorrencia();
+            }
+        });
     }
 
     private void inicializaAdapter(){
-        OcorrenciaPagination ocorrenciaPagination = new OcorrenciaPagination(this);
         getSupportFragmentManager().beginTransaction().replace(R.id.container_list_ocorrencias_paciente,ListOcorrenciasFragment.newInstance(false)).commit();
 
     }
@@ -75,19 +74,14 @@ public class PacienteActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.paciente, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
@@ -98,46 +92,57 @@ public class PacienteActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        Intent intent;
+
         switch(item.getItemId()){
-            case R.id.nav_alterar_dados :
-                  startActivity(new Intent(this, AlteraDadosActivity.class));
-                break;
-            case R.id.nav_adicionar_medico :
-                intent = new Intent(this, AdicionarMedicoActivity.class);
-                startActivity(intent);
-                break;
-            case R.id.nav_prontuario :
-                if (paciente.getProntuario() != null){
-                    intent = new Intent(this, ProntuarioActivity.class);
-                    intent.putExtra(GenericBundleKeys.PRONTUARIO.toString(), paciente.getProntuario());
-                    startActivity(intent);
-                }else
-                    Toast.makeText(this, "Paciente não possui prontuário cadastrado ", Toast.LENGTH_SHORT).show();
+            case R.id.nav_alterar_dados : this.alterarDados(); break;
 
+            case R.id.nav_adicionar_medico : this.adicionarMedico(); break;
 
-                break;
-            case R.id.nav_nova_ocorrencia :
-                intent = new Intent(this, NovaOcorrenciaActivity.class);
-                startActivity(intent);
-                break;
-            case R.id.nav_logoff_paciente:
-                try {
-                    new Login(this).realizaLogoff();
-                    intent = new Intent(this, SplashActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    intent.putExtra("msg_splash","Realizando logoff ...");
-                    startActivity(intent);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Toast.makeText(this, "Não foi possível realizar o logoff - " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-                break;
+            case R.id.nav_prontuario : this.abrirProntuario(); break;
+
+            case R.id.nav_nova_ocorrencia : this.novaOcorrencia();break;
+
+            case R.id.nav_logoff_paciente: this.logoff(); break;
+
         }
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void novaOcorrencia(){
+        startActivity(new Intent(this, NovaOcorrenciaActivity.class));
+    }
+
+    private void adicionarMedico(){
+        startActivity(new Intent(this, AdicionarMedicoActivity.class));
+    }
+
+    private void alterarDados(){
+        startActivity(new Intent(this, AlteraDadosActivity.class));
+    }
+
+    private void abrirProntuario(){
+        if (paciente.getProntuario() != null){
+            Intent intent = new Intent(this, ProntuarioActivity.class);
+            intent.putExtra(GenericBundleKeys.PRONTUARIO.toString(), paciente.getProntuario());
+            startActivity(intent);
+        }else
+            Toast.makeText(this, "Paciente não possui prontuário cadastrado ", Toast.LENGTH_SHORT).show();
+    }
+
+    private void logoff(){
+        try {
+            new Login(this).realizaLogoff();
+            Intent intent = new Intent(this, SplashActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.putExtra("msg_splash","Realizando logoff ...");
+            startActivity(intent);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Não foi possível realizar o logoff - " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override

@@ -43,4 +43,8 @@ public class OcorrenciasController extends BaseController {
         }
 
     }
+
+    public void removerOcorrencias(Paciente paciente){
+
+    }
 }

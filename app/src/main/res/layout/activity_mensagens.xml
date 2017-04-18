@@ -26,14 +26,17 @@
                 <TextView
                     android:id="@+id/toolbar_title"
                     android:orientation="horizontal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="fill_parent"
                     android:layout_marginRight="?attr/actionBarSize"
                     android:layout_gravity="left"
-                    android:gravity="center_vertical"
                     android:text="@string/title_activity_mensagens"
                     android:textColor="@android:color/white"
                     style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title.Inverse"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="marquee"
+                    android:gravity="center_vertical"
+                    android:marqueeRepeatLimit="1"
+                    android:singleLine="true"
                     />
 
                 <TextView
@@ -44,10 +47,13 @@
                     android:layout_marginRight="?attr/actionBarSize"
                     android:layout_gravity="left"
                     android:gravity="bottom"
-                    android:textSize="5pt"
+                    android:textSize="7pt"
                     android:text="@string/offline_name"
                     android:textColor="@android:color/white"
                     style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title.Inverse"
+                    android:ellipsize="marquee"
+                    android:marqueeRepeatLimit="1"
+                    android:singleLine="true"
                     />
 
 
