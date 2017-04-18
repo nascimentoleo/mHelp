@@ -9,6 +9,7 @@ import com.ifma.appmhelp.models.Ocorrencia;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.PreparedQuery;
 import com.j256.ormlite.stmt.QueryBuilder;
+import com.j256.ormlite.stmt.UpdateBuilder;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -45,6 +46,7 @@ public class OcorrenciaDao extends BaseController implements IDao<Ocorrencia> {
     @Override
     public void carregaId(Ocorrencia objeto) throws SQLException {
         Dao<Ocorrencia, Long> dao = DbSqlHelper.getHelper(ctx).getDao(Ocorrencia.class);
+        objeto.setDataUltimaMensagem(null); //Ignora a data
         List<Ocorrencia> ocorrencias = dao.queryForMatching(objeto);
         if(!ocorrencias.isEmpty())
             objeto.setId(ocorrencias.get(0).getId());
@@ -58,4 +60,18 @@ public class OcorrenciaDao extends BaseController implements IDao<Ocorrencia> {
         return dao.query(prepare);
     }
 
+
+    public boolean atualizarDataUltimaMensagem(Ocorrencia objeto) throws SQLException {
+
+        Dao<Ocorrencia, Long> dao = DbSqlHelper.getHelper(ctx).getDao(Ocorrencia.class);
+
+        UpdateBuilder<Ocorrencia, Long> updateBuilder = dao.updateBuilder();
+        updateBuilder.updateColumnValue("dataUltimaMensagem", objeto.getDataUltimaMensagem());
+
+        updateBuilder.where().idEq(objeto.getId());
+
+        updateBuilder.update();
+
+        return true;
+    }
 }

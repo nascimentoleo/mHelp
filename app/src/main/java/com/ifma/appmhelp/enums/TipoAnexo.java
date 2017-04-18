@@ -5,5 +5,16 @@ package com.ifma.appmhelp.enums;
  */
 
 public enum TipoAnexo {
-    IMAGEM, VIDEO;
+    IMAGEM("Imagem"), VIDEO("Vídeo");
+
+    private String value;
+
+    TipoAnexo(String value) {
+        this.value = value;
+    }
+
+    @Override
+    public String toString() {
+        return this.value;
+    }
 }

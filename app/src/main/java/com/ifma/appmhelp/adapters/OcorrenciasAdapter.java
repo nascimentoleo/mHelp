@@ -9,8 +9,12 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.ifma.appmhelp.R;
+import com.ifma.appmhelp.daos.MensagemDao;
+import com.ifma.appmhelp.models.Mensagem;
 import com.ifma.appmhelp.models.Ocorrencia;
 
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 /**
@@ -56,13 +60,34 @@ public class OcorrenciasAdapter extends RecyclerView.Adapter<OcorrenciasAdapter.
 
         holder.txtTituloOcorrencia.setText(ocorrencia.getTitulo());
 
-        if (ocorrencia.getDataUltimaMensagem() != null)
-            holder.txtDataUltimaMensagem.setText(ocorrencia.getDataUltimaMensagem().toString());
-        else
+        if (ocorrencia.getDataUltimaMensagem() != null) {
+            SimpleDateFormat df = new SimpleDateFormat("HH:mm");
+            holder.txtDataUltimaMensagem.setText(df.format(ocorrencia.getDataUltimaMensagem()));
+        }else
             holder.txtDataUltimaMensagem.setVisibility(View.INVISIBLE);
 
+        Mensagem mensagem = this.carregaUltimaMensagem(ocorrencia);
 
-    //    holder.txtUltimaMensagem.setText(ocorrencia.getUltimaMensagem().getMsg()); Ainda vou ver como farei isso
+        if (mensagem != null){
+
+            if (mensagem.getMsg() != null && !mensagem.getMsg().isEmpty())
+                holder.txtUltimaMensagem.setText(mensagem.getMsg());
+
+            else if (mensagem.getAnexo() != null)
+                holder.txtUltimaMensagem.setText(mensagem.getAnexo().getTipoAnexo().toString());
+
+        }else
+            holder.txtUltimaMensagem.setVisibility(View.INVISIBLE);
+    }
+
+    private Mensagem carregaUltimaMensagem(Ocorrencia ocorrencia){
+        try {
+            return new MensagemDao(ctx).getUltimaMensagemByOcorrencia(ocorrencia);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @Override

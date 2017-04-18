@@ -35,6 +35,7 @@ public class MensagemController extends BaseController{
         String jsonCriptografado = BlowfishCrypt.encrypt(mensagem.toJson());
         Message message = new Message(jId,jsonCriptografado);
         ConexaoXMPP.getInstance().getConexao().sendStanza(message);
+
     }
 
     public void salvarMensagem(Mensagem mensagem) throws SQLException {
@@ -46,11 +47,18 @@ public class MensagemController extends BaseController{
             if (mensagem.getUsuario().getId() == null)
                 new UsuarioDao(ctx).carregaId(mensagem.getUsuario());
 
-        if (mensagem.getOcorrencia() != null)
+        if (mensagem.getOcorrencia() != null) {
+            OcorrenciaDao ocorrenciaDao = new OcorrenciaDao(ctx);
             if (mensagem.getOcorrencia().getId() == null)
-                new OcorrenciaDao(ctx).carregaId(mensagem.getOcorrencia());
+                ocorrenciaDao.carregaId(mensagem.getOcorrencia());
+
+            mensagem.getOcorrencia().setDataUltimaMensagem(mensagem.getData());
+            ocorrenciaDao.atualizarDataUltimaMensagem(mensagem.getOcorrencia());
+
+        }
 
         new MensagemDao(ctx).persistir(mensagem, true);
+
     }
 
 }

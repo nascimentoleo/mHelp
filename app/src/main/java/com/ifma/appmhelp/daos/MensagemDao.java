@@ -61,4 +61,16 @@ public class MensagemDao extends BaseController implements IDao<Mensagem> {
         return dao.query(prepare);
     }
 
+    public Mensagem getUltimaMensagemByOcorrencia(Ocorrencia ocorrencia) throws SQLException {
+        Dao<Mensagem, Long> dao = DbSqlHelper.getHelper(ctx).getDao(Mensagem.class);
+        QueryBuilder<Mensagem, Long> query = dao.queryBuilder().orderBy("data", false).limit(new Long(1));
+        query.orderBy("id",false).where().eq("ocorrencia_id", ocorrencia.getId());
+        List<Mensagem> queryMensagens = dao.query(query.prepare());
+
+        if (!queryMensagens.isEmpty())
+            return queryMensagens.get(0);
+
+        return null;
+    }
+
 }

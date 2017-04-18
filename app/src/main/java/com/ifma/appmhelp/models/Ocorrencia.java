@@ -23,7 +23,6 @@ public class Ocorrencia implements IModel, Cloneable {
     private Paciente paciente;
     @DatabaseField(foreign = true, foreignAutoRefresh = true, canBeNull = false)
     private Medico medico;
-    private Mensagem ultimaMensagem;
 
     Ocorrencia(){
 
@@ -63,14 +62,6 @@ public class Ocorrencia implements IModel, Cloneable {
 
     public void setDataUltimaMensagem(Date dataUltimaMensagem) {
         this.dataUltimaMensagem = dataUltimaMensagem;
-    }
-
-    public Mensagem getUltimaMensagem() {
-        return ultimaMensagem;
-    }
-
-    public void setUltimaMensagem(Mensagem ultimaMensagem) {
-        this.ultimaMensagem = ultimaMensagem;
     }
 
     public Medico getMedico() {
