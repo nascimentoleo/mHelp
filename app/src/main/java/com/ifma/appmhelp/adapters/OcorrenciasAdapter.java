@@ -51,38 +51,42 @@ public class OcorrenciasAdapter extends RecyclerView.Adapter<OcorrenciasAdapter.
     @Override
     public void onBindViewHolder(RecycleOcorrenciasViewHolder holder, int position) {
         Ocorrencia ocorrencia = listaDeOcorrencias.get(position);
-        holder.txtNomePaciente.setText(ocorrencia.getPaciente().getUsuario().getNome());
 
-        if (exibeNomePaciente)
-            holder.txtNomePaciente.setVisibility(View.VISIBLE);
-        else
-            holder.txtNomePaciente.setVisibility(View.INVISIBLE);
+        if (ocorrencia.getPaciente() != null){
+            holder.txtNomePaciente.setText(ocorrencia.getPaciente().getUsuario().getNome());
 
-        holder.txtTituloOcorrencia.setText(ocorrencia.getTitulo());
+            if (exibeNomePaciente)
+                holder.txtNomePaciente.setVisibility(View.VISIBLE);
+            else
+                holder.txtNomePaciente.setVisibility(View.INVISIBLE);
 
-        if (ocorrencia.getDataUltimaMensagem() != null) {
-            SimpleDateFormat dfHora = new SimpleDateFormat("HH:mm");
-            SimpleDateFormat dfData = new SimpleDateFormat("dd/MM/yyyy");
+            holder.txtTituloOcorrencia.setText(ocorrencia.getTitulo());
 
-            holder.txtDataUltimaMensagem.setText(dfData.format(ocorrencia.getDataUltimaMensagem()));
-            holder.txtHoraUltimaMensagem.setText(dfHora.format(ocorrencia.getDataUltimaMensagem()));
-        }else {
-            holder.txtDataUltimaMensagem.setVisibility(View.INVISIBLE);
-            holder.txtHoraUltimaMensagem.setVisibility(View.INVISIBLE);
+            if (ocorrencia.getDataUltimaMensagem() != null) {
+                SimpleDateFormat dfHora = new SimpleDateFormat("HH:mm");
+                SimpleDateFormat dfData = new SimpleDateFormat("dd/MM/yyyy");
 
+                holder.txtDataUltimaMensagem.setText(dfData.format(ocorrencia.getDataUltimaMensagem()));
+                holder.txtHoraUltimaMensagem.setText(dfHora.format(ocorrencia.getDataUltimaMensagem()));
+            }else {
+                holder.txtDataUltimaMensagem.setVisibility(View.INVISIBLE);
+                holder.txtHoraUltimaMensagem.setVisibility(View.INVISIBLE);
+
+            }
+            Mensagem mensagem = this.carregaUltimaMensagem(ocorrencia);
+
+            if (mensagem != null){
+
+                if (mensagem.getMsg() != null && !mensagem.getMsg().isEmpty())
+                    holder.txtUltimaMensagem.setText(mensagem.getMsg());
+
+                else if (mensagem.getAnexo() != null)
+                    holder.txtUltimaMensagem.setText(mensagem.getAnexo().getTipoAnexo().toString());
+
+            }else
+                holder.txtUltimaMensagem.setVisibility(View.INVISIBLE);
         }
-        Mensagem mensagem = this.carregaUltimaMensagem(ocorrencia);
 
-        if (mensagem != null){
-
-            if (mensagem.getMsg() != null && !mensagem.getMsg().isEmpty())
-                holder.txtUltimaMensagem.setText(mensagem.getMsg());
-
-            else if (mensagem.getAnexo() != null)
-                holder.txtUltimaMensagem.setText(mensagem.getAnexo().getTipoAnexo().toString());
-
-        }else
-            holder.txtUltimaMensagem.setVisibility(View.INVISIBLE);
     }
 
     private Mensagem carregaUltimaMensagem(Ocorrencia ocorrencia){

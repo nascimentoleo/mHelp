@@ -53,9 +53,9 @@ public class MensagemDao extends BaseController implements IDao<Mensagem> {
         return dao.queryForMatching(mensagem);
     }
 
-    public List<Mensagem> getMensagensByOcorrencia(Long inicio, Long fim, Ocorrencia ocorrencia) throws SQLException {
+    public List<Mensagem> getMensagensByOcorrencia(Long offset, Long limit, Ocorrencia ocorrencia) throws SQLException {
         Dao<Mensagem, Long> dao = DbSqlHelper.getHelper(ctx).getDao(Mensagem.class);
-        QueryBuilder<Mensagem, Long> query = dao.queryBuilder().offset(inicio).limit(fim);
+        QueryBuilder<Mensagem, Long> query = dao.queryBuilder().offset(offset).limit(limit);
         query.orderBy("id",false).where().eq("ocorrencia_id", ocorrencia.getId());
         PreparedQuery<Mensagem> prepare = query.prepare();
         return dao.query(prepare);

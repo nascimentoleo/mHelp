@@ -38,14 +38,14 @@ public class MedicamentoDao extends BaseController implements IDao<Medicamento> 
 
     }
 
-    public List<Medicamento> getMedicamentos(Long inicio, Long fim) throws SQLException {
+    public List<Medicamento> getMedicamentos(Long offset, Long limit) throws SQLException {
         Dao<Medicamento, Long> dao = DbSqlHelper.getHelper(ctx).getDao(Medicamento.class);
-        return dao.queryBuilder().offset(inicio).limit(fim).query();
+        return dao.queryBuilder().offset(offset).limit(limit).query();
     }
 
-    public List<Medicamento> getMedicamentosByField(Long inicio, Long fim, String fieldName, String fieldValue) throws SQLException {
+    public List<Medicamento> getMedicamentosByField(Long offset, Long limit, String fieldName, String fieldValue) throws SQLException {
         Dao<Medicamento, Long> dao = DbSqlHelper.getHelper(ctx).getDao(Medicamento.class);
-        QueryBuilder<Medicamento, Long> query = dao.queryBuilder().offset(inicio).limit(fim);
+        QueryBuilder<Medicamento, Long> query = dao.queryBuilder().offset(offset).limit(limit);
         query.where().like(fieldName, "%" + fieldValue + "%");
         PreparedQuery<Medicamento> prepare = query.prepare();
         return dao.query(prepare);

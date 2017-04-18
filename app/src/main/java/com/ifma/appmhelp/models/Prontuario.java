@@ -14,7 +14,7 @@ import java.util.Date;
  */
 
 @DatabaseTable(tableName = "prontuarios")
-public class Prontuario implements IModel {
+public class Prontuario implements IModel, Cloneable {
 
     @DatabaseField(generatedId = true)
     private Long id;
@@ -126,6 +126,11 @@ public class Prontuario implements IModel {
 
     public String getDataDeNascimentoString(){
         return DataLib.converterData(this.dataDeNascimento);
+    }
+
+    @Override
+    public Prontuario clone() throws CloneNotSupportedException {
+        return (Prontuario) super.clone();
     }
 
 }

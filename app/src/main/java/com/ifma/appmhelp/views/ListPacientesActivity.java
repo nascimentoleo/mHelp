@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.ifma.appmhelp.R;
 import com.ifma.appmhelp.controls.MensagemController;
+import com.ifma.appmhelp.controls.OcorrenciasController;
 import com.ifma.appmhelp.controls.SolicitacoesController;
 import com.ifma.appmhelp.daos.MedicoPacienteDao;
 import com.ifma.appmhelp.daos.PacienteDao;
@@ -147,6 +148,10 @@ public class ListPacientesActivity extends AppCompatActivity implements ListPaci
     private void removerPaciente(Paciente paciente){
         try {
             if (SolicitacoesController.removerUsuario(this, paciente)) {
+
+                //Removo as ocorrências, mensagens e anexos
+                new OcorrenciasController(this).removerOcorrencias(paciente);
+
                 //Aviso que paciente foi excluido
                 Medico medico = (Medico) UsuarioLogado.getInstance().getModelo();
                 SolicitacaoRoster solicitacaoRoster = new SolicitacaoRoster(medico.getUsuario(), StatusSolicitacaoRoster.REMOVIDA);
@@ -155,6 +160,7 @@ public class ListPacientesActivity extends AppCompatActivity implements ListPaci
 
                 Toast.makeText(this, "Paciente removido !", Toast.LENGTH_SHORT).show();
                 this.inicializaAdapter();
+
             }
         } catch (Exception e) {
             e.printStackTrace();

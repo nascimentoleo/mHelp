@@ -67,6 +67,7 @@ public class SolicitacoesController {
         UsuarioDao usuarioDao = new UsuarioDao(ctx);
         MedicoDao medicoDao = new MedicoDao(ctx);
         Usuario usuarioDB = usuarioDao.getUsuarioByLogin(medico.getUsuario().getLogin());
+
         if (usuarioDB == null){
             medico.setId(null);
             medico.getUsuario().setId(null);

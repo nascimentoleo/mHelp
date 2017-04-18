@@ -6,7 +6,6 @@ import com.ifma.appmhelp.controls.BaseController;
 import com.ifma.appmhelp.db.DbSqlHelper;
 import com.ifma.appmhelp.models.Mensagem;
 import com.ifma.appmhelp.models.Ocorrencia;
-import com.ifma.appmhelp.models.Paciente;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.PreparedQuery;
 import com.j256.ormlite.stmt.QueryBuilder;
@@ -53,13 +52,14 @@ public class OcorrenciaDao extends BaseController implements IDao<Ocorrencia> {
             objeto.setId(ocorrencias.get(0).getId());
     }
 
-    public List<Ocorrencia> getOcorrencias(Long inicio, Long fim) throws SQLException {
+    public List<Ocorrencia> getOcorrencias(Long offset, Long limit) throws SQLException {
         Dao<Ocorrencia, Long> dao = DbSqlHelper.getHelper(ctx).getDao(Ocorrencia.class);
-        QueryBuilder<Ocorrencia, Long> query = dao.queryBuilder().offset(inicio).limit(fim);
+        QueryBuilder<Ocorrencia, Long> query = dao.queryBuilder().offset(offset).limit(limit);
         query.orderBy("dataUltimaMensagem",false);
         PreparedQuery<Ocorrencia> prepare = query.prepare();
         return dao.query(prepare);
     }
+
 
     public boolean atualizarDataUltimaMensagem(Ocorrencia objeto) throws SQLException {
         Dao<Ocorrencia, Long> dao = DbSqlHelper.getHelper(ctx).getDao(Ocorrencia.class);
@@ -70,8 +70,12 @@ public class OcorrenciaDao extends BaseController implements IDao<Ocorrencia> {
         return true;
     }
 
-    public void removerOcorrenciasByPaciente(Paciente paciente){
-
+    public List<Ocorrencia> getOcorrenciasByField(String fieldName, Object fieldValue) throws SQLException {
+        Dao<Ocorrencia, Long> dao = DbSqlHelper.getHelper(ctx).getDao(Ocorrencia.class);
+        QueryBuilder<Ocorrencia, Long> query = dao.queryBuilder();
+        query.where().eq(fieldName, fieldValue);
+        PreparedQuery<Ocorrencia> prepare = query.prepare();
+        return dao.query(prepare);
     }
 
 

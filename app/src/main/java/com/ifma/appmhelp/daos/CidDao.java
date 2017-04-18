@@ -38,9 +38,9 @@ public class CidDao extends BaseController implements IDao<Cid> {
 
     }
 
-    public List<Cid> getCids(Long inicio, Long fim) throws SQLException {
+    public List<Cid> getCids(Long offset, Long limit) throws SQLException {
         Dao<Cid, Long> dao = DbSqlHelper.getHelper(ctx).getDao(Cid.class);
-        return dao.queryBuilder().offset(inicio).limit(fim).query();
+        return dao.queryBuilder().offset(offset).limit(limit).query();
     }
 
     public List<Cid> getTodos(int qtdRegistros) throws SQLException {
@@ -48,9 +48,9 @@ public class CidDao extends BaseController implements IDao<Cid> {
         return dao.queryForAll();
     }
 
-    public List<Cid> getCidsByField(Long inicio, Long fim, String fieldName, String fieldValue) throws SQLException {
+    public List<Cid> getCidsByField(Long offset, Long limit, String fieldName, String fieldValue) throws SQLException {
         Dao<Cid, Long> dao = DbSqlHelper.getHelper(ctx).getDao(Cid.class);
-        QueryBuilder<Cid, Long> query = dao.queryBuilder().offset(inicio).limit(fim);
+        QueryBuilder<Cid, Long> query = dao.queryBuilder().offset(offset).limit(limit);
         query.where().like(fieldName, "%" + fieldValue + "%");
         PreparedQuery<Cid> prepare = query.prepare();
         return dao.query(prepare);

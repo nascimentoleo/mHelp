@@ -23,9 +23,9 @@ public class ProntuariosController extends BaseController {
         super(ctx);
     }
 
-    public ProntuarioParaEnvio getProntuarioParaEnvio(Prontuario prontuario) throws SQLException {
+    public ProntuarioParaEnvio getProntuarioParaEnvio(Prontuario prontuario) throws SQLException, CloneNotSupportedException {
 
-        ProntuarioParaEnvio prontuarioParaEnvio = new ProntuarioParaEnvio(UsuarioLogado.getInstance().getUsuario(), prontuario);
+        ProntuarioParaEnvio prontuarioParaEnvio = new ProntuarioParaEnvio(UsuarioLogado.getInstance().getUsuario().clone(), prontuario.clone());
 
         //Limpo as informações desnecessárias do usuario antes de enviar
         prontuarioParaEnvio.limparUsuario();

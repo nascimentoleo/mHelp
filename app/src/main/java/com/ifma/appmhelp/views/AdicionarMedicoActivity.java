@@ -1,5 +1,6 @@
 package com.ifma.appmhelp.views;
 
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -72,8 +73,14 @@ public class AdicionarMedicoActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, new IntentFilter(IntentType.SOLICITACAO_ROSTER.toString()));
         this.carregaComponentes();
-        this.exibeQRCode();
 
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        this.exibeQRCode();
     }
 
     private void carregaComponentes(){
@@ -83,6 +90,12 @@ public class AdicionarMedicoActivity extends AppCompatActivity {
     }
 
     private void exibeQRCode(){
+
+        ProgressDialog progressdialog = new ProgressDialog(this);
+        progressdialog.setMessage("Arguarde, Gerando QRCode....");
+        progressdialog.setCancelable(false);
+        progressdialog.show();
+
         //Calcula o tamanho que o qrcode deve ocupar
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
@@ -102,11 +115,14 @@ public class AdicionarMedicoActivity extends AppCompatActivity {
 
             imgQrCode.setImageBitmap(bmp);
 
+
         } catch (WriterException e) {
             e.printStackTrace();
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();
         }
+
+        progressdialog.dismiss();
     }
 
 
@@ -122,6 +138,7 @@ public class AdicionarMedicoActivity extends AppCompatActivity {
                         enviaRespostaDaSolicitacao(StatusSolicitacaoRoster.APROVADA);
                         enviaProntuario(medico.getUsuario(),paciente.getProntuario());
                         adicionarMedico(medico);
+
                     }})
 
                 .setNegativeButton(R.string.resposta_nao,new DialogInterface.OnClickListener() {
@@ -148,9 +165,11 @@ public class AdicionarMedicoActivity extends AppCompatActivity {
 
     private void enviaProntuario(Usuario usuarioTo, Prontuario prontuario){
         try {
-            ProntuarioParaEnvio prontuarioParaEnvio = new ProntuariosController(this).getProntuarioParaEnvio(prontuario);
-            Mensagem mensagem = new Mensagem(prontuarioParaEnvio.toJson(), TipoDeMensagem.ATUALIZACAO_PRONTUARIO);
-             new MensagemController(this).enviaMensagem(usuarioTo, mensagem);
+            if (prontuario != null){
+                ProntuarioParaEnvio prontuarioParaEnvio = new ProntuariosController(this).getProntuarioParaEnvio(prontuario);
+                Mensagem mensagem = new Mensagem(prontuarioParaEnvio.toJson(), TipoDeMensagem.ATUALIZACAO_PRONTUARIO);
+                new MensagemController(this).enviaMensagem(usuarioTo, mensagem);
+            }
         } catch (Exception e) {
             e.printStackTrace();
             Toast.makeText(this, "Erro ao enviar o prontuário ao médico: " + e.getMessage(), Toast.LENGTH_LONG).show();

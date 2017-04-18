@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 import android.widget.Toast;
 
+import com.ifma.appmhelp.controls.OcorrenciasController;
 import com.ifma.appmhelp.controls.SolicitacoesController;
 import com.ifma.appmhelp.daos.MedicoDao;
 import com.ifma.appmhelp.daos.UsuarioDao;
@@ -42,8 +43,14 @@ public class ProcessadorDeSolicitacoes implements ProcessadorDeStanzas {
             //Agora procuro o médico
             Medico medico = new MedicoDao(ctx).getMedicoByUsuario(usuario);
             if (medico != null){
-                if (SolicitacoesController.removerUsuario(ctx, medico))
+                if (SolicitacoesController.removerUsuario(ctx, medico)) {
+                    //Removo as ocorrências, mensagens e anexos
+                    new OcorrenciasController(ctx).removerOcorrencias(medico);
+
+                    LocalBroadcastManager.getInstance(ctx).sendBroadcast(new Intent(IntentType.ATUALIZAR_OCORRENCIAS.toString()));
+
                     Toast.makeText(ctx, "Você foi removido pelo médico " + usuario.getNome(), Toast.LENGTH_SHORT).show();
+                }
             }
         } else {
             it.putExtra(SolicitacaoBundleKeys.FINALIZOU.toString(), true);
