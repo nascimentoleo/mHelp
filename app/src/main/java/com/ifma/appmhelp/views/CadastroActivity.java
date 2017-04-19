@@ -10,18 +10,9 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.ifma.appmhelp.R;
-import com.ifma.appmhelp.controls.ClientXMPPController;
-import com.ifma.appmhelp.daos.IDao;
-import com.ifma.appmhelp.daos.MedicoDao;
-import com.ifma.appmhelp.daos.PacienteDao;
-import com.ifma.appmhelp.daos.UsuarioDao;
-import com.ifma.appmhelp.lib.BlowfishCrypt;
-import com.ifma.appmhelp.models.IModel;
-import com.ifma.appmhelp.models.Medico;
-import com.ifma.appmhelp.models.Paciente;
+import com.ifma.appmhelp.controls.CadastroController;
+import com.ifma.appmhelp.enums.TipoUsuario;
 import com.ifma.appmhelp.models.Usuario;
-
-import java.sql.SQLException;
 
 public class CadastroActivity extends AppCompatActivity {
 
@@ -45,52 +36,23 @@ public class CadastroActivity extends AppCompatActivity {
 
     public void cadastrar(View v){
         if(cadastroEhValido()){
-            UsuarioDao usuarioDao = new UsuarioDao(this);
-            ClientXMPPController clientXMPPController = new ClientXMPPController();
-            try {
-                Usuario novoUsuario = new Usuario(edUsuarioCadastro.getText().toString(), edSenhaCadastro.getText().toString());
-                novoUsuario.setNome(edNomeCadastro.getText().toString());
-                novoUsuario.setEmail(edEmailCadastro.getText().toString());
+            Usuario novoUsuario = new Usuario(edUsuarioCadastro.getText().toString(), edSenhaCadastro.getText().toString());
+            novoUsuario.setNome(edNomeCadastro.getText().toString());
+            novoUsuario.setEmail(edEmailCadastro.getText().toString());
 
-                //Se não existe usuário cadastrado no banco
-                if(usuarioDao.getUsuarioByLogin(novoUsuario.getLogin()) == null) {
-                    //Criptografa a senha antes de salvar no banco
-                    novoUsuario.setSenha(BlowfishCrypt.encrypt(novoUsuario.getSenha()));
-                    usuarioDao.persistir(novoUsuario, false);
-                    this.registrarUsuario(novoUsuario);
-                    Snackbar.make(findViewById(android.R.id.content), "Usuário cadastrado", Snackbar.LENGTH_LONG).show();
+            TipoUsuario tipoUsuario;
+            if(rGroupCadastro.getCheckedRadioButtonId() == R.id.radioPaciente)
+                tipoUsuario = TipoUsuario.PACIENTE;
+            else
+                tipoUsuario = TipoUsuario.MEDICO;
 
-                    novoUsuario.setSenha(BlowfishCrypt.decrypt(novoUsuario.getSenha()));
+            CadastroController cadastroController = new CadastroController(this);
 
-                    if(!clientXMPPController.cadastrarUsuario(novoUsuario)){
-                        novoUsuario.setSenha(BlowfishCrypt.encrypt(novoUsuario.getSenha()));
-                        Snackbar.make(findViewById(android.R.id.content), "Não foi possível cadastrar, conexão não estabelecida", Snackbar.LENGTH_LONG).show();
-
-                        usuarioDao.deletar(novoUsuario);
-                    }
-
-                }else
-                    Snackbar.make(findViewById(android.R.id.content), "Usuário já existe", Snackbar.LENGTH_LONG).show();
-
-                 } catch (Exception  e) {
-                e.printStackTrace();
-                Toast.makeText(this, "Erro ao cadastrar usuário - " + e.getMessage(), Toast.LENGTH_SHORT).show();
-            }
+            if (cadastroController.cadastrar(novoUsuario, tipoUsuario))
+                Snackbar.make(findViewById(android.R.id.content), "Usuário cadastrado", Snackbar.LENGTH_LONG).show();
+            else
+                Toast.makeText(this,cadastroController.getMsgErro(),Toast.LENGTH_SHORT).show();
         }
-    }
-
-    public boolean registrarUsuario(Usuario usuario) throws SQLException {
-        IDao controle;
-        IModel modelo;
-        if(rGroupCadastro.getCheckedRadioButtonId() == R.id.radioPaciente) {
-            controle = new PacienteDao(this);
-            modelo   = new Paciente(usuario);
-        }else{
-            controle = new MedicoDao(this);
-            modelo   = new Medico(usuario);
-        }
-        controle.persistir(modelo, false);
-        return true;
     }
 
     public void registrarComponentes(){
@@ -102,6 +64,13 @@ public class CadastroActivity extends AppCompatActivity {
     }
 
     private boolean cadastroEhValido(){
+
+        if(edNomeCadastro.getText().toString().trim().equals("")){
+            Snackbar.make(findViewById(android.R.id.content), "Preencha um nome", Snackbar.LENGTH_LONG).show();
+            edNomeCadastro.setFocusable(true);
+            return false;
+        }
+
         if(edUsuarioCadastro.getText().toString().trim().equals("")){
             Snackbar.make(findViewById(android.R.id.content), "Preencha um usuário", Snackbar.LENGTH_LONG).show();
             edUsuarioCadastro.setFocusable(true);

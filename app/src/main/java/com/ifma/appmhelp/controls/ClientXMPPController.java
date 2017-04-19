@@ -20,7 +20,7 @@ import java.util.Map;
  */
 public class ClientXMPPController{
 
-    public boolean cadastrarUsuario(Usuario usuario) throws Exception{
+    public static boolean cadastrarUsuario(Usuario usuario) throws SmackException.NotConnectedException, XMPPException.XMPPErrorException, SmackException.NoResponseException {
         if (ConexaoXMPP.getInstance().conexaoEstaAtiva()){
             AccountManager accountManager = AccountManager.getInstance(ConexaoXMPP.getInstance().getConexao());
             Map<String, String> atributes = new HashMap<>();
