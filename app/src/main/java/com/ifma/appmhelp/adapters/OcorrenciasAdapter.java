@@ -52,40 +52,37 @@ public class OcorrenciasAdapter extends RecyclerView.Adapter<OcorrenciasAdapter.
     public void onBindViewHolder(RecycleOcorrenciasViewHolder holder, int position) {
         Ocorrencia ocorrencia = listaDeOcorrencias.get(position);
 
-        if (ocorrencia.getPaciente() != null){
-            holder.txtNomePaciente.setText(ocorrencia.getPaciente().getUsuario().getNome());
+        if (exibeNomePaciente){
+            holder.txtNomeUsuario.setText(ocorrencia.getPaciente().getUsuario().getNome());
+        }else
+            holder.txtNomeUsuario.setText(ocorrencia.getMedico().getUsuario().getNome());
 
-            if (exibeNomePaciente)
-                holder.txtNomePaciente.setVisibility(View.VISIBLE);
-            else
-                holder.txtNomePaciente.setVisibility(View.INVISIBLE);
+        holder.txtTituloOcorrencia.setText(ocorrencia.getTitulo());
 
-            holder.txtTituloOcorrencia.setText(ocorrencia.getTitulo());
+        if (ocorrencia.getDataUltimaMensagem() != null) {
+            SimpleDateFormat dfHora = new SimpleDateFormat("HH:mm");
+            SimpleDateFormat dfData = new SimpleDateFormat("dd/MM/yyyy");
 
-            if (ocorrencia.getDataUltimaMensagem() != null) {
-                SimpleDateFormat dfHora = new SimpleDateFormat("HH:mm");
-                SimpleDateFormat dfData = new SimpleDateFormat("dd/MM/yyyy");
+            holder.txtDataUltimaMensagem.setText(dfData.format(ocorrencia.getDataUltimaMensagem()));
+            holder.txtHoraUltimaMensagem.setText(dfHora.format(ocorrencia.getDataUltimaMensagem()));
+        }else {
+            holder.txtDataUltimaMensagem.setVisibility(View.INVISIBLE);
+            holder.txtHoraUltimaMensagem.setVisibility(View.INVISIBLE);
 
-                holder.txtDataUltimaMensagem.setText(dfData.format(ocorrencia.getDataUltimaMensagem()));
-                holder.txtHoraUltimaMensagem.setText(dfHora.format(ocorrencia.getDataUltimaMensagem()));
-            }else {
-                holder.txtDataUltimaMensagem.setVisibility(View.INVISIBLE);
-                holder.txtHoraUltimaMensagem.setVisibility(View.INVISIBLE);
-
-            }
-            Mensagem mensagem = this.carregaUltimaMensagem(ocorrencia);
-
-            if (mensagem != null){
-
-                if (mensagem.getMsg() != null && !mensagem.getMsg().isEmpty())
-                    holder.txtUltimaMensagem.setText(mensagem.getMsg());
-
-                else if (mensagem.getAnexo() != null)
-                    holder.txtUltimaMensagem.setText(mensagem.getAnexo().getTipoAnexo().toString());
-
-            }else
-                holder.txtUltimaMensagem.setVisibility(View.INVISIBLE);
         }
+        Mensagem mensagem = this.carregaUltimaMensagem(ocorrencia);
+
+        if (mensagem != null){
+
+            if (mensagem.getMsg() != null && !mensagem.getMsg().isEmpty())
+                holder.txtUltimaMensagem.setText(mensagem.getMsg());
+
+            else if (mensagem.getAnexo() != null)
+                holder.txtUltimaMensagem.setText(mensagem.getAnexo().getTipoAnexo().toString());
+
+        }else
+            holder.txtUltimaMensagem.setVisibility(View.INVISIBLE);
+
 
     }
 
@@ -106,7 +103,7 @@ public class OcorrenciasAdapter extends RecyclerView.Adapter<OcorrenciasAdapter.
 
     public class RecycleOcorrenciasViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView txtNomePaciente;
+        private TextView txtNomeUsuario;
         private TextView txtTituloOcorrencia;
         private TextView txtDataUltimaMensagem;
         private TextView txtHoraUltimaMensagem;
@@ -116,7 +113,7 @@ public class OcorrenciasAdapter extends RecyclerView.Adapter<OcorrenciasAdapter.
         public RecycleOcorrenciasViewHolder(View itemView) {
             super(itemView);
 
-            txtNomePaciente       = (TextView) itemView.findViewById(R.id.txtNomePacienteList);
+            txtNomeUsuario        = (TextView) itemView.findViewById(R.id.txtNomeUsuarioList);
             txtTituloOcorrencia   = (TextView) itemView.findViewById(R.id.txtTituloOcorrenciaList);
             txtDataUltimaMensagem = (TextView) itemView.findViewById(R.id.txtDataUltimaMensagemList);
             txtHoraUltimaMensagem = (TextView) itemView.findViewById(R.id.txtHoraUltimaMensagemList);

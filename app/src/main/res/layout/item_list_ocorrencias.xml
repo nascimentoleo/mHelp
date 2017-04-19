@@ -73,7 +73,9 @@
                     android:text="@string/paciente_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/txtNomePacienteList"
+                    android:id="@+id/txtNomeUsuarioList"
+                    android:maxLines="1"
+                    android:ellipsize="end"
                     android:textSize="16sp" />
 
                 <TextView
@@ -81,6 +83,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/txtUltimaMensagemList"
+                    android:maxLines="1"
+                    android:ellipsize="end"
                     android:textSize="12sp" />
 
 
