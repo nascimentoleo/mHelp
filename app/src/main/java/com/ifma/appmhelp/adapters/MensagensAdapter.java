@@ -3,6 +3,8 @@ package com.ifma.appmhelp.adapters;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.ThumbnailUtils;
+import android.provider.MediaStore;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -16,6 +18,7 @@ import android.widget.TextView;
 
 import com.ifma.appmhelp.R;
 import com.ifma.appmhelp.controls.AnexoController;
+import com.ifma.appmhelp.enums.TipoAnexo;
 import com.ifma.appmhelp.models.Anexo;
 import com.ifma.appmhelp.models.Mensagem;
 import com.ifma.appmhelp.models.UsuarioLogado;
@@ -68,11 +71,10 @@ public class MensagensAdapter extends RecyclerView.Adapter<MensagensAdapter.Recy
         else
             holder.txtInfo.setText(sdf.format(new Date()));
 
-        if (mensagem.getAnexo() != null){
-            this.adicionaAnexo(holder, mensagem.getAnexo());
+        holder.imgAnexo.setVisibility(View.GONE);
 
-        }else
-            holder.imgAnexo.setVisibility(View.GONE);
+        if (mensagem.getAnexo() != null)
+            this.adicionaAnexo(holder, mensagem.getAnexo());
 
      }
 
@@ -135,19 +137,24 @@ public class MensagensAdapter extends RecyclerView.Adapter<MensagensAdapter.Recy
 
     }
 
-    private void adicionaAnexo(RecycleMensagemViewHolder holder, Anexo anexo){
+    private void adicionaAnexo(final RecycleMensagemViewHolder holder, Anexo anexo){
 
         File file = new AnexoController(ctx).carregaAnexo(anexo.getPath());
-
+        Bitmap bitmap;
         if (file != null){
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inSampleSize = 7; //Reduz a resolução da imagem
-            Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath(),options);
+            if (anexo.getTipoAnexo() == TipoAnexo.IMAGEM){
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inSampleSize = 7; //Reduz a resolução da imagem
+                bitmap = BitmapFactory.decodeFile(file.getAbsolutePath(),options);
+
+            }else {
+                bitmap = ThumbnailUtils.createVideoThumbnail(file.getAbsolutePath(),
+                        MediaStore.Images.Thumbnails.MINI_KIND);
+            }
 
             holder.imgAnexo.setImageBitmap(bitmap);
             holder.imgAnexo.setVisibility(View.VISIBLE);
-        }else
-            holder.imgAnexo.setVisibility(View.GONE);
+        }
     }
 
     public class RecycleMensagemViewHolder extends RecyclerView.ViewHolder  {
@@ -174,8 +181,10 @@ public class MensagensAdapter extends RecyclerView.Adapter<MensagensAdapter.Recy
             layout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (listener != null)
-                        listener.onItemClick(listaDeMensagens.get(getLayoutPosition()));
+
+                    if (listener != null) {
+                       listener.onItemClick(listaDeMensagens.get(getLayoutPosition()));
+                    }
                  }
             });
         }

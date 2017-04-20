@@ -2,12 +2,16 @@ package com.ifma.appmhelp.views;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.MediaController;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 import com.ifma.appmhelp.R;
 import com.ifma.appmhelp.controls.AnexoController;
@@ -24,6 +28,7 @@ import it.sephiroth.android.library.imagezoom.ImageViewTouchBase;
 public class AnexoActivity extends AppCompatActivity {
 
     private ImageViewTouch imgFullScreen;
+    private VideoView videoFullScreen;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,8 +52,18 @@ public class AnexoActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onStop() {
+        if (this.videoFullScreen.isPlaying())
+            this.videoFullScreen.pause();
+
+        super.onStop();
+
+    }
+
     private void carregaComponentes(){
-        imgFullScreen = (ImageViewTouch) findViewById(R.id.imgFullScreen);
+        imgFullScreen   = (ImageViewTouch) findViewById(R.id.imgFullScreen);
+        videoFullScreen = (VideoView) findViewById(R.id.videoFullScreen);
 
     }
 
@@ -57,15 +72,36 @@ public class AnexoActivity extends AppCompatActivity {
         File fileAnexo = anexoController.carregaAnexo(anexo.getPath());
 
         if (fileAnexo.exists()){
-            if (anexo.getTipoAnexo() == TipoAnexo.IMAGEM){
-                Bitmap bitmap = BitmapFactory.decodeFile(fileAnexo.getAbsolutePath());
-                this.imgFullScreen.setImageBitmap(bitmap);
-                this.imgFullScreen.setDisplayType(ImageViewTouchBase.DisplayType.FIT_IF_BIGGER);
-            }
+            if (anexo.getTipoAnexo() == TipoAnexo.IMAGEM)
+                this.exibeImagem(fileAnexo);
+            else
+                this.exibeVideo(fileAnexo);
         }else{
             Toast.makeText(this,"Anexo não encontrado",Toast.LENGTH_SHORT).show();
             finish();
         }
+    }
+
+    private void exibeImagem(File file){
+        Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+        this.imgFullScreen.setImageBitmap(bitmap);
+        this.imgFullScreen.setDisplayType(ImageViewTouchBase.DisplayType.FIT_IF_BIGGER);
+        this.imgFullScreen.setVisibility(View.VISIBLE);
+    }
+
+    private void exibeVideo(final File file){
+        MediaController mediaControls = new MediaController(this);
+        this.videoFullScreen.setMediaController(mediaControls);
+        this.videoFullScreen.setVisibility(View.VISIBLE);
+        this.videoFullScreen.setVideoPath(file.getAbsolutePath());
+
+        this.videoFullScreen.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                videoFullScreen.start();
+            }
+
+        });
     }
 
     @Override

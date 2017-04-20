@@ -49,6 +49,8 @@ public class FileTransfer {
     }
 
     public static void downloadFile(final Context ctx, final String url, final String storagePath){
+
+        final int[] numTentativas = {0};
         FileService downloadService = FileTransfer.createService();
 
         Call<ResponseBody> call = downloadService.download(url);
@@ -63,22 +65,25 @@ public class FileTransfer {
 
                 } else {
                     Log.d("Download", "Conexão ao servidor falhou");
-
-                    new Thread(){
-                        @Override
-                        public void run(){
-                            try {
-                                synchronized(this){
-                                    wait(10000);
-                                    Log.d("Download", "Nova tentativa de download");
-                                    downloadFile(ctx, url, storagePath);
+                    if (numTentativas[0] < 5){
+                        new Thread(){
+                            @Override
+                            public void run(){
+                                try {
+                                    synchronized(this){
+                                        numTentativas[0]++;
+                                        wait(10000);
+                                        Log.d("Download", "Nova tentativa de download");
+                                        downloadFile(ctx, url, storagePath);
+                                    }
                                 }
-                            }
-                            catch(InterruptedException ex){
-                            }
+                                catch(InterruptedException ex){
+                                }
 
-                        }
-                    }.start();
+                            }
+                        }.start();
+                    }
+
 
                 }
             }
