@@ -37,6 +37,7 @@ public class ProcessadorDeProntuarios implements ProcessadorDeStanzas {
             paciente = new PacienteDao(ctx).getPacienteByUsuario(usuario);
 
         }
+
         if (paciente != null)
             this.atualizarProntuario(ctx, prontuarioParaEnvio, paciente);
     }

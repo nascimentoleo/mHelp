@@ -42,7 +42,7 @@
             android:id="@+id/rViewCidsCadastrados"
             android:scrollbars="vertical"
             android:layout_width="match_parent"
-            android:layout_height="160dp" >
+            android:layout_height="170dp" >
 
         </android.support.v7.widget.RecyclerView>
 

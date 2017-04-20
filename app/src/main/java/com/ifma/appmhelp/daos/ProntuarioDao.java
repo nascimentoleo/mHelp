@@ -22,6 +22,10 @@ public class ProntuarioDao extends BaseController implements IDao<Prontuario> {
 
     @Override
     public boolean persistir(Prontuario objeto, boolean updateChild) throws SQLException {
+        if (updateChild){
+
+        }
+
         Dao<Prontuario,Long> dao = DbSqlHelper.getHelper(ctx).getDao(Prontuario.class);
         dao.createOrUpdate(objeto);
         return true;

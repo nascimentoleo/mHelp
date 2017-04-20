@@ -90,7 +90,6 @@ public class AdicionarMedicoActivity extends AppCompatActivity {
     }
 
     private void exibeQRCode(){
-
         ProgressDialog progressdialog = new ProgressDialog(this);
         progressdialog.setMessage("Arguarde, Gerando QRCode....");
         progressdialog.setCancelable(false);
@@ -136,8 +135,8 @@ public class AdicionarMedicoActivity extends AppCompatActivity {
 
                     public void onClick(DialogInterface dialog, int whichButton) {
                         enviaRespostaDaSolicitacao(StatusSolicitacaoRoster.APROVADA);
-                        enviaProntuario(medico.getUsuario(),paciente.getProntuario());
                         adicionarMedico(medico);
+                        enviaProntuario(medico.getUsuario(),paciente.getProntuario());
 
                     }})
 
@@ -179,7 +178,8 @@ public class AdicionarMedicoActivity extends AppCompatActivity {
     private void adicionarMedico(Medico medico){
         try {
             SolicitacoesController.adicionarUsuario(this, paciente, medico);
-            Snackbar.make(findViewById(android.R.id.content), "Médico adicionado", Snackbar.LENGTH_LONG).show();
+            Toast.makeText(this, "Médico adicionado", Toast.LENGTH_LONG).show();
+            finish();
         } catch (Exception e) {
             e.printStackTrace();
             Toast.makeText(this, "Erro ao adicionar médico: " + e.getMessage(), Toast.LENGTH_LONG).show();

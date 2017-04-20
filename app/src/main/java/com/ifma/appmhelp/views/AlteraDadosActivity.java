@@ -13,6 +13,7 @@ import com.ifma.appmhelp.daos.IDao;
 import com.ifma.appmhelp.events.OnSaveModelFragment;
 import com.ifma.appmhelp.factories.FactoryAlteraDadosActivity;
 import com.ifma.appmhelp.factories.FactoryController;
+import com.ifma.appmhelp.lib.KeyboardLib;
 import com.ifma.appmhelp.models.IModel;
 import com.ifma.appmhelp.models.UsuarioLogado;
 
@@ -51,6 +52,7 @@ public class AlteraDadosActivity extends AppCompatActivity implements OnSaveMode
         IDao controller = FactoryController.getController(this,modelo);
         try {
             if (controller.persistir(modelo, true)) {
+                KeyboardLib.fecharTeclado(this);
                 Snackbar.make(findViewById(android.R.id.content), "Dados alterados", Snackbar.LENGTH_LONG).show();
             }else
                 Toast.makeText(this, controller.getMsgErro() ,Toast.LENGTH_SHORT).show();

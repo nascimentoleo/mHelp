@@ -194,6 +194,7 @@ public class CidActivity extends AppCompatActivity {
     private void limparCamposDeBusca(){
         this.edCidCodigo.getText().clear();
         this.edCidDescricao.getText().clear();
+
     }
 
     public void loadNextDataFromApi(int offset) {
@@ -209,6 +210,7 @@ public class CidActivity extends AppCompatActivity {
                 event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
                     cidsDisponiveis.clear();
                     atualizaAdapter(Pagination.FIRST);
+                    KeyboardLib.fecharTeclado(CidActivity.this);
                     return true;
             }
             return false;

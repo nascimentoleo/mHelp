@@ -185,6 +185,7 @@ public class MedicamentoActivity extends AppCompatActivity {
                     event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
                 medicamentosDisponiveis.clear();
                 atualizaAdapter(Pagination.FIRST);
+                KeyboardLib.fecharTeclado(MedicamentoActivity.this);
                 return true;
             }
             return false;
