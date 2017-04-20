@@ -16,9 +16,9 @@ import android.support.v4.content.PermissionChecker;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -51,7 +51,7 @@ import org.jivesoftware.smack.SmackException;
 import java.sql.SQLException;
 import java.util.List;
 
-public class MensagensActivity extends AppCompatActivity {
+public class MensagensActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
 
     private static Ocorrencia ocorrencia;
     private RecyclerView rViewMensagens;
@@ -59,7 +59,8 @@ public class MensagensActivity extends AppCompatActivity {
     private List<Mensagem> listaDeMensagens;
     private Pagination mensagemPagination;
     private static boolean active = false;
-    private Uri imageUri;
+    private Uri anexoUri;
+    private TipoAnexo tipoAnexoParaEnvio;
 
     private BroadcastReceiver mReceiverMensagem = new BroadcastReceiver() {
         @Override
@@ -107,18 +108,18 @@ public class MensagensActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         active = false;
-//        ocorrencia = null; dando problema
     }
 
     public static boolean isActive() {
         return active;
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.mensagem, menu);
-        return true;
+    public void showPopup(View v) {
+        PopupMenu popup = new PopupMenu(this, v);
+        MenuInflater inflater = popup.getMenuInflater();
+        popup.setOnMenuItemClickListener(this);
+        inflater.inflate(R.menu.mensagem, popup.getMenu());
+        popup.show();
     }
 
     public static Ocorrencia getOcorrencia() {
@@ -205,13 +206,27 @@ public class MensagensActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onMenuItemClick(MenuItem item) {
+
+        switch (item.getItemId()) {
+           case R.id.action_EnviarImagem:
+               selecionarAnexo(TipoAnexo.IMAGEM);
+               break;
+           case R.id.action_EnviarVideo:
+               selecionarAnexo(TipoAnexo.VIDEO);
+               break;
+
+        }
+        return false;
+    }
+
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
                 return true;
-            case R.id.action_EnviarImagem:
-                selecionarImagem();
         }
         return false;
 
@@ -257,12 +272,12 @@ public class MensagensActivity extends AppCompatActivity {
         return ocorrencia.getMedico().getUsuario();
     }
 
-    private void selecionarImagem() {
+    private void selecionarAnexo(final TipoAnexo tipoAnexo) {
         final CharSequence[] items = {CameraIntent.CAMERA.toString(),
                 CameraIntent.GALERIA.toString(),
                 CameraIntent.CANCELAR.toString()};
         AlertDialog.Builder builder = new AlertDialog.Builder(MensagensActivity.this);
-        builder.setTitle("Enviar Imagem");
+        builder.setTitle("Selecionar " + tipoAnexo.toString());
         builder.setItems(items, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int item) {
@@ -270,9 +285,9 @@ public class MensagensActivity extends AppCompatActivity {
                     dialog.dismiss();
                 else{
                     if (items[item].equals(CameraIntent.GALERIA.toString()))
-                        createImageIntent(CameraIntent.GALERIA);
+                        createIntent(tipoAnexo, CameraIntent.GALERIA);
                     else
-                        createImageIntent(CameraIntent.CAMERA);
+                        createIntent(tipoAnexo, CameraIntent.CAMERA);
 
                 }
             }
@@ -280,57 +295,81 @@ public class MensagensActivity extends AppCompatActivity {
         builder.show();
     }
 
-    private void createImageIntent(CameraIntent cameraIntent) {
-        Intent intent;
+    private void createIntent(TipoAnexo tipoAnexo, CameraIntent cameraIntent){
+        this.tipoAnexoParaEnvio = tipoAnexo;
+
         if (cameraIntent == CameraIntent.CAMERA) {
-            int permissionCheck = ContextCompat.checkSelfPermission(this,
+            int permissionCamera = ContextCompat.checkSelfPermission(this,
                     Manifest.permission.CAMERA);
 
-            if(permissionCheck == PermissionChecker.PERMISSION_GRANTED){
-
-                ContentValues values = new ContentValues();
-                values.put(MediaStore.Images.Media.TITLE, "IMG_" + System.currentTimeMillis());
-                values.put(MediaStore.Images.Media.DESCRIPTION, "From mHelp");
-
-                imageUri = getContentResolver().insert(
-                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-
-                intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-
-                startActivityForResult(intent, RequestType.ABRIR_CAMERA.getValue());
-            }
-
-        } else {
-            int permissionCheck = ContextCompat.checkSelfPermission(this,
+            if (permissionCamera == PermissionChecker.PERMISSION_GRANTED)
+                createCameraIntent(tipoAnexo);
+        }
+        else {
+            int permissionReadExternal = ContextCompat.checkSelfPermission(this,
                     Manifest.permission.READ_EXTERNAL_STORAGE);
 
-            if(permissionCheck == PermissionChecker.PERMISSION_GRANTED) {
-                intent = new Intent();
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent, "Selecione uma imagem"), RequestType.ABRIR_GALERIA.getValue());
-            }
+            if (permissionReadExternal == PermissionChecker.PERMISSION_GRANTED)
+                createGalleryIntent(tipoAnexo);
         }
 
     }
 
+    private void createGalleryIntent(TipoAnexo tipoAnexo) {
+        Intent intent = new Intent();
+        String msg;
+        if (tipoAnexo == TipoAnexo.IMAGEM) {
+            intent.setType("image/*");
+            msg = "Selecione uma imagem";
+        }else {
+            intent.setType("video/*");
+            msg = "Selecione um vídeo";
+        }
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, msg), RequestType.ABRIR_GALERIA.getValue());
+
+    }
+
+    private void createCameraIntent(TipoAnexo tipoAnexo) {
+        Intent intent;
+
+        if (tipoAnexo == TipoAnexo.IMAGEM) {
+            intent   = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            ContentValues values = new ContentValues();
+
+            //Precisa especificar onde irá salvar
+            anexoUri = getContentResolver().insert(
+                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+
+            values.put(MediaStore.Images.Media.TITLE, "IMG_" + System.currentTimeMillis());
+            values.put(MediaStore.Images.Media.DESCRIPTION, "From mHelp");
+
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, anexoUri);
+        }
+        else
+            intent  = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+
+        startActivityForResult(intent, RequestType.ABRIR_CAMERA.getValue());
+
+    }
+
     @Override
-    protected void onActivityResult(final int requestCode, int resultCode, final Intent data) {
+    protected void onActivityResult(final int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
             String nomeArquivo;
             try {
                 AnexoController anexoController = new AnexoController(MensagensActivity.this);
 
                 if (requestCode == RequestType.ABRIR_GALERIA.getValue())
-                    nomeArquivo = anexoController.enviarArquivo(data.getData());
+                    nomeArquivo = anexoController.enviarArquivo(this.tipoAnexoParaEnvio, data.getData());
+                else if (anexoUri != null)
+                    nomeArquivo = anexoController.enviarArquivo(this.tipoAnexoParaEnvio, this.anexoUri);
                 else
-                    nomeArquivo = anexoController.enviarArquivo(imageUri);
-
+                    nomeArquivo = anexoController.enviarArquivo(this.tipoAnexoParaEnvio, data.getData());
 
                 Mensagem mensagem = new Mensagem();
                 mensagem.setTipo(TipoDeMensagem.NOVA_MENSAGEM);
-                mensagem.setAnexo(new Anexo(nomeArquivo, TipoAnexo.IMAGEM));
+                mensagem.setAnexo(new Anexo(nomeArquivo, this.tipoAnexoParaEnvio));
                 enviarMensagem(mensagem);
 
             } catch (Exception e) {

@@ -12,7 +12,7 @@ import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 
 import com.ifma.appmhelp.R;
-import com.ifma.appmhelp.lib.ImageLib;
+import com.ifma.appmhelp.lib.MediaLib;
 
 
 public class MensagemNotification {
@@ -22,7 +22,7 @@ public class MensagemNotification {
     public static void notify(final Context context, String ticker, String title, String text, String bigText, PendingIntent intent) {
         Resources res = context.getResources();
         Bitmap icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_notification);
-        icon = ImageLib.getCircleBitmap(icon);
+        icon = MediaLib.getCircleBitmap(icon);
 
         final NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
                 .setDefaults(Notification.DEFAULT_ALL)

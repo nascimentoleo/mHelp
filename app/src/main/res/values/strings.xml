@@ -112,6 +112,6 @@
     <string name="action_reply">Reply</string>
     <string name="action_anexo">Anexo</string>
     <string name="imagem_action">Imagem</string>
-
+    <string name="video_action">Vídeo</string>
     <string name="title_activity_anexo">AnexoActivity</string>
 </resources>

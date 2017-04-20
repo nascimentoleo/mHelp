@@ -10,7 +10,7 @@ import android.support.v4.app.NotificationCompat;
 
 import com.ifma.appmhelp.R;
 import com.ifma.appmhelp.enums.IntentType;
-import com.ifma.appmhelp.lib.ImageLib;
+import com.ifma.appmhelp.lib.MediaLib;
 import com.ifma.appmhelp.views.SplashActivity;
 
 /**
@@ -31,7 +31,7 @@ public class ServiceNotification {
         PendingIntent deletePedingIntent = PendingIntent.getBroadcast(context, 0, deleteIntent, 0);
 
         Bitmap icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_notification);
-        icon = ImageLib.getCircleBitmap(icon);
+        icon = MediaLib.getCircleBitmap(icon);
 
         return new NotificationCompat.Builder(context)
                 .setLargeIcon(icon)

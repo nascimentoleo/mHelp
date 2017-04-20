@@ -24,12 +24,12 @@ import retrofit2.Retrofit;
 
 public class FileTransfer {
 
-    public static void uploadFile(final Context ctx, String path) {
+    public static void uploadFile(String path, MediaType mediaType) {
 
         FileService service = FileTransfer.createService();
         File file = new File(path);
 
-        RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), file);
+        RequestBody requestFile = RequestBody.create(mediaType, file);
 
         MultipartBody.Part body = MultipartBody.Part.createFormData("file", file.getName(), requestFile);
 

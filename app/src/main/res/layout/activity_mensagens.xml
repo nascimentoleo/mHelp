@@ -56,8 +56,19 @@
                     android:singleLine="true"
                     />
 
+                <ImageButton
+                    android:id="@+id/btnAnexo"
+                    android:layout_width="10pt"
+                    android:layout_height="10pt"
+                    android:layout_gravity="right|center_vertical"
+                    android:layout_marginRight="6pt"
+                    android:clickable="true"
+                    android:background="@drawable/ic_attach"
+                    android:onClick="showPopup"
+                    />
 
             </FrameLayout>
+
 
 
         </android.support.v7.widget.Toolbar>

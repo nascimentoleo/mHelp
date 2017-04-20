@@ -18,6 +18,7 @@ public class Anexo implements IModel {
     @DatabaseField
     private TipoAnexo tipoAnexo;
 
+
     public Anexo(String path, TipoAnexo tipoAnexo) {
         this.path = path;
         this.tipoAnexo = tipoAnexo;

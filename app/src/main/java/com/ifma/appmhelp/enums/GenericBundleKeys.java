@@ -11,7 +11,8 @@ public enum GenericBundleKeys {
     PRONTUARIO("PRONTUARIO"),
     EDITAR_PRONTUARIO("EDITAR_PRONTUARIO"),
     MENSAGEM("MENSAGEM"),
-    ANEXO("ANEXO");
+    ANEXO("ANEXO"),
+    TIPO_ANEXO("TIPO_ANEXO");
 
     private final String value;
 
