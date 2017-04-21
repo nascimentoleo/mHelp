@@ -30,6 +30,7 @@ public class ProcessadorDeMensagens implements ProcessadorDeStanzas {
 
         Intent ito = new Intent(IntentType.ATUALIZAR_OCORRENCIAS.toString());
         ito.putExtra(GenericBundleKeys.OCORRENCIA.toString(), mensagem.getOcorrencia());
+        ito.putExtra(GenericBundleKeys.MENSAGEM.toString(), mensagem);
         lbm.sendBroadcast(ito);
 
 

@@ -34,9 +34,11 @@ public class PacienteController extends BaseController {
         if (paciente.getProntuario() != null){
             ProntuarioParaEnvio prontuarioParaEnvio = new ProntuarioController(ctx).getProntuarioParaEnvio(prontuario);
             pacienteParaEnvio.setProntuarioParaEnvio(prontuarioParaEnvio);
-            pacienteParaEnvio.preparaPacienteParaEnvio();
 
         }
+
+        pacienteParaEnvio.preparaPacienteParaEnvio();
+
         return pacienteParaEnvio;
     }
 

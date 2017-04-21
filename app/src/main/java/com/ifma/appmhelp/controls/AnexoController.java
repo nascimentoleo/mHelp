@@ -7,7 +7,6 @@ import android.net.Uri;
 
 import com.ifma.appmhelp.enums.TipoAnexo;
 import com.ifma.appmhelp.lib.FileLib;
-import com.ifma.appmhelp.lib.Hash;
 import com.ifma.appmhelp.lib.MediaLib;
 import com.ifma.appmhelp.services.FileTransfer;
 
@@ -85,13 +84,4 @@ public class AnexoController extends BaseController{
         return null;
 
     }
-
-    public String novoAnexo(TipoAnexo tipoAnexo){
-        if (tipoAnexo == TipoAnexo.IMAGEM)
-          return  this.pathUpload + "/" + Hash.getHash()  + ".jpg";
-
-        return  this.pathUpload + "/" + Hash.getHash()  + ".mp4";
-    }
-
-
 }

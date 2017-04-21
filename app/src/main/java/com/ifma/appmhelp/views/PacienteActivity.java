@@ -34,7 +34,7 @@ public class PacienteActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         paciente = (Paciente) UsuarioLogado.getInstance().getModelo();
-        toolbar.setTitle(paciente.getUsuario().getNome());
+       // toolbar.setTitle(paciente.getUsuario().getNome());
 
         setSupportActionBar(toolbar);
 
@@ -48,6 +48,12 @@ public class PacienteActivity extends AppCompatActivity
 
         this.inicializaAdapter();
         this.carregaComponentes();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        getSupportActionBar().setTitle(paciente.getUsuario().getNome());
     }
 
     private void carregaComponentes() {

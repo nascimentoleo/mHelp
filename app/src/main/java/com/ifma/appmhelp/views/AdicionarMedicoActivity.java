@@ -15,6 +15,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -25,7 +26,6 @@ import com.google.zxing.qrcode.QRCodeWriter;
 import com.ifma.appmhelp.R;
 import com.ifma.appmhelp.controls.MensagemController;
 import com.ifma.appmhelp.controls.PacienteController;
-import com.ifma.appmhelp.controls.ProntuarioController;
 import com.ifma.appmhelp.controls.SolicitacoesController;
 import com.ifma.appmhelp.enums.IntentType;
 import com.ifma.appmhelp.enums.SolicitacaoBundleKeys;
@@ -35,8 +35,6 @@ import com.ifma.appmhelp.models.Medico;
 import com.ifma.appmhelp.models.Mensagem;
 import com.ifma.appmhelp.models.Paciente;
 import com.ifma.appmhelp.models.PacienteParaEnvio;
-import com.ifma.appmhelp.models.Prontuario;
-import com.ifma.appmhelp.models.ProntuarioParaEnvio;
 import com.ifma.appmhelp.models.SolicitacaoRoster;
 import com.ifma.appmhelp.models.Usuario;
 import com.ifma.appmhelp.models.UsuarioLogado;
@@ -121,6 +119,8 @@ public class AdicionarMedicoActivity extends AppCompatActivity {
 
             imgQrCode.setImageBitmap(bmp);
 
+            Log.d("QRCode Paciente", pacienteParaEnvio.toJson());
+
         } catch (WriterException e) {
             e.printStackTrace();
         } catch (SQLException e) {
@@ -128,6 +128,7 @@ public class AdicionarMedicoActivity extends AppCompatActivity {
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();
         }
+
 
         progressdialog.dismiss();
     }
@@ -167,19 +168,6 @@ public class AdicionarMedicoActivity extends AppCompatActivity {
             Toast.makeText(this, "Erro ao enviar confirmação ao médico: " + e.getMessage(), Toast.LENGTH_LONG).show();
         }
 
-    }
-
-    private void enviaProntuario(Usuario usuarioTo, Prontuario prontuario){
-        try {
-            if (prontuario != null){
-                ProntuarioParaEnvio prontuarioParaEnvio = new ProntuarioController(this).getProntuarioParaEnvio(prontuario);
-                Mensagem mensagem = new Mensagem(prontuarioParaEnvio.toJson(), TipoDeMensagem.ATUALIZACAO_PRONTUARIO);
-                new MensagemController(this).enviaMensagem(usuarioTo, mensagem);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            Toast.makeText(this, "Erro ao enviar o prontuário ao médico: " + e.getMessage(), Toast.LENGTH_LONG).show();
-        }
     }
 
     private void adicionarMedico(Medico medico){

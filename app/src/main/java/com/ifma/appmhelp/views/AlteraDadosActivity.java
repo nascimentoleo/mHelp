@@ -52,6 +52,7 @@ public class AlteraDadosActivity extends AppCompatActivity implements OnSaveMode
         IDao controller = FactoryController.getController(this,modelo);
         try {
             if (controller.persistir(modelo, true)) {
+                UsuarioLogado.getInstance().setModelo(modelo);
                 KeyboardLib.fecharTeclado(this);
                 Snackbar.make(findViewById(android.R.id.content), "Dados alterados", Snackbar.LENGTH_LONG).show();
             }else

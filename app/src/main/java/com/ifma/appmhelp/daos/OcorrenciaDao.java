@@ -54,12 +54,11 @@ public class OcorrenciaDao extends BaseController implements IDao<Ocorrencia> {
 
     public List<Ocorrencia> getOcorrencias(Long offset, Long limit) throws SQLException {
         Dao<Ocorrencia, Long> dao = DbSqlHelper.getHelper(ctx).getDao(Ocorrencia.class);
-        QueryBuilder<Ocorrencia, Long> query = dao.queryBuilder().offset(offset).limit(limit);
-        query.orderBy("dataUltimaMensagem",false);
+        QueryBuilder<Ocorrencia, Long> query = this.getQueryBuilder(null, null, "dataUltimaMensagem", false, offset, limit);
         PreparedQuery<Ocorrencia> prepare = query.prepare();
         return dao.query(prepare);
-    }
 
+    }
 
     public boolean atualizarDataUltimaMensagem(Ocorrencia objeto) throws SQLException {
         Dao<Ocorrencia, Long> dao = DbSqlHelper.getHelper(ctx).getDao(Ocorrencia.class);
@@ -72,10 +71,37 @@ public class OcorrenciaDao extends BaseController implements IDao<Ocorrencia> {
 
     public List<Ocorrencia> getOcorrenciasByField(String fieldName, Object fieldValue) throws SQLException {
         Dao<Ocorrencia, Long> dao = DbSqlHelper.getHelper(ctx).getDao(Ocorrencia.class);
-        QueryBuilder<Ocorrencia, Long> query = dao.queryBuilder();
-        query.where().eq(fieldName, fieldValue);
+        QueryBuilder<Ocorrencia, Long> query = this.getQueryBuilder(fieldName, fieldValue, null, false, null, null);
         PreparedQuery<Ocorrencia> prepare = query.prepare();
         return dao.query(prepare);
+    }
+
+    public List<Ocorrencia> getOcorrenciasByField(Long offset, Long limit, String fieldName, Object fieldValue) throws SQLException {
+        Dao<Ocorrencia, Long> dao = DbSqlHelper.getHelper(ctx).getDao(Ocorrencia.class);
+        QueryBuilder<Ocorrencia, Long> query = this.getQueryBuilder(fieldName, fieldValue, null, false, offset, limit);
+        PreparedQuery<Ocorrencia> prepare = query.prepare();
+        return dao.query(prepare);
+    }
+
+    private QueryBuilder<Ocorrencia, Long> getQueryBuilder(String fieldName, Object fieldValue, String fieldOrder,
+                                                           boolean ascending, Long offset, Long limit) throws SQLException {
+        Dao<Ocorrencia, Long> dao = DbSqlHelper.getHelper(ctx).getDao(Ocorrencia.class);
+        QueryBuilder<Ocorrencia, Long> query = dao.queryBuilder();
+
+        if (fieldName != null && fieldValue != null)
+            query.where().eq(fieldName, fieldValue);
+
+        if (fieldOrder != null)
+            query.orderBy(fieldOrder, ascending);
+
+        if (offset != null)
+            query.offset(offset);
+
+        if (limit != null)
+            query.limit(limit);
+
+        return query;
+
     }
 
 

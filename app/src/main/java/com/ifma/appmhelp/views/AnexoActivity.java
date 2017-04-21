@@ -3,6 +3,7 @@ package com.ifma.appmhelp.views;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
@@ -93,7 +94,7 @@ public class AnexoActivity extends AppCompatActivity {
         MediaController mediaControls = new MediaController(this);
         this.videoFullScreen.setMediaController(mediaControls);
         this.videoFullScreen.setVisibility(View.VISIBLE);
-        this.videoFullScreen.setVideoPath(file.getAbsolutePath());
+        this.videoFullScreen.setVideoURI(Uri.fromFile(file));
 
         this.videoFullScreen.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override

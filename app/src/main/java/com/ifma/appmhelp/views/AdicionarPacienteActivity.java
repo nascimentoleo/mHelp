@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.zxing.integration.android.IntentIntegrator;
@@ -38,10 +39,14 @@ public class AdicionarPacienteActivity extends AppCompatActivity {
         public void onReceive(Context context, Intent intent) {
             if (intent.getBooleanExtra(SolicitacaoBundleKeys.FINALIZOU.toString(), false)) {
                 if (intent.getBooleanExtra(SolicitacaoBundleKeys.ACEITOU_SOLICITACAO.toString(), false)) {
-                    adicionarPaciente(pacienteParaEnvio.getPaciente());
+                    if (pacienteParaEnvio.getPaciente() != null){
+                        adicionarPaciente(pacienteParaEnvio.getPaciente());
+                        if (pacienteParaEnvio.getProntuarioParaEnvio() != null)
+                            atualizarProntuario(pacienteParaEnvio);
 
-                    if (pacienteParaEnvio.getProntuarioParaEnvio() != null)
-                        atualizarProntuario(pacienteParaEnvio);
+                    }else
+                        Toast.makeText(AdicionarPacienteActivity.this,"Não foi possível ler o QRCode, tente novamente",Toast.LENGTH_SHORT).show();
+
                 }else
                     Toast.makeText(AdicionarPacienteActivity.this,"Paciente recusou a solicitação",Toast.LENGTH_SHORT).show();
 
@@ -78,6 +83,7 @@ public class AdicionarPacienteActivity extends AppCompatActivity {
             if (intentResult.getContents() != null) {
                 try {
                     this.pacienteParaEnvio = new PacienteParaEnvio().fromJson(intentResult.getContents());
+                    Log.d("QRCode Paciente",this.pacienteParaEnvio.toJson());
                     SolicitacaoRoster solicitacaoRoster = new SolicitacaoRoster(medico.getUsuario().clone(), StatusSolicitacaoRoster.ENVIADA);
                     Mensagem mensagem = new Mensagem(solicitacaoRoster.toJson(), TipoDeMensagem.SOLICITACAO_ROSTER);
                     new MensagemController(this).enviaMensagem(this.pacienteParaEnvio.getPaciente().getUsuario(), mensagem);

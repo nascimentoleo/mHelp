@@ -148,8 +148,9 @@ public class MensagensAdapter extends RecyclerView.Adapter<MensagensAdapter.Recy
                 bitmap = BitmapFactory.decodeFile(file.getAbsolutePath(),options);
 
             }else {
-                bitmap = ThumbnailUtils.createVideoThumbnail(file.getAbsolutePath(),
+                bitmap = ThumbnailUtils.createVideoThumbnail(file.getPath(),
                         MediaStore.Images.Thumbnails.MINI_KIND);
+
             }
 
             holder.imgAnexo.setImageBitmap(bitmap);

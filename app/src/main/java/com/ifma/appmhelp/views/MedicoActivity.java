@@ -31,7 +31,7 @@ public class MedicoActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         medico = (Medico) UsuarioLogado.getInstance().getModelo();
-        toolbar.setTitle(medico.getUsuario().getNome());
+        //toolbar.setTitle(medico.getUsuario().getNome());
 
         setSupportActionBar(toolbar);
 
@@ -45,6 +45,12 @@ public class MedicoActivity extends AppCompatActivity
 
 
         inicializaAdapter();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        getSupportActionBar().setTitle(medico.getUsuario().getNome());
     }
 
     private void inicializaAdapter(){

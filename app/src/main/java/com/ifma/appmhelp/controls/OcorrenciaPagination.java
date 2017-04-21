@@ -3,7 +3,9 @@ package com.ifma.appmhelp.controls;
 import android.content.Context;
 
 import com.ifma.appmhelp.daos.OcorrenciaDao;
+import com.ifma.appmhelp.models.Medico;
 import com.ifma.appmhelp.models.Ocorrencia;
+import com.ifma.appmhelp.models.UsuarioLogado;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -22,6 +24,13 @@ public class OcorrenciaPagination extends Pagination<Ocorrencia> {
 
     @Override
     public List<Ocorrencia> getRegistros(int offset) throws SQLException {
-        return dao.getOcorrencias(Long.valueOf(offset), Long.valueOf(offset + qtdDeRegistros));
+
+        if (UsuarioLogado.getInstance().getModelo().getClass() == Medico.class)
+            return dao.getOcorrenciasByField(Long.valueOf(offset), Long.valueOf(offset + qtdDeRegistros),
+                    "medico_id", UsuarioLogado.getInstance().getModelo().getId());
+
+        return dao.getOcorrenciasByField(Long.valueOf(offset), Long.valueOf(offset + qtdDeRegistros),
+                "paciente_id", UsuarioLogado.getInstance().getModelo().getId());
+
     }
 }

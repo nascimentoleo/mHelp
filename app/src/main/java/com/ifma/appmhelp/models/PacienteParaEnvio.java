@@ -36,6 +36,8 @@ public class PacienteParaEnvio {
     }
 
     public void preparaPacienteParaEnvio(){
+        this.getPaciente().setId(null);
+        this.getPaciente().getUsuario().setId(null);
         this.getPaciente().getUsuario().setSenha(null);
         this.getPaciente().setProntuario(null);
     }

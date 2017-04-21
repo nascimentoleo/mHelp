@@ -39,14 +39,16 @@ public class ListOcorrenciasFragment extends Fragment implements OcorrenciasAdap
         @Override
         public void onReceive(Context context, Intent intent) {
             Ocorrencia ocorrencia = (Ocorrencia) intent.getSerializableExtra(GenericBundleKeys.OCORRENCIA.toString());
+            //Ocorrencia ocorrencia = (Ocorrencia) intent.getSerializableExtra(GenericBundleKeys.OCORRENCIA.toString());
             if (ocorrencia != null){
                 if (!listaDeOcorrencias.contains(ocorrencia)){
                     listaDeOcorrencias.add(0,ocorrencia);
                     rViewOcorrencias.getAdapter().notifyItemInserted(0);
                     rViewOcorrencias.scrollToPosition(0);
-                }else
-                    rViewOcorrencias.getAdapter().notifyDataSetChanged();
-
+                }else{
+                    int position = listaDeOcorrencias.indexOf(ocorrencia);
+                    rViewOcorrencias.getAdapter().notifyItemChanged(position);
+                }
             }else {
                 inicializaAdapter();
                 rViewOcorrencias.getAdapter().notifyDataSetChanged();
