@@ -5,5 +5,5 @@ package com.ifma.appmhelp.enums;
  */
 
 public enum StatusSolicitacaoRoster {
-    ENVIADA, APROVADA, REPROVADA, REMOVIDA;
+    ENVIADA, APROVADA, REPROVADA, REMOVIDA, CONCLUIDA;
 }

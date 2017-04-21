@@ -24,7 +24,8 @@ import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.ifma.appmhelp.R;
 import com.ifma.appmhelp.controls.MensagemController;
-import com.ifma.appmhelp.controls.ProntuariosController;
+import com.ifma.appmhelp.controls.PacienteController;
+import com.ifma.appmhelp.controls.ProntuarioController;
 import com.ifma.appmhelp.controls.SolicitacoesController;
 import com.ifma.appmhelp.enums.IntentType;
 import com.ifma.appmhelp.enums.SolicitacaoBundleKeys;
@@ -33,11 +34,14 @@ import com.ifma.appmhelp.enums.TipoDeMensagem;
 import com.ifma.appmhelp.models.Medico;
 import com.ifma.appmhelp.models.Mensagem;
 import com.ifma.appmhelp.models.Paciente;
+import com.ifma.appmhelp.models.PacienteParaEnvio;
 import com.ifma.appmhelp.models.Prontuario;
 import com.ifma.appmhelp.models.ProntuarioParaEnvio;
 import com.ifma.appmhelp.models.SolicitacaoRoster;
 import com.ifma.appmhelp.models.Usuario;
 import com.ifma.appmhelp.models.UsuarioLogado;
+
+import java.sql.SQLException;
 
 public class AdicionarMedicoActivity extends AppCompatActivity {
 
@@ -102,10 +106,13 @@ public class AdicionarMedicoActivity extends AppCompatActivity {
         int largura = metrics.widthPixels;
 
         try {
-            //Vou retirar a senha antes de gerar o qrcode
-            Paciente pacienteParaEnvio = this.paciente.clone();
+            PacienteParaEnvio pacienteParaEnvio = new PacienteController(this).getPacienteParaEnvio(this.paciente);
+
+            /*Paciente pacienteParaEnvio = this.paciente.clone();
             pacienteParaEnvio.setUsuario(this.paciente.getUsuario().clone());
             pacienteParaEnvio.getUsuario().setSenha(null); //Limpo a senha antes de enviar
+            */
+
             BitMatrix bitMatrix = new QRCodeWriter().encode(pacienteParaEnvio.toJson(), BarcodeFormat.QR_CODE,largura,altura);
             Bitmap bmp = Bitmap.createBitmap(largura, altura, Bitmap.Config.RGB_565);
             for (int i = 0; i < largura; i ++)
@@ -114,8 +121,9 @@ public class AdicionarMedicoActivity extends AppCompatActivity {
 
             imgQrCode.setImageBitmap(bmp);
 
-
         } catch (WriterException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
             e.printStackTrace();
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();
@@ -123,7 +131,6 @@ public class AdicionarMedicoActivity extends AppCompatActivity {
 
         progressdialog.dismiss();
     }
-
 
     private AlertDialog createDialog(){
 
@@ -136,7 +143,7 @@ public class AdicionarMedicoActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         enviaRespostaDaSolicitacao(StatusSolicitacaoRoster.APROVADA);
                         adicionarMedico(medico);
-                        enviaProntuario(medico.getUsuario(),paciente.getProntuario());
+                 //       enviaProntuario(medico.getUsuario(),paciente.getProntuario());
 
                     }})
 
@@ -165,7 +172,7 @@ public class AdicionarMedicoActivity extends AppCompatActivity {
     private void enviaProntuario(Usuario usuarioTo, Prontuario prontuario){
         try {
             if (prontuario != null){
-                ProntuarioParaEnvio prontuarioParaEnvio = new ProntuariosController(this).getProntuarioParaEnvio(prontuario);
+                ProntuarioParaEnvio prontuarioParaEnvio = new ProntuarioController(this).getProntuarioParaEnvio(prontuario);
                 Mensagem mensagem = new Mensagem(prontuarioParaEnvio.toJson(), TipoDeMensagem.ATUALIZACAO_PRONTUARIO);
                 new MensagemController(this).enviaMensagem(usuarioTo, mensagem);
             }

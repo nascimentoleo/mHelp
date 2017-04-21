@@ -17,7 +17,7 @@ import android.widget.Toast;
 
 import com.ifma.appmhelp.R;
 import com.ifma.appmhelp.controls.MensagemController;
-import com.ifma.appmhelp.controls.ProntuariosController;
+import com.ifma.appmhelp.controls.ProntuarioController;
 import com.ifma.appmhelp.daos.PacienteDao;
 import com.ifma.appmhelp.enums.EstadoCivil;
 import com.ifma.appmhelp.enums.GenericBundleKeys;
@@ -172,7 +172,7 @@ public class ProntuarioActivity extends AppCompatActivity {
     }
 
     private void enviarProntuario(){
-        ProntuariosController controller = new ProntuariosController(this);
+        ProntuarioController controller = new ProntuarioController(this);
         try {
             ProntuarioParaEnvio prontuarioParaEnvio = controller.getProntuarioParaEnvio(this.prontuario);
             Mensagem mensagem = new Mensagem(prontuarioParaEnvio.toJson(), TipoDeMensagem.ATUALIZACAO_PRONTUARIO);

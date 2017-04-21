@@ -33,7 +33,7 @@ import com.ifma.appmhelp.controls.MensagemController;
 import com.ifma.appmhelp.controls.MensagemPagination;
 import com.ifma.appmhelp.controls.Pagination;
 import com.ifma.appmhelp.controls.RosterXMPPController;
-import com.ifma.appmhelp.enums.CameraIntent;
+import com.ifma.appmhelp.enums.AnexoIntent;
 import com.ifma.appmhelp.enums.GenericBundleKeys;
 import com.ifma.appmhelp.enums.IntentType;
 import com.ifma.appmhelp.enums.RequestType;
@@ -273,21 +273,21 @@ public class MensagensActivity extends AppCompatActivity implements PopupMenu.On
     }
 
     private void selecionarAnexo(final TipoAnexo tipoAnexo) {
-        final CharSequence[] items = {CameraIntent.CAMERA.toString(),
-                CameraIntent.GALERIA.toString(),
-                CameraIntent.CANCELAR.toString()};
+        final CharSequence[] items = {AnexoIntent.CAMERA.toString(),
+                AnexoIntent.GALERIA.toString(),
+                AnexoIntent.CANCELAR.toString()};
         AlertDialog.Builder builder = new AlertDialog.Builder(MensagensActivity.this);
         builder.setTitle("Selecionar " + tipoAnexo.toString());
         builder.setItems(items, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int item) {
-                if (items[item].equals(CameraIntent.CANCELAR.toString()))
+                if (items[item].equals(AnexoIntent.CANCELAR.toString()))
                     dialog.dismiss();
                 else{
-                    if (items[item].equals(CameraIntent.GALERIA.toString()))
-                        createIntent(tipoAnexo, CameraIntent.GALERIA);
+                    if (items[item].equals(AnexoIntent.GALERIA.toString()))
+                        createIntent(tipoAnexo, AnexoIntent.GALERIA);
                     else
-                        createIntent(tipoAnexo, CameraIntent.CAMERA);
+                        createIntent(tipoAnexo, AnexoIntent.CAMERA);
 
                 }
             }
@@ -295,10 +295,10 @@ public class MensagensActivity extends AppCompatActivity implements PopupMenu.On
         builder.show();
     }
 
-    private void createIntent(TipoAnexo tipoAnexo, CameraIntent cameraIntent){
+    private void createIntent(TipoAnexo tipoAnexo, AnexoIntent anexoIntent){
         this.tipoAnexoParaEnvio = tipoAnexo;
 
-        if (cameraIntent == CameraIntent.CAMERA) {
+        if (anexoIntent == AnexoIntent.CAMERA) {
             int permissionCamera = ContextCompat.checkSelfPermission(this,
                     Manifest.permission.CAMERA);
 

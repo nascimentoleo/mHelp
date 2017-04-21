@@ -59,6 +59,22 @@ public class OcorrenciasAdapter extends RecyclerView.Adapter<OcorrenciasAdapter.
 
         holder.txtTituloOcorrencia.setText(ocorrencia.getTitulo());
 
+        Mensagem mensagem = this.carregaUltimaMensagem(ocorrencia);
+
+        if (mensagem != null){
+
+            if (mensagem.getMsg() != null && !mensagem.getMsg().isEmpty())
+                holder.txtUltimaMensagem.setText(mensagem.getMsg());
+
+            else if (mensagem.getAnexo() != null)
+                holder.txtUltimaMensagem.setText(mensagem.getAnexo().getTipoAnexo().toString());
+
+            if (ocorrencia.getDataUltimaMensagem() == null)
+                ocorrencia.setDataUltimaMensagem(mensagem.getData());
+
+        }else
+            holder.txtUltimaMensagem.setVisibility(View.INVISIBLE);
+
         if (ocorrencia.getDataUltimaMensagem() != null) {
             SimpleDateFormat dfHora = new SimpleDateFormat("HH:mm");
             SimpleDateFormat dfData = new SimpleDateFormat("dd/MM/yyyy");
@@ -70,20 +86,6 @@ public class OcorrenciasAdapter extends RecyclerView.Adapter<OcorrenciasAdapter.
             holder.txtHoraUltimaMensagem.setVisibility(View.INVISIBLE);
 
         }
-        Mensagem mensagem = this.carregaUltimaMensagem(ocorrencia);
-
-        if (mensagem != null){
-
-            if (mensagem.getMsg() != null && !mensagem.getMsg().isEmpty())
-                holder.txtUltimaMensagem.setText(mensagem.getMsg());
-
-            else if (mensagem.getAnexo() != null)
-                holder.txtUltimaMensagem.setText(mensagem.getAnexo().getTipoAnexo().toString());
-
-        }else
-            holder.txtUltimaMensagem.setVisibility(View.INVISIBLE);
-
-
     }
 
     private Mensagem carregaUltimaMensagem(Ocorrencia ocorrencia){

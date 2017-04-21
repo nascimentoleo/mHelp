@@ -14,6 +14,7 @@ import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.ifma.appmhelp.R;
 import com.ifma.appmhelp.controls.MensagemController;
+import com.ifma.appmhelp.controls.ProntuarioController;
 import com.ifma.appmhelp.controls.SolicitacoesController;
 import com.ifma.appmhelp.enums.IntentType;
 import com.ifma.appmhelp.enums.SolicitacaoBundleKeys;
@@ -22,22 +23,29 @@ import com.ifma.appmhelp.enums.TipoDeMensagem;
 import com.ifma.appmhelp.models.Medico;
 import com.ifma.appmhelp.models.Mensagem;
 import com.ifma.appmhelp.models.Paciente;
+import com.ifma.appmhelp.models.PacienteParaEnvio;
 import com.ifma.appmhelp.models.SolicitacaoRoster;
 import com.ifma.appmhelp.models.UsuarioLogado;
 
+import java.sql.SQLException;
+
 public class AdicionarPacienteActivity extends AppCompatActivity {
 
-    private Paciente paciente;
     private Medico medico;
-
+    private PacienteParaEnvio pacienteParaEnvio;
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getBooleanExtra(SolicitacaoBundleKeys.FINALIZOU.toString(), false)) {
                 if (intent.getBooleanExtra(SolicitacaoBundleKeys.ACEITOU_SOLICITACAO.toString(), false)) {
-                    adicionarPaciente(paciente);
+                    adicionarPaciente(pacienteParaEnvio.getPaciente());
+
+                    if (pacienteParaEnvio.getProntuarioParaEnvio() != null)
+                        atualizarProntuario(pacienteParaEnvio);
                 }else
                     Toast.makeText(AdicionarPacienteActivity.this,"Paciente recusou a solicitação",Toast.LENGTH_SHORT).show();
+
+                finish();
             }
         }
     };
@@ -69,10 +77,10 @@ public class AdicionarPacienteActivity extends AppCompatActivity {
         if (intentResult != null) {
             if (intentResult.getContents() != null) {
                 try {
-                    this.paciente = new Paciente().fromJson(intentResult.getContents());
+                    this.pacienteParaEnvio = new PacienteParaEnvio().fromJson(intentResult.getContents());
                     SolicitacaoRoster solicitacaoRoster = new SolicitacaoRoster(medico.getUsuario().clone(), StatusSolicitacaoRoster.ENVIADA);
                     Mensagem mensagem = new Mensagem(solicitacaoRoster.toJson(), TipoDeMensagem.SOLICITACAO_ROSTER);
-                    new MensagemController(this).enviaMensagem(this.paciente.getUsuario(), mensagem);
+                    new MensagemController(this).enviaMensagem(this.pacienteParaEnvio.getPaciente().getUsuario(), mensagem);
                 } catch (Exception e) {
                     e.printStackTrace();
                     Toast.makeText(this, "Erro ao enviar solicitação: " + e.getMessage(), Toast.LENGTH_LONG).show();
@@ -93,7 +101,20 @@ public class AdicionarPacienteActivity extends AppCompatActivity {
             Toast.makeText(this, "Erro ao adicionar paciente: " +
                     e.getMessage(), Toast.LENGTH_SHORT).show();
         }
-        finish();
+    }
+
+    private void atualizarProntuario(PacienteParaEnvio pacienteParaEnvio){
+
+        try {
+            new ProntuarioController(this).atualizarProntuario(pacienteParaEnvio.getProntuarioParaEnvio(), pacienteParaEnvio.getPaciente());
+            Toast.makeText(this, "Prontuário Atualizado! ", Toast.LENGTH_LONG).show();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Erro ao atualizar prontuário: " +
+                    e.getMessage(), Toast.LENGTH_SHORT).show();
+
+        }
     }
 
 }

@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 
-import com.ifma.appmhelp.controls.OcorrenciasController;
+import com.ifma.appmhelp.controls.OcorrenciaController;
 import com.ifma.appmhelp.controls.SolicitacoesController;
 import com.ifma.appmhelp.daos.MedicoDao;
 import com.ifma.appmhelp.daos.UsuarioDao;
@@ -54,7 +54,7 @@ public class ProcessadorDeSolicitacoes implements ProcessadorDeStanzas {
         if (medico != null) {
             if (SolicitacoesController.removerUsuario(ctx, medico)) {
                 //Removo as ocorrências, mensagens e anexos
-                new OcorrenciasController(ctx).removerOcorrencias(medico);
+                new OcorrenciaController(ctx).removerOcorrencias(medico);
 
                 LocalBroadcastManager.getInstance(ctx).sendBroadcast(new Intent(IntentType.ATUALIZAR_OCORRENCIAS.toString()));
                 MensagemNotification.notify(ctx,"Removido",  "Você foi removido ", " pelo médico " + usuario.getNome(),"", null);

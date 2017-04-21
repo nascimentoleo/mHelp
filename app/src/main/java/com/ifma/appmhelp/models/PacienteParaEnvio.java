@@ -15,6 +15,14 @@ public class PacienteParaEnvio {
         return paciente;
     }
 
+    public void setPaciente(Paciente paciente) {
+        this.paciente = paciente;
+    }
+
+    public void setProntuarioParaEnvio(ProntuarioParaEnvio prontuarioParaEnvio) {
+        this.prontuarioParaEnvio = prontuarioParaEnvio;
+    }
+
     public ProntuarioParaEnvio getProntuarioParaEnvio() {
         return prontuarioParaEnvio;
     }
@@ -26,4 +34,10 @@ public class PacienteParaEnvio {
     public static PacienteParaEnvio fromJson(String jsonObject){
         return new Gson().fromJson(jsonObject, PacienteParaEnvio.class);
     }
+
+    public void preparaPacienteParaEnvio(){
+        this.getPaciente().getUsuario().setSenha(null);
+        this.getPaciente().setProntuario(null);
+    }
+
 }

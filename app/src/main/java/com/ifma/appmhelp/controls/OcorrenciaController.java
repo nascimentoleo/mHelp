@@ -21,9 +21,9 @@ import java.util.List;
  * Created by leo on 2/27/17.
  */
 
-public class OcorrenciasController extends BaseController {
+public class OcorrenciaController extends BaseController {
 
-    public OcorrenciasController(Context ctx) {
+    public OcorrenciaController(Context ctx) {
         super(ctx);
     }
 

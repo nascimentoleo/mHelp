@@ -5,7 +5,9 @@ package com.ifma.appmhelp.enums;
  */
 
 public enum SolicitacaoBundleKeys {
-    USUARIO_MEDICO("USUARIO_MEDICO"), FINALIZOU("FINALIZOU"), ACEITOU_SOLICITACAO("ACEITOU_SOLICITACAO");
+    USUARIO_MEDICO("USUARIO_MEDICO"),
+    FINALIZOU("FINALIZOU"),
+    ACEITOU_SOLICITACAO("ACEITOU_SOLICITACAO");
 
     private String value;
 
