@@ -71,7 +71,7 @@ public class FileTransfer {
                             public void run(){
                                 try {
                                     synchronized(this){
-                                        numTentativas[0]++;
+                                            numTentativas[0]++;
                                         wait(10000);
                                         Log.d("Download", "Nova tentativa de download");
                                         downloadFile(ctx, url, storagePath);

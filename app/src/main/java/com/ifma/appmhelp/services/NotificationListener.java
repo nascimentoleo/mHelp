@@ -56,12 +56,15 @@ public class NotificationListener {
 
         String ticker = "Nova Mensagem";
         String title;
-        String text;
+        String text = "";
 
         if (existeMaisDeUmaMensagem)
             text =  mensagensNotificadas.size() + " mensagens";
-        else
+        else if (ultimaMensagem.getMsg() != null)
             text = ultimaMensagem.getMsg();
+        else if (ultimaMensagem.getAnexo() != null){
+            text = ultimaMensagem.getAnexo().getTipoAnexo().toString();
+        }
 
         if (existeMaisDeUmRemetente) {
             title = ctx.getString(R.string.app_name);
@@ -72,7 +75,8 @@ public class NotificationListener {
         String bigText = "";
 
         for (Mensagem mensagem : mensagensNotificadas){
-            bigText += mensagem.getMsg() + "\n";
+            if (mensagem.getMsg() != null)
+                bigText += mensagem.getMsg() + "\n";
         }
 
         MensagemNotification.notify(ctx, ticker, title, text, bigText, pendingIntent);

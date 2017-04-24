@@ -65,6 +65,7 @@
                     android:clickable="true"
                     android:background="@drawable/ic_attach"
                     android:onClick="showPopup"
+                    android:padding="10dp"
                     />
 
             </FrameLayout>

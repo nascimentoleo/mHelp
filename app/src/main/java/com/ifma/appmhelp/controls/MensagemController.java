@@ -57,6 +57,10 @@ public class MensagemController extends BaseController{
 
         }
 
+        if (mensagem.getAnexo() != null){
+            mensagem.getAnexo().setId(null);
+        }
+
         new MensagemDao(ctx).persistir(mensagem, true);
 
     }

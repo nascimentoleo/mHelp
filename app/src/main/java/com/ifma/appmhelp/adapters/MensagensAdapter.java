@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.VideoView;
 
 import com.ifma.appmhelp.R;
 import com.ifma.appmhelp.controls.AnexoController;
@@ -72,6 +73,7 @@ public class MensagensAdapter extends RecyclerView.Adapter<MensagensAdapter.Recy
             holder.txtInfo.setText(sdf.format(new Date()));
 
         holder.imgAnexo.setVisibility(View.GONE);
+        holder.videoAnexo.setVisibility(View.GONE);
 
         if (mensagem.getAnexo() != null)
             this.adicionaAnexo(holder, mensagem.getAnexo());
@@ -147,6 +149,7 @@ public class MensagensAdapter extends RecyclerView.Adapter<MensagensAdapter.Recy
                 options.inSampleSize = 7; //Reduz a resolução da imagem
                 bitmap = BitmapFactory.decodeFile(file.getAbsolutePath(),options);
 
+
             }else {
                 bitmap = ThumbnailUtils.createVideoThumbnail(file.getPath(),
                         MediaStore.Images.Thumbnails.MINI_KIND);
@@ -155,6 +158,7 @@ public class MensagensAdapter extends RecyclerView.Adapter<MensagensAdapter.Recy
 
             holder.imgAnexo.setImageBitmap(bitmap);
             holder.imgAnexo.setVisibility(View.VISIBLE);
+
         }
     }
 
@@ -165,6 +169,7 @@ public class MensagensAdapter extends RecyclerView.Adapter<MensagensAdapter.Recy
         private LinearLayout content;
         private LinearLayout contentWithBG;
         private ImageView imgAnexo;
+        private VideoView videoAnexo;
         private ProgressBar progressAnexo;
         private LinearLayout layout;
 
@@ -176,6 +181,7 @@ public class MensagensAdapter extends RecyclerView.Adapter<MensagensAdapter.Recy
             contentWithBG = (LinearLayout) itemView.findViewById(R.id.contentWithBackground);
             txtInfo       = (TextView) itemView.findViewById(R.id.txtInfo);
             imgAnexo      = (ImageView) itemView.findViewById(R.id.imgAnexo);
+            videoAnexo    = (VideoView) itemView.findViewById(R.id.videoAnexo);
             progressAnexo = (ProgressBar) itemView.findViewById(R.id.pbAnexo);
             layout        = (LinearLayout) itemView.findViewById(R.id.contentWithBackground);
 

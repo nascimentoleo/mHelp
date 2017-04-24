@@ -32,6 +32,16 @@
                     android:adjustViewBounds="true"
                     android:scaleType="centerCrop"/>
 
+                <VideoView
+                    android:id="@+id/videoAnexo"
+                    android:layout_width="@dimen/maxImgWidth"
+                    android:layout_height="@dimen/maxImgHeight"
+                    android:layout_marginTop="5pt"
+                    android:layout_marginLeft="5pt"
+                    android:layout_marginRight="5pt"
+                    android:adjustViewBounds="true"
+                    android:scaleType="centerCrop"/>
+
                 <ProgressBar
                     android:id="@+id/pbAnexo"
                     style="?android:attr/progressBarStyleSmall"

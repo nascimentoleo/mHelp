@@ -10,6 +10,7 @@ import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.content.PermissionChecker;
@@ -23,6 +24,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,6 +43,7 @@ import com.ifma.appmhelp.enums.TipoAnexo;
 import com.ifma.appmhelp.enums.TipoDeMensagem;
 import com.ifma.appmhelp.lib.EndlessRecyclerViewScrollListener;
 import com.ifma.appmhelp.models.Anexo;
+import com.ifma.appmhelp.models.Medico;
 import com.ifma.appmhelp.models.Mensagem;
 import com.ifma.appmhelp.models.Ocorrencia;
 import com.ifma.appmhelp.models.Usuario;
@@ -61,6 +64,7 @@ public class MensagensActivity extends AppCompatActivity implements PopupMenu.On
     private static boolean active = false;
     private Uri anexoUri;
     private TipoAnexo tipoAnexoParaEnvio;
+    private ImageButton btnAnexo;
 
     private BroadcastReceiver mReceiverMensagem = new BroadcastReceiver() {
         @Override
@@ -192,6 +196,11 @@ public class MensagensActivity extends AppCompatActivity implements PopupMenu.On
 
         findViewById(R.id.toolbar_title).setSelected(true);
 
+        btnAnexo = (ImageButton) findViewById(R.id.btnAnexo);
+
+        if (UsuarioLogado.getInstance().getModelo().getClass() == Medico.class)
+            btnAnexo.setVisibility(View.GONE);
+
     }
 
     private void loadNextDataFromApi(int totalItemCount) {
@@ -302,15 +311,21 @@ public class MensagensActivity extends AppCompatActivity implements PopupMenu.On
             int permissionCamera = ContextCompat.checkSelfPermission(this,
                     Manifest.permission.CAMERA);
 
-            if (permissionCamera == PermissionChecker.PERMISSION_GRANTED)
+            if (permissionCamera != PermissionChecker.PERMISSION_GRANTED)
+                ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.CAMERA},0);
+            else
                 createCameraIntent(tipoAnexo);
+
         }
         else {
             int permissionReadExternal = ContextCompat.checkSelfPermission(this,
                     Manifest.permission.READ_EXTERNAL_STORAGE);
 
-            if (permissionReadExternal == PermissionChecker.PERMISSION_GRANTED)
+            if (permissionReadExternal != PermissionChecker.PERMISSION_GRANTED)
+                ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},0);
+            else
                 createGalleryIntent(tipoAnexo);
+
         }
 
     }
