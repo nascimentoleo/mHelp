@@ -11,7 +11,6 @@ import com.ifma.appmhelp.processors.ProcessadorDeStanzas;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.StanzaListener;
 import org.jivesoftware.smack.packet.Message;
-import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.packet.Stanza;
 
 /**
@@ -28,11 +27,10 @@ public class StanzaXMPPListener implements StanzaListener{
 
     @Override
     public void processPacket(Stanza packet) throws SmackException.NotConnectedException {
-        String login = ConexaoXMPP.getInstance().getConexao().getUser();
-        if(packet.getFrom() != null && packet.getFrom() != login){
-            if(packet.getClass() == Presence.class)
-                this.processarPresenca((Presence) packet);
-            else if (packet.getClass() == Message.class) {
+        String loginConectado = ConexaoXMPP.getInstance().getConexao().getUser();
+        //Verifica se a stanza foi enviada para outro usuário, e não para o próprio logado
+        if(packet.getFrom() != null && packet.getFrom() != loginConectado){
+            if (packet.getClass() == Message.class) {
                 try {
                     this.processarMensagem((Message) packet);
                 } catch (Exception e) {
@@ -44,28 +42,12 @@ public class StanzaXMPPListener implements StanzaListener{
     }
 
     private void processarMensagem(Message message) throws Exception {
+        //Extrai o json e descriptografa
         String jsonCriptografado = message.getBody().toString();
         Mensagem mensagem = Mensagem.fromJson(BlowfishCrypt.decrypt(jsonCriptografado));
-
+        //Encaminha a mensagem para ser processada, de acordo com seu tipo
         ProcessadorDeStanzas processador = mensagem.getTipo().getProcessador();
         processador.processar(ctx,mensagem);
-
-    }
-
-    private void processarPresenca(Presence presence){
-       /* LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(ctx);
-        //Recebeu uma solicitação para adicionar contato
-        if(presence.getType() == Presence.Type.subscribe){
-            Intent it = new Intent("solicitacao_roster");
-            it.putExtra("login", JidTranslator.getLogin(presence.getFrom()));
-            it.putExtra("aceitou_solicitacao", true); //Parametro utilizado para confirmar que paciente confirmou a solicitação
-            lbm.sendBroadcast(it);
-        //Recebeu uma solicitacao para remover contato
-        }else if(presence.getType() == Presence.Type.unsubscribe){
-            Intent it = new Intent("solicitacao_roster");
-            it.putExtra("aceitou_solicitacao", false);
-            lbm.sendBroadcast(it);
-        } */
 
     }
 

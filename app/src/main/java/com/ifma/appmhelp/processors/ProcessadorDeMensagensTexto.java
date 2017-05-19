@@ -12,7 +12,7 @@ import com.ifma.appmhelp.models.Mensagem;
 /**
  * Created by leo on 3/9/17.
  */
-public class ProcessadorDeMensagens implements ProcessadorDeStanzas {
+public class ProcessadorDeMensagensTexto implements ProcessadorDeStanzas {
 
     @Override
     public void processar(Context ctx, Mensagem mensagem) throws Exception {

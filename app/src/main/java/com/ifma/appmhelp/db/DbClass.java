@@ -18,6 +18,7 @@ import com.ifma.appmhelp.models.Usuario;
  */
 public class DbClass {
 
+    //Modelos referentes à tabelas no banco
     private static final Class<?>[] classes = new Class[] {
             Usuario.class,
             Medico.class,

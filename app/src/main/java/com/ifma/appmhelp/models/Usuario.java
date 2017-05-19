@@ -21,6 +21,7 @@ public class Usuario implements IModel, Cloneable{
     @DatabaseField
     private String email;
 
+
     //Construtor sem argumentos necessário para o funcionamento do orm
     public Usuario() {
 

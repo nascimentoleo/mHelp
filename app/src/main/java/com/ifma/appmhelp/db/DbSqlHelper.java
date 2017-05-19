@@ -15,30 +15,32 @@ import java.sql.SQLException;
  */
 public class DbSqlHelper extends OrmLiteSqliteOpenHelper {
 
-   private String msgErro;
-   private Context ctx;
+    private String msgErro;
+    private Context ctx;
 
-   private static DbSqlHelper instance = null;
+    private static DbSqlHelper instance = null;
 
+    //Singleton responsável por fornecer a conexão
     public synchronized static DbSqlHelper getHelper(Context context) {
         if(instance==null)
             instance = new DbSqlHelper(context);
         return instance;
     }
 
-   private DbSqlHelper(Context context) {
-       super(context, DbInfo.getNomeBanco(), null, DbInfo.getVersaoBanco(), R.raw.ormlite_config);
-       this.ctx = context;
-       checkDatabaseVersion();
-   }
+    private DbSqlHelper(Context context) {
+        super(context, DbInfo.getNomeBanco(), null, DbInfo.getVersaoBanco(), R.raw.ormlite_config);
+        this.ctx = context;
+        checkDatabaseVersion();
+    }
 
-   public String getMsgErro() {
+    public String getMsgErro() {
         return this.msgErro;
     }
 
     @Override
     public void onCreate(SQLiteDatabase database, ConnectionSource connectionSource) {
         try {
+            //Cria as tabelas baseado nos modelos referenciados na classe DbClass
             for(Class classeDb : DbClass.getClasses())
                 TableUtils.createTableIfNotExists(connectionSource, classeDb);
 
@@ -56,6 +58,7 @@ public class DbSqlHelper extends OrmLiteSqliteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase database, ConnectionSource connectionSource, int oldVersion, int newVersion) {
         try {
+            //Primeiro exclui tabelas existentes para poder criá-las novamente
             for(Class classeDb : DbClass.getClasses())
                 TableUtils.dropTable(connectionSource, classeDb, true);
 
