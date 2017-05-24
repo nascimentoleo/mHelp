@@ -243,7 +243,7 @@ public class MensagensActivity extends AppCompatActivity implements PopupMenu.On
 
     public void enviarMensagem(View v) {
         if (this.mensagemEhValida()) {
-            Mensagem mensagem = new Mensagem(edMensagem.getText().toString().trim(), TipoDeMensagem.NOVA_MENSAGEM_TEXTO);
+            Mensagem mensagem = new Mensagem(edMensagem.getText().toString().trim(), TipoDeMensagem.MENSAGEM_OCORRENCIA);
             this.enviarMensagem(mensagem);
         }
 
@@ -261,7 +261,6 @@ public class MensagensActivity extends AppCompatActivity implements PopupMenu.On
             this.atualizarAdapter(mensagem);
 
             controller.enviaMensagem(this.getUsuarioDestino(mensagem.getOcorrencia()), mensagem);
-
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -383,7 +382,7 @@ public class MensagensActivity extends AppCompatActivity implements PopupMenu.On
                     nomeArquivo = anexoController.enviarArquivo(this.tipoAnexoParaEnvio, data.getData());
 
                 Mensagem mensagem = new Mensagem();
-                mensagem.setTipo(TipoDeMensagem.NOVA_MENSAGEM_TEXTO);
+                mensagem.setTipo(TipoDeMensagem.MENSAGEM_OCORRENCIA);
                 mensagem.setAnexo(new Anexo(nomeArquivo, this.tipoAnexoParaEnvio));
                 enviarMensagem(mensagem);
 

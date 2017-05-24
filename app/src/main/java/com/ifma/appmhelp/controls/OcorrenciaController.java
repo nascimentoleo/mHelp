@@ -28,8 +28,9 @@ public class OcorrenciaController extends BaseController {
     }
 
     public void enviarNovaOcorrencia(Usuario usuarioDestino, Ocorrencia ocorrencia) throws Exception {
+        //Limpa ids dos modelos
         ocorrencia.preparaParaEnvio();
-        Mensagem mensagem = new Mensagem(ocorrencia.toJson(), TipoDeMensagem.NOVA_OCORRENCIA);
+        Mensagem mensagem = new Mensagem(ocorrencia.toJson(), TipoDeMensagem.OCORRENCIA);
         new MensagemController(ctx).enviaMensagem(usuarioDestino, mensagem);
     }
 

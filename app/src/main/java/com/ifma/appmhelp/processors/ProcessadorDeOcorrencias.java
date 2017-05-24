@@ -17,9 +17,11 @@ public class ProcessadorDeOcorrencias implements ProcessadorDeStanzas {
 
     @Override
     public void processar(Context ctx, Mensagem mensagem) throws Exception {
+        //Extrai a ocorrência e persiste no banco
         Ocorrencia ocorrencia = Ocorrencia.fromJson(mensagem.getMsg());
         new OcorrenciaController(ctx).adicionarOcorrenciaFromPaciente(ocorrencia);
 
+        //Envia broadcast notificando da nova ocorrência
         LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(ctx);
         Intent it = new Intent(IntentType.ATUALIZAR_OCORRENCIAS.toString());
         it.putExtra(GenericBundleKeys.OCORRENCIA.toString(),ocorrencia);

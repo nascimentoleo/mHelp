@@ -81,20 +81,25 @@ public class AdicionarPacienteActivity extends AppCompatActivity {
         IntentResult intentResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         if (intentResult != null) {
             if (intentResult.getContents() != null) {
-                try {
-                    this.pacienteParaEnvio = new PacienteParaEnvio().fromJson(intentResult.getContents());
-                    Log.d("QRCode Paciente",this.pacienteParaEnvio.toJson());
-                    SolicitacaoRoster solicitacaoRoster = new SolicitacaoRoster(medico.getUsuario().clone(), StatusSolicitacaoRoster.ENVIADA);
-                    Mensagem mensagem = new Mensagem(solicitacaoRoster.toJson(), TipoDeMensagem.SOLICITACAO_ROSTER);
-                    new MensagemController(this).enviaMensagem(this.pacienteParaEnvio.getPaciente().getUsuario(), mensagem);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Toast.makeText(this, "Erro ao enviar solicitação: " + e.getMessage(), Toast.LENGTH_LONG).show();
-
-                }
+                this.pacienteParaEnvio = new PacienteParaEnvio().fromJson(intentResult.getContents());
+                Log.d("QRCode Paciente",this.pacienteParaEnvio.toJson());
+                this.enviaSolicitacao(this.pacienteParaEnvio.getPaciente());
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void enviaSolicitacao(Paciente paciente){
+        try {
+            SolicitacaoRoster solicitacaoRoster = new SolicitacaoRoster(medico.getUsuario().clone(), StatusSolicitacaoRoster.ENVIADA);
+            Mensagem mensagem = new Mensagem(solicitacaoRoster.toJson(), TipoDeMensagem.SOLICITACAO_ROSTER);
+            new MensagemController(this).enviaMensagem(paciente.getUsuario(), mensagem);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Erro ao enviar solicitação: " + e.getMessage(), Toast.LENGTH_LONG).show();
+
+        }
+
     }
 
 

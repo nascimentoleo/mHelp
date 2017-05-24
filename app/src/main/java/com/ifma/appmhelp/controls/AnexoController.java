@@ -34,9 +34,9 @@ public class AnexoController extends BaseController{
     public String enviarArquivo(TipoAnexo tipoAnexo, Uri data) throws IOException {
         File file;
         MediaType mediaType;
-
+        //Carrega o endereço do arquivo
         String pathFile = FileLib.getPath(ctx, data);
-
+        //Carrega o arquivo de acordo com seu tipo
         if (tipoAnexo == TipoAnexo.IMAGEM){
             Bitmap myBitmap = BitmapFactory.decodeFile(pathFile);
             file = MediaLib.saveImageBitmap(myBitmap, this.pathUpload);
@@ -45,7 +45,7 @@ public class AnexoController extends BaseController{
             file = MediaLib.saveVideoMP4(new File(pathFile), this.pathUpload);
             mediaType = MediaType.parse("video/*");
         }
-
+        //Envia o arquivo
         if (file != null) {
             FileTransfer.uploadFile(file.getPath(), mediaType);
             return file.getName();
@@ -53,8 +53,6 @@ public class AnexoController extends BaseController{
 
         return null;
     }
-
-
 
     public File carregaAnexo(String nome){
         File anexo = this.getFile(nome);

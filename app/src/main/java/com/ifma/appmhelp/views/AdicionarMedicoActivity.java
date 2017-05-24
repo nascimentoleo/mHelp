@@ -1,6 +1,5 @@
 package com.ifma.appmhelp.views;
 
-import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -92,11 +91,6 @@ public class AdicionarMedicoActivity extends AppCompatActivity {
     }
 
     private void exibeQRCode(){
-        ProgressDialog progressdialog = new ProgressDialog(this);
-        progressdialog.setMessage("Arguarde, Gerando QRCode....");
-        progressdialog.setCancelable(false);
-        progressdialog.show();
-
         //Calcula o tamanho que o qrcode deve ocupar
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
@@ -125,7 +119,6 @@ public class AdicionarMedicoActivity extends AppCompatActivity {
         }
 
 
-        progressdialog.dismiss();
     }
 
     private AlertDialog createDialog(){

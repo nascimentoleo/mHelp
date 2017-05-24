@@ -16,17 +16,17 @@ import retrofit2.http.Url;
  */
 
 public interface FileService {
-
+    //Envia o arquivo para o servidor
     @Multipart
     @POST("upload")
     Call<ResponseBody> upload(
             @Part MultipartBody.Part file
     );
-
+    //Recebe o arquivo do servidor
     @Streaming
     @GET
     Call<ResponseBody> download(@Url String fileUrl);
-
+    //Exclui o arquivo do servidor
     @GET("delete/{filename}")
     Call<ResponseBody> delete(@Path("filename") String fileName);
 
