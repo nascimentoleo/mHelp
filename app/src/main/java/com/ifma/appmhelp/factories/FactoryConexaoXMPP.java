@@ -25,34 +25,35 @@ import java.io.IOException;
 public class FactoryConexaoXMPP {
 
     public static AbstractXMPPConnection getConexao(Context ctx, String host, int porta) throws IOException, XMPPException, SmackException {
-        XMPPTCPConnectionConfiguration config = XMPPTCPConnectionConfiguration.builder()
-                .setDebuggerEnabled(true) //Ativa debug das mensagens
+        XMPPTCPConnectionConfiguration config;
+
+        config = XMPPTCPConnectionConfiguration.builder()
                 .setCompressionEnabled(true) //Comprime as mensagens antes de enviar
                 .setSecurityMode(ConnectionConfiguration.SecurityMode.disabled) //Desativa modo de segurança
                 .setServiceName("mhelp-server-xmpp")
                 .setHost(host) //Ip do servidor
                 .setPort(porta) //Porta padrão 5222
                 .build();
-        XMPPTCPConnection xmpptcpConnection = new XMPPTCPConnection(config);
+        XMPPTCPConnection xmppConnection = new XMPPTCPConnection(config);
 
         //Define um objeto para controlar a conexão
-        xmpptcpConnection.addConnectionListener(new ConexaoXMPPListener(ctx));
+        xmppConnection.addConnectionListener(new ConexaoXMPPListener(ctx));
 
         //Define um objeto para controlar as mensagens que chegam
-        xmpptcpConnection.addAsyncStanzaListener(new StanzaXMPPListener(ctx), new StanzaFilter() {
+        xmppConnection.addAsyncStanzaListener(new StanzaXMPPListener(ctx), new StanzaFilter() {
             @Override
             public boolean accept(Stanza stanza) {
                 return true;
             }
         });
 
-        xmpptcpConnection.setPacketReplyTimeout(10000); //Tempo de reconexão
+        xmppConnection.setPacketReplyTimeout(10000); //Tempo de reconexão
         //Registra o ping para habilitar reconexão
-        PingManager.getInstanceFor(xmpptcpConnection).setPingInterval(30);
-        PingManager.getInstanceFor(xmpptcpConnection).registerPingFailedListener(new PingListener(ctx));
+        PingManager.getInstanceFor(xmppConnection).setPingInterval(30);
+        PingManager.getInstanceFor(xmppConnection).registerPingFailedListener(new PingListener(ctx));
 
-        RosterXMPPController.getInstance().init(xmpptcpConnection);
+        RosterXMPPController.getInstance().init(xmppConnection);
 
-        return xmpptcpConnection.connect();
+        return xmppConnection.connect();
     }
 }

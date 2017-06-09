@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.LocalBroadcastManager;
@@ -18,10 +17,6 @@ import android.util.Log;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.WriterException;
-import com.google.zxing.common.BitMatrix;
-import com.google.zxing.qrcode.QRCodeWriter;
 import com.ifma.appmhelp.R;
 import com.ifma.appmhelp.controls.MensagemController;
 import com.ifma.appmhelp.controls.PacienteController;
@@ -30,6 +25,7 @@ import com.ifma.appmhelp.enums.IntentType;
 import com.ifma.appmhelp.enums.SolicitacaoBundleKeys;
 import com.ifma.appmhelp.enums.StatusSolicitacaoRoster;
 import com.ifma.appmhelp.enums.TipoDeMensagem;
+import com.ifma.appmhelp.lib.QrCodeLib;
 import com.ifma.appmhelp.models.Medico;
 import com.ifma.appmhelp.models.Mensagem;
 import com.ifma.appmhelp.models.Paciente;
@@ -99,26 +95,16 @@ public class AdicionarMedicoActivity extends AppCompatActivity {
 
         try {
             PacienteParaEnvio pacienteParaEnvio = new PacienteController(this).getPacienteParaEnvio(this.paciente);
-
-            BitMatrix bitMatrix = new QRCodeWriter().encode(pacienteParaEnvio.toJson(), BarcodeFormat.QR_CODE,largura,altura);
-            Bitmap bmp = Bitmap.createBitmap(largura, altura, Bitmap.Config.RGB_565);
-            for (int i = 0; i < largura; i ++)
-                for (int j = 0; j < altura; j ++)
-                    bmp.setPixel(i, j, bitMatrix.get(i,j) ? Color.BLACK : Color.WHITE);
-
-            imgQrCode.setImageBitmap(bmp);
+            Bitmap qrcode = QrCodeLib.montaQrCode(pacienteParaEnvio.toJson(),altura, largura);
+            imgQrCode.setImageBitmap(qrcode);
 
             Log.d("QRCode Paciente", pacienteParaEnvio.toJson());
 
-        } catch (WriterException e) {
-            e.printStackTrace();
         } catch (SQLException e) {
             e.printStackTrace();
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();
         }
-
-
     }
 
     private AlertDialog createDialog(){

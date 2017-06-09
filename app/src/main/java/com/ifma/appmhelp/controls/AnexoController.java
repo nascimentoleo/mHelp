@@ -56,21 +56,19 @@ public class AnexoController extends BaseController{
 
     public File carregaAnexo(String nome){
         File anexo = this.getFile(nome);
-
         if (anexo != null)
             return anexo;
-
-        return this.baixarAnexo(nome);
-
+        //Caso o anexo não seja encontrado realiza o download
+        return this.baixarArquivo(nome);
     }
 
-    private File baixarAnexo(String nome) {
+    private File baixarArquivo(String nome) {
         String url         = this.pathDownload + nome;
         String storagePath = this.pathUpload + "/" + nome;
 
         FileTransfer.downloadFile(ctx, url, storagePath);
 
-        return getFile(nome);
+        return this.getFile(nome);
     }
 
     private File getFile(String nome){
